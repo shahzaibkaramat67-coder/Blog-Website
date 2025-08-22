@@ -1,6 +1,7 @@
 export const DB_NAME = "userSingup";
 export const BLOG_DATA = "blogData";
 export const BLOGCATEGORY = "blogCategories";
+export const PROFILE = "profile";
 
 
 

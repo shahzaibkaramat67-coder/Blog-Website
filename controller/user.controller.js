@@ -3,7 +3,8 @@ import { validationResult } from 'express-validator';
 import ApiError from '../utils/ApiError.js'
 import ApiResponse from '../utils/ApiResponse.js';
 import User from '../models/Singup.model.js'
-import passport from 'passport';
+// import passport from 'passport';
+import { Profile } from '../models/profile.model.js';
 
 // get request routes 
 // const singupUser = asyncHendler(async (req, res) => {
@@ -153,14 +154,34 @@ const submitLoginData = asyncHendler(async (req, res) => {
 
 })
 
+const artherProfile = asyncHendler(async(req, res)=>{
+    const {full_name,username,about,email,phone,location,website,socials,category} = req.body
+     const {profile_image} = req.file
 
+     const prodile = await Profile.craeteOne({
+        full_name,
+        username,
+        about,
+        email,
+        phone,
+        location,
+        website : website,
+        socials : socials,
+        category,
+        profile_image 
+     })
 
-
+     res.status(201)
+     throw new ApiResponse("prodile data add successfull", 200, prodile);
+     
+})
 
 export {
     // singupUser,
     // login,
     submitSingupData,
-    submitLoginData
+    submitLoginData,
+    artherProfile
+
 }
 /*****======== Section singup Form Hendler End  ==========*****/

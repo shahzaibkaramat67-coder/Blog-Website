@@ -6,7 +6,8 @@ import {
       // login,
       // singupUser, 
       submitSingupData, 
-      submitLoginData
+      submitLoginData,
+      artherProfile
 } from '../controller/user.controller.js'
 import passport from 'passport'
 import '../auth/google-Strategy.js'
@@ -34,6 +35,7 @@ router.get("/auth/google/callback",
 // user profile route
 router.get('/profile',(req, res)=>{res.render('Profile', { title: "Profile" })})
 router.get('/profile/edit-profile',(req, res)=>{res.render('edit-profile', { title: "edit-profile" })})
+router.post('/profile/profile-save',artherProfile,(req, res)=>{res.json(req.body)})
 router.get('/profile/Artical',(req, res)=>{res.render('Artical', { title: "Artical" })})
 
 
