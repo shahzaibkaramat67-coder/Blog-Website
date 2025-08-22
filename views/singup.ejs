@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title><%= title%></title>
+<link rel="stylesheet" href="/all.css">
+</head>
+<body>
+  
+  <section>
+    <div class="section-page">
+      <div class="Singup">
+        <h1>Singup Here</h1>
+      </div>
+      <div class="form_Hendler">
+        <form action="/api/user/submit-singup" method="POST">
+          <div class="form_date">
+            <label for="firstName">Username</label>
+            <input type="text" id="firstName" name="firstName">
+          </div>
+          <div class="form_date">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName">
+          </div>
+          <div class="form_date">
+            <label for="gmail">Gmail</label>
+            <input type="text" id="gmail" name="gmail">
+          </div>
+          <div class="form_date">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password">
+                 <span><img src="/assets/icons/eye-solid-full.svg " class="toggle-password" toggle="password"></span>
+          </div>
+          <div class="form_date">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword"> 
+        <span><img src="/assets/icons/eye-solid-full.svg " class="toggle-password" toggle="confirmPassword"></span>
+      
+          </div>
+          <div class="form_date">
+            <button type="submit">submit</button>
+          </div>
+          <div>
+            <p>if you have account then login : <a href="./login">Login</a> </p>
+          </div>
+
+           <div>
+          <div class="line">
+            <hr>
+            <span>OR</span>
+            <hr>
+          </div>
+          <div class="singup_option">
+            <a href="/api/user/auth/google">
+            <!-- <i class="fa-brands fa-google"></i> -->
+             <img src="/assets/icons/google-brands-solid-full.svg" alt="G" srcset="">
+            </a>
+            <a href="/auth/facebook">
+             <!-- <i class="fa-brands fa-facebook"></i> -->
+              <img src="/assets/icons/facebook-brands-solid-full.svg" alt="F">
+            </a>
+            <!-- <a href="">N</a> -->
+          </div>
+        </div>
+        </form>
+     
+      </div>
+    </div>
+  </section>
+
+  <script>
+  
+  const toggle = document.querySelectorAll('.toggle-password');  
+  toggle.forEach((icon) => {
+   icon.addEventListener('click', ()=>{
+    const inputId = icon.getAttribute("toggle");
+    const input = document.getElementById(inputId);
+    console.log(input);
+    if(input){
+      const currenttype = input.getAttribute('type')
+      if (currenttype === 'text') {
+        input.setAttribute('type', 'password')
+        icon.src = '/assets/icons/eye-slash-solid-full.svg'
+      }else{
+        input.setAttribute('type', 'text')
+        icon.src = '/assets/icons/eye-solid-full.svg'
+      }
+    }
+   })    
+
+
+
+     
+   })
+  </script>
+</body>
+
+</html>

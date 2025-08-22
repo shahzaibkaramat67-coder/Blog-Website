@@ -1,0 +1,250 @@
+  
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Responsive Dashboard with Sidebar & Icons</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+
+</head>
+
+<body class="bg-gray-100 min-h-screen flex">
+  
+  <aside
+    class="fixed inset-y-0 left-0 z-20 w-64 bg-white shadow-lg overflow-y-auto transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out""
+    id="sidebar">
+  <!-- md:translate-x-0 transition-transform duration-200 ease-in-out"  -->
+    <div class="px-6 py-4 border-b">
+      <h2 class="text-2xl font-bold text-gray-800">Admin Panel</h2>
+    </div>
+
+    <nav class="flex flex-col px-4 py-6 space-y-2 text-gray-700 text-sm">
+      <a href='/api/host/Dashbord/appDetailUploadPage'
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 16v-4a4 4 0 00-8 0v4"></path>
+          <rect width="20" height="14" x="2" y="8" rx="2" ry="2"></rect>
+        </svg>
+        Upload App
+      </a>
+
+      <a href="/api/host/Dashbord/blogContentUpload"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h7l7 7v9a2 2 0 01-2 2z"></path>
+    </svg>
+    Upload Blog Content
+  </a>
+      <a href="/api/host/Dashbord/blogFileUpload"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2v20"></path>
+      <path d="M16 10a4 4 0 01-8 0"></path>
+      <path d="M9 16h6"></path>
+    </svg>
+    Upload Blog with PDF
+  
+  </a>
+     
+     <a href="/api/host/Dashbord/postsAnalytics"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3v18h18"></path>
+      <path d="M9 17V9"></path>
+      <path d="M15 17V5"></path>
+    </svg>
+    Blog Posts Analytics
+  </a>
+   <a href="/api/host/Dashbord/EarningPage"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 8c-3.31 0-6 1.79-6 4s2.69 4 6 4 6-1.79 6-4-2.69-4-6-4z"></path>
+    </svg>
+    Earnings
+  </a>
+   <a href="/api/host/Dashbord/BlogGraph"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3v18h18"></path>
+      <path d="M7 14l4-4 5 5"></path>
+    </svg>
+    Blog Graphs
+  </a>
+
+   <a href="/api/host/Dashbord/Appgraph"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3v18h18"></path>
+      <path d="M7 13h4v6H7z"></path>
+      <path d="M13 9h4v10h-4z"></path>
+    </svg>
+    App Graphs
+  </a>
+  <a href="/api/host/Dashbord/postsAnalytics"
+        class="flex items-center gap-3 px-3 py-2 rounded bg-blue-600 text-white font-semibold" aria-current="page">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10h18M3 6h18M3 14h18M3 18h18"></path>
+        </svg>
+        Blog Posts Overview
+      </a>
+    </nav>
+  </aside>
+
+
+
+
+
+
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Responsive Dashboard with Sidebar & Icons</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+   <style>
+    /* Custom scrollbar for sidebar */
+    aside::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    aside::-webkit-scrollbar-thumb {
+      background-color: rgba(59, 130, 246, 0.5);
+      border-radius: 3px;
+    }
+  </style>
+
+</head>
+
+<body class="bg-gray-100 min-h-screen flex">
+
+  <button id="menu-btn" aria-label="Toggle menu"
+    class="absolute top-4 left-4 md:hidden z-30 p-2 rounded-md bg-white shadow-md text-gray-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" viewBox="0 0 24 24">
+      <path d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+  </button>
+
+
+  <aside
+    class="fixed inset-y-0 left-0 z-20 w-64 bg-white shadow-lg overflow-y-auto transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out""
+    id="sidebar">
+ md:translate-x-0 transition-transform duration-200 ease-in-out" 
+    <div class="px-6 py-4 border-b">
+      <h2 class="text-2xl font-bold text-gray-800">Admin Panel</h2>
+    </div>
+
+    <nav class="flex flex-col px-4 py-6 space-y-2 text-gray-700 text-sm">
+      <a href='/api/host/Dashbord/appDetailUploadPage'
+        class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 16v-4a4 4 0 00-8 0v4"></path>
+          <rect width="20" height="14" x="2" y="8" rx="2" ry="2"></rect>
+        </svg>
+        Upload App
+      </a>
+
+      <a href="/api/host/Dashbord/blogContentUpload"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h7l7 7v9a2 2 0 01-2 2z"></path>
+    </svg>
+    Upload Blog Content
+  </a>
+      <a href="/api/host/Dashbord/blogFileUpload"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2v20"></path>
+      <path d="M16 10a4 4 0 01-8 0"></path>
+      <path d="M9 16h6"></path>
+    </svg>
+    Upload Blog with PDF
+  
+  </a>
+     
+     <a href="/api/host/Dashbord/postsAnalytics"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3v18h18"></path>
+      <path d="M9 17V9"></path>
+      <path d="M15 17V5"></path>
+    </svg>
+    Blog Posts Analytics
+  </a>
+   <a href="/api/host/Dashbord/EarningPage"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 8c-3.31 0-6 1.79-6 4s2.69 4 6 4 6-1.79 6-4-2.69-4-6-4z"></path>
+    </svg>
+    Earnings
+  </a>
+   <a href="/api/host/Dashbord/BlogGraph"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3v18h18"></path>
+      <path d="M7 14l4-4 5 5"></path>
+    </svg>
+    Blog Graphs
+  </a>
+
+   <a href="/api/host/Dashbord/Appgraph"
+    class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-700 transition font-semibold">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3v18h18"></path>
+      <path d="M7 13h4v6H7z"></path>
+      <path d="M13 9h4v10h-4z"></path>
+    </svg>
+    App Graphs
+  </a>
+  <a href="/api/host/posts-dashboard.html"
+        class="flex items-center gap-3 px-3 py-2 rounded bg-blue-600 text-white font-semibold" aria-current="page">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10h18M3 6h18M3 14h18M3 18h18"></path>
+        </svg>
+        Blog Posts Overview
+      </a>
+    </nav>
+  </aside>
+
+
+
+
+
+ 
+
+  <script>
+    // Toggle sidebar on mobile
+    const btn = document.getElementById("menu-btn");
+    const sidebar = document.getElementById("sidebar");
+
+    btn.addEventListener("click", () => {
+      sidebar.classList.toggle("-translate-x-full");
+    });
+  </script>  -->

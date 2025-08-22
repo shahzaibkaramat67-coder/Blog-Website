@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog Posts Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 py-10 px-4 m-auto mr-1 max-w-5xl">
+
+    <%-include('../../partial/sidebar.ejs')%>
+
+    <div class="max-w-5xl bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">Blog Posts Overview</h1>
+
+        <div class="overflow-x-auto">
+            <table class="w-full table-auto border-collapse">
+                <thead>
+                    <tr class="bg-gray-200 text-left text-sm uppercase text-gray-600">
+                        <th class="p-4">Main Picture</th>
+                        <th class="p-4">Post</th>
+                        <th class="p-4">Date of Post</th>
+                        <th class="p-4">Views</th>
+                        <th class="p-4">Likes</th>
+                        <th class="p-4">🔗 Share</th> <!-- New Column -->
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    Example Row
+                    <tr class="border-t">
+                        <td class="p-4">
+                            <img src="/assets/image/premium_photo-1664474619075-644dd191935f.jpeg" alt="Main Picture"
+                                class="w-20 h-14 object-cover rounded">
+                        </td>
+                        <td class="p-4 font-semibold">The Future of Cybersecurity</td>
+                        <td class="p-4">2025-08-14</td>
+                        <td class="p-4">1,250</td>
+                        <td class="p-4">320</td>
+                        <td class="p-4">00</td>
+
+                    </tr>
+                    <tr class="border-t">
+                        <td class="p-4">
+                            <img src="/assets/image/premium_photo-1664474619075-644dd191935f.jpeg" alt="Main Picture"
+                                class="w-20 h-14 object-cover rounded">
+                        </td>
+                        <td class="p-4 font-semibold">The Future of Cybersecurity</td>
+                        <td class="p-4">2025-08-14</td>
+                        <td class="p-4">1,250</td>
+                        <td class="p-4">320</td>
+                        <td class="p-4">00</td>
+
+                    </tr>
+
+                 
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

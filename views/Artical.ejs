@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Blog - Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white m-auto mr-1 w-full">
+  
+  <div class="w-full max-w-5xl mx-auto p-6  rounded-lg shadow bg-white mt-2">
+    <h1 class="text-3xl text-center text-5xl capitalize  font-bold mt-2 mb-4">Create New Blog Post</h1>
+
+    <form action="/api/user/profile/Artical/upload-blog" method="POST" enctype="multipart/form-data" class="space-y-6">
+
+      <!-- Blog Title -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Blog Title</label>
+        <input type="text" name="title" class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200" placeholder="Enter blog title">
+      </div>
+
+      <!-- Featured Image -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Featured Image</label>
+        <input type="file" name="featured_image" class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-white">
+      </div>
+
+      <!-- Tags -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Tags (comma separated)</label>
+        <input type="text" name="tags" class="w-full mt-1 p-3 border border-gray-300 rounded-lg" placeholder="e.g. hacking, app security, tips">
+      </div>
+
+      <!-- Short Description -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Short Description</label>
+        <textarea name="short_description" rows="3" class="w-full mt-1 p-3 border border-gray-300 rounded-lg" placeholder="Write a short preview of your blog"></textarea>
+      </div>
+
+      <!-- Full Content -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Full Content</label>
+        <textarea name="content" rows="8" class="w-full mt-1 p-3 border border-gray-300 rounded-lg" placeholder="Write the complete blog here"></textarea>
+      </div>
+
+      <!-- Publish Date -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Publish Date</label>
+        <input type="date" name="publish_date" class="w-full mt-1 p-3 border border-gray-300 rounded-lg">
+      </div>
+
+      <!-- Author Name -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Author</label>
+        <input type="text" name="author" class="w-full mt-1 p-3 border border-gray-300 rounded-lg" placeholder="Enter author name">
+      </div>
+
+      <!-- SEO Meta Title -->
+      <div>
+        <label class="block text-gray-700 font-semibold">SEO Meta Title</label>
+        <input type="text" name="meta_title" class="w-full mt-1 p-3 border border-gray-300 rounded-lg" placeholder="Enter meta title for search engines">
+      </div>
+
+      <!-- SEO Meta Description -->
+      <div>
+        <label class="block text-gray-700 font-semibold">SEO Meta Description</label>
+        <textarea name="meta_description" rows="2" class="w-full mt-1 p-3 border border-gray-300 rounded-lg" placeholder="Enter meta description for search engines"></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
+        Upload Blog Post
+      </button>
+
+    </form>
+  </div>
+
+</body>
+</html>

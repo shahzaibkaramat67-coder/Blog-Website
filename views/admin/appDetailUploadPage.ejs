@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload App - Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 m-auto max-w-5xl mr-1">
+
+<%-include('../../partial/sidebar.ejs')%>
+
+
+    <div class="max-w-4xl p-6 bg-white rounded-lg shadow mt-8 items-center">
+    <h1 class="text-3xl font-bold mb-6">Upload New App</h1>
+
+    <form action="/upload-app" method="POST" enctype="multipart/form-data" class="space-y-6">
+
+      <!-- App Name -->
+      <div>
+        <label class="block text-gray-700 font-semibold">App Name</label>
+        <input type="text" name="app_name"
+          class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+          placeholder="Enter app name">
+      </div>
+
+      <!-- App Logo -->
+      <div>
+        <label class="block text-gray-700 font-semibold">App Logo</label>
+        <input type="file" name="app_logo" class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-white">
+      </div>
+
+      <!-- Version -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Version</label>
+        <input type="text" name="version" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+          placeholder="e.g. 1.0.0">
+      </div>
+
+      <!-- Short Description -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Short Description</label>
+        <textarea name="short_description" rows="3" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+          placeholder="Enter a short summary of the app"></textarea>
+      </div>
+
+      <!-- Detailed Description -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Detailed Description</label>
+        <textarea name="detailed_description" rows="6" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+          placeholder="Enter a detailed description"></textarea>
+      </div>
+
+      <!-- Features -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Features (one per line)</label>
+        <textarea name="features" rows="5" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+          placeholder="Feature 1&#10;Feature 2&#10;Feature 3"></textarea>
+      </div>
+
+      <!-- How It Works -->
+      <div>
+        <label class="block text-gray-700 font-semibold">How It Works</label>
+        <textarea name="how_it_works" rows="5" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+          placeholder="Explain how your app works"></textarea>
+      </div>
+
+      <!-- Screenshots -->
+      <div>
+        <label class="block text-gray-700 font-semibold">Screenshots (Upload Multiple)</label>
+        <input type="file" name="screenshots[]" multiple
+          class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-white">
+      </div>
+
+      <!-- APK File -->
+      <div>
+        <label class="block text-gray-700 font-semibold">APK File</label>
+        <input type="file" name="apk_file" class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-white">
+      </div>
+
+      <!-- FAQ -->
+      <div>
+        <label class="block text-gray-700 font-semibold">FAQ (Optional)</label>
+        <textarea name="faq" rows="5" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+          placeholder="Q: Question 1?&#10;A: Answer 1&#10;&#10;Q: Question 2?&#10;A: Answer 2"></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
+        Upload App
+      </button>
+
+    </form>
+  </div>
+</div>
+
+
+</body>
+
+</html>
