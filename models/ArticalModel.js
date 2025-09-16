@@ -1,0 +1,92 @@
+import mongoose, { Schema } from "mongoose";
+
+const articalSchema = new mongoose.Schema({
+  
+     
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    featured_image: {
+      type: String, // store Cloudinary URL or local path
+      required: true,
+    },
+
+    tags: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+
+    short_description: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 300, // limit preview size
+    },
+
+    content: {
+      type: String,
+      required: true,
+    },
+
+    publish_date: {
+      type: Date,
+      default: Date.now,
+    },
+
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref : 'User',
+      required: true,
+  
+    },
+
+    meta_title: {
+      type: String,
+      trim: true,
+    },
+
+    meta_description: {
+      type: String,
+      trim: true,
+      maxlength: 160,
+    },
+
+    // optional extra fields
+    views: {
+      type: Number,
+      default: 0,
+    },
+      like: [
+        {
+      type: mongoose.Schema.Types.ObjectId,
+      ref : "User",
+      
+    }
+      ],
+
+        shares: {
+      messenger: { type: Number, default: 0 },
+      linkedin: { type: Number, default: 0 },
+      snapchat: { type: Number, default: 0 },
+      telegram: { type: Number, default: 0 },
+      whatsapp: { type: Number, default: 0 },
+      twitter: { type: Number, default: 0 }, // X
+      instagram: { type: Number, default: 0 },
+      facebook: { type: Number, default: 0 },
+      google: { type: Number, default: 0 },
+      other: { type: Number, default: 0 }, // fallback for share icon
+    },
+
+    isPublished: {
+      type: Boolean,
+      default: true,
+    },
+
+}, { timestamps: true })
+
+export const Articals = mongoose.model("Artical", articalSchema)

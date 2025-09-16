@@ -1,27 +1,34 @@
-import { v2 as cloudinary } from "cloudinary";
-import upload from "../middleware/multer.middleware";
+import dotenv from "dotenv";
+dotenv.config(); 
+import {v2 as cloudinary } from 'cloudinary'
 import fs from 'fs'
 
 
-cloudinary.config({ 
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY, 
-  api_secret: process.env.CLOUDINARY_API_SECRET
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,   // ✅ correct
+  api_secret: process.env.CLOUDINARY_API_SECRET, // ✅ correct
 });
 
-const uploadOnCloudinary = async(localPathImage) =>{
-  try {
-    if (!localPathImage) return null
 
-    const response = await cloudinary.uploader.upload(localPathImage, {
-        resource_type :'auto',      
-    })
-    console.log(`this is ${response} and  this is ${resource_type}`)
-    return response
-  } catch (error) {
-    fs.unlinkSync(localPathImage)
-    return null
-  }
+const uploadOnCloudinary =async (localPath)=>{   
+    try {
+        if (!localPath)  return null
+        const response = await cloudinary.uploader.upload(localPath, {
+            resource_type : 'auto'
+        })
+        return response
+        
+    } catch (error) {
+        console.log(`this cloudinary upload  is error `, error);
+        
+    }
+
+    if (fs.existsSync(localPath)) {
+        fs.unlinkSync(localPath)
+        
+    }
 }
 
 export default uploadOnCloudinary

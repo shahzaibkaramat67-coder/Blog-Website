@@ -33,36 +33,120 @@
     
     <!-- Like & Share -->
     <div class="flex items-center justify-between border-t border-b py-3 mb-6">
-      <button class="flex items-center gap-2 text-blue-600 hover:text-blue-800">
-        ❤ Like
+      <button class="flex items-center gap-2  text-blue-600 hover:text-blue-800">
+       <span id="Heart"> ❤ </span> Like
       </button>
       <div class="flex gap-3">
-        <a href="#" class="text-blue-500 hover:text-blue-700">🔗 Share</a>
+        <a onclick="openPopup()" href="#" class="text-blue-500 hover:text-blue-700">🔗 Share</a>
       </div>
     </div>
     
-    <!-- Comments Section -->
-    <div>
-      <h2 class="text-xl font-semibold mb-4">Comments</h2>
-      
-      <!-- Comment Form -->
-      <form class="mb-6">
-        <textarea placeholder="Write your comment..." class="w-full border border-gray-300 rounded-lg p-3 mb-3"></textarea>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800">Post Comment</button>
-      </form>
-
-      <hr class="border-t-2 border-gray-900 mt-12">
-      <!-- Example Comments -->
-      <div class="w-full  shadow-lg rounded-lg mt-3">
-       <div class="pt-6 px-6 flex gap-3">
-        <img class="w-10 rounded-xl" src="/assets/image/premium_photo-1664474619075-644dd191935f.jpeg" alt="">
-        <p>Shahzaib</p>
-       </div>
-       <p class="p-6">this is very nice post a grate post with knowledege</p>
-      </div>
-    </div>
+   <%-include("../partial/comments.ejs")%>
     
   </div>
+
+
+
+  <script>
+    
+  let share
+
+    const openPopup = () => {
+       share = document.createElement("div")
+      share.className = "fixed absolute inset-0 bg-black bg-opacity-50 z-50 h-screen flex items-center justify-center"
+
+      share.innerHTML = `
+       <div
+      class="relative flex items-center justify-center flex-col bg-white shadow rounded-lg p-6 w-full max-w-md gap-6">
+
+      <button id="xmarkIcon"  onclick="xmarkdown()" class="fixed top-12 right-12 bg-white p-2  z-[9999]">
+        <img src="/assets/icons/xmark-solid-full.svg" alt="Close" class="h-10 w-10">
+      </button>
+
+
+      <!-- Input + copy icon -->
+      <div class=" w-full">
+        <div class="w-full gap-3 flex justify-center items-center">
+          <input id="text" class="border border-gray-900 p-2 w-80" readonly type="text" value="Shahzaib karamat">
+          <img  onclick="copyText()"  src="/assets/icons/paste-regular-full.svg" alt="copy"
+            class="w-9 h-9 p-2 rounded-xl cursor-pointer border border-gray-900">
+        </div>
+        <div class="flex justify-center items-center gap-3">
+          <div class="w-full gap-2 bg-white mt-6 shadow rounded-xl w-[600px] p-2">
+            <div class="w-full flex gap-3 p-1 mb-2">
+               <a href="#"><img src="/assets/icons/facebook-messenger-brands-solid-full.svg" alt="messinger"class="w-12 h-12"></a>
+              <a href="#"><img src="/assets/icons/linkedin-brands-solid-full.svg" alt="linksdin" class="w-12 h-12"></a>
+              <a href="#"><img src="/assets/icons/snapchat-brands-solid-full.svg" alt="snapchat" class="w-12 h-12"></a>
+              <a href="#"><img src="/assets/icons/telegram-brands-solid-full.svg" alt="telegram" class="w-12 h-12"></a>
+              <a href="#"><img src="/assets/icons/share-nodes-solid-full.svg" alt="share" class="w-12 h-12"></a>
+              <a href="#"><img src="/assets/icons/whatsapp-brands-solid-full.svg" class="w-12 h-12 " alt="WhatsApp"></a>
+              </div>
+            <div  id="extraIcons" class=" w-full flex  gap-2 min-w-max hidden">
+              <a href="#"><img src="/assets/icons/x-twitter-brands-solid-full.svg" class="w-12 h-12 "alt="Twitter/X"></a>
+              <a href="#"><img src="/assets/icons/instagram-brands-solid-full.svg" class="w-12 h-12 "alt="Instagram"></a>
+              <a href="#"><img src="/assets/icons/facebook-brands-solid-full.svg" class="w-12 h-12 " alt="Facebook"></a>
+              <a href="#"><img src="/assets/icons/google-brands-solid-full.svg" class="w-12 h-12 " alt="Google"></a>
+            </div>
+          </div>
+          <div>
+            <button onclick="toggleMoreIcons()" class="w-12 h-12 border border-gray-900 rounded-full p-1 flex justify-center items-center ">
+            <img id="arrowIcon" src="/assets/icons/arrow-up-solid-full.svg" class="w-12 h-12 transition-transform duration-300 ease-in-out "alt="Arrow">
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+     </div>
+      `
+
+      document.body.appendChild(share)
+      
+    }
+
+
+    const toggleMoreIcons = () => {
+      const extra = document.querySelector("#extraIcons")
+      const arrowIcon = document.querySelector("#arrowIcon")
+      
+      if (extra.classList.contains("hidden")) {
+        extra.classList.remove("hidden")
+        arrowIcon.style.transform = "rotate(0deg)"
+        
+      } else {
+        extra.classList.add("hidden")
+        arrowIcon.style.transform = "rotate(180deg)"
+      }
+    }
+    
+    const xmarkIcon = document.querySelector("#xmarkIcon")
+    
+    const xmarkdown = () =>{
+      if (share) {
+        document.body.removeChild(share)
+        
+      }
+    }
+
+    
+    const copyText = () =>{
+      const text = document.querySelector("#text")
+      try {
+        navigator.clipboard.writeText(text.value)  
+      } catch (error) {
+        console.log(error);
+        
+      }
+    } 
+
+
+    const heart = document.querySelector("#Heart")
+    if (heart) {
+      
+    }
+
+
+  </script>
 
 </body>
 </html>

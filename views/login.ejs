@@ -4,8 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title%></title>
- <link rel="stylesheet" href="/all.css">
+  <title>
+    <%= title%>
+  </title>
+  <link rel="stylesheet" href="/all.css">
 </head>
 
 <body>
@@ -15,10 +17,10 @@
         <h1>Login Here</h1>
       </div>
       <div class="form_Hendler">
-        <form action="/submit-login" method="POST">
+        <form action="/api/user/submit-login" method="POST">
           <div class="form_date">
-            <label for="firstName">Username or Email</label>
-            <input type="text" id="firstName" name="firstName">
+            <label for="identifier">Username or Email</label>
+            <input type="text" id="identifier" name="identifier" required>
           </div>
 
           <div class="form_date">

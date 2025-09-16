@@ -8,31 +8,27 @@
   <div class="flex max-w-6xl mx-auto py-12 gap-3">
     <div class="flex-row ">
 
-      <div class="bg-white p-6 rounded-xl shadow-lg flex gap-4 mb-4">
+      <div class="bg-white p-4 rounded-xl shadow-lg flex gap-4 mb-4">
         <div>
-          <img src="/assets/image/premium_photo-1664474619075-644dd191935f.jpeg" alt="app" width="800px" height="800px">
+          <img src="/assets/image/premium_photo-1664474619075-644dd191935f.jpeg" alt="app" width="700px" height="700px">
         </div>
         <div class="">
-          <strong class="text-3xl capitalize">
-            <h1>SentinelX the best ever app in the whole would</h1>
-          </strong>
-
-          <p class="mt-6"> SentinelX is your ultimate digital bodyguard.
+          <h1 class="text-3xl capitalize">
+            <strong>SentinelX the best ever app in the whole would</strong>
+          </h1>
+            <p>Aurther</p>
+          <p class="mt-3"> SentinelX is your ultimate digital bodyguard.
             Built for professionals, investigators, and privacy-conscious users, it offers deep device
             monitoring,
             forensic-level tracking, and real-time security alerts — without the restrictions of
             standard
             app
-            stores.
-            With SentinelX, you get full control over your device, unmatched visibility into system
-            changes,
-            and
-            protection against hidden threats.
+            stores
 
           </p>
 
           <!-- Like, Share, View Section -->
-          <div class="grid grid-cols-3 w-40 mt-6 text-gray-600 text-sm">
+          <div class="grid grid-cols-3 w-40 mt-3 text-gray-600 text-sm">
             <div class="flex items-center  cursor-pointer">
               <img src="/assets/icons/thumbs-up-regular-full.svg" alt="" class="w-5 h-5">
               <span>125</span>
@@ -43,7 +39,7 @@
             </div>
             <div id="shareBtn" onclick="openPopup()" class="flex items-center  cursor-pointer ">
               <img src="/assets/icons/share-nodes-solid-full.svg" href="/share" alt="" class="w-5 h-5">
-              <span>Share</span>
+              <span>12k</span>
               <!-- <button id="shareBtn">Share</button> -->
             </div>
           </div>
@@ -82,9 +78,9 @@
   </div>
 
   <!-- Parent Container: Add relative positioning -->
- 
 
- <!-- <div id="shareContainer" class="fixed absolute inset-0 bg-black bg-opacity-50 z-50 h-screen flex items-center justify-center">
+
+  <!-- <div id="shareContainer" class="fixed absolute inset-0 bg-black text-white bg-opacity-50 z-50 h-screen flex items-center justify-center">
     Modal Box: Set relative to position X mark absolutely inside it
     
   </div> -->
@@ -101,11 +97,11 @@
 
 
 
-  <!-- <%- include('../partial/footer.ejs')%> -->
+  <%- include('../partial/footer.ejs')%>
 
 
 
-
+  <!-- usvfuvdyuvbvyefuyefyueb -->
 
 
   <script>
@@ -141,32 +137,17 @@
     // }
 
 
-    //  const toggleMoreIcons = () =>{
-    //   const extra = document.querySelector("extraIcons")
-    //    const button = event.target
-    //   if(extra.classList.contains("hidden")){
-    //      extra.classList.remove("hidden")
-    //      button.textContent = "show more"
-    //     }else{
-    //       extra.classList.add("hidden")
-    //       button.textContent = "Less"
-    //      }
-    // }
+  let share
 
-
-
-
-    const openPopup = () =>{
-
-      
-      const share = document.createElement("div")
+    const openPopup = () => {
+       share = document.createElement("div")
       share.className = "fixed absolute inset-0 bg-black bg-opacity-50 z-50 h-screen flex items-center justify-center"
 
-      share.innerHTML=`
+      share.innerHTML = `
        <div
       class="relative flex items-center justify-center flex-col bg-white shadow rounded-lg p-6 w-full max-w-md gap-6">
 
-      <button class="fixed top-12 right-12 bg-white p-2  z-[9999] ">
+      <button id="xmarkIcon"  onclick="xmarkdown()" class="fixed top-12 right-12 bg-white p-2  z-[9999]">
         <img src="/assets/icons/xmark-solid-full.svg" alt="Close" class="h-10 w-10">
       </button>
 
@@ -174,45 +155,78 @@
       <!-- Input + copy icon -->
       <div class=" w-full">
         <div class="w-full gap-3 flex justify-center items-center">
-          <input class="border border-gray-900 p-2 w-80" readonly type="text" value="Shahzaib karamat">
-          <img src="/assets/icons/paste-regular-full.svg" alt="copy"
+          <input id="text" class="border border-gray-900 p-2 w-80" readonly type="text" value="Shahzaib karamat">
+          <img  onclick="copyText()"  src="/assets/icons/paste-regular-full.svg" alt="copy"
             class="w-9 h-9 p-2 rounded-xl cursor-pointer border border-gray-900">
         </div>
         <div class="flex justify-center items-center gap-3">
-          <div class="w-full   gap-2 bg-white mt-6 shadow rounded-xl w-[600px] overflow-x-auto">
-            <div class=" w-full flex  gap-2 min-w-max">
-              <a href="#"><img src="/assets/icons/facebook-messenger-brands-solid-full.svg" alt="messinger"
-                  class="w-12 h-12"></a>
+          <div class="w-full gap-2 bg-white mt-6 shadow rounded-xl w-[600px] p-2">
+            <div class="w-full flex gap-3 p-1 mb-2">
+               <a href="#"><img src="/assets/icons/facebook-messenger-brands-solid-full.svg" alt="messinger"class="w-12 h-12"></a>
               <a href="#"><img src="/assets/icons/linkedin-brands-solid-full.svg" alt="linksdin" class="w-12 h-12"></a>
               <a href="#"><img src="/assets/icons/snapchat-brands-solid-full.svg" alt="snapchat" class="w-12 h-12"></a>
               <a href="#"><img src="/assets/icons/telegram-brands-solid-full.svg" alt="telegram" class="w-12 h-12"></a>
               <a href="#"><img src="/assets/icons/share-nodes-solid-full.svg" alt="share" class="w-12 h-12"></a>
               <a href="#"><img src="/assets/icons/whatsapp-brands-solid-full.svg" class="w-12 h-12 " alt="WhatsApp"></a>
-              <a href="#"><img src="/assets/icons/x-twitter-brands-solid-full.svg" class="w-12 h-12 "
-                  alt="Twitter/X"></a>
-              <a href="#"><img src="/assets/icons/instagram-brands-solid-full.svg" class="w-12 h-12 "
-                  alt="Instagram"></a>
+              </div>
+            <div  id="extraIcons" class=" w-full flex  gap-2 min-w-max hidden">
+              <a href="#"><img src="/assets/icons/x-twitter-brands-solid-full.svg" class="w-12 h-12 "alt="Twitter/X"></a>
+              <a href="#"><img src="/assets/icons/instagram-brands-solid-full.svg" class="w-12 h-12 "alt="Instagram"></a>
               <a href="#"><img src="/assets/icons/facebook-brands-solid-full.svg" class="w-12 h-12 " alt="Facebook"></a>
               <a href="#"><img src="/assets/icons/google-brands-solid-full.svg" class="w-12 h-12 " alt="Google"></a>
             </div>
           </div>
           <div>
-            <button class="w-12 h-12 border border-gray-900 rounded-full p-1">
-              <img src="/assets/icons/arrow-right-solid-full.svg" alt="" class="w-10 h-10">
+            <button onclick="toggleMoreIcons()" class="w-12 h-12 border border-gray-900 rounded-full p-1 flex justify-center items-center ">
+            <img id="arrowIcon" src="/assets/icons/arrow-up-solid-full.svg" class="w-12 h-12 transition-transform duration-300 ease-in-out "alt="Arrow">
             </button>
           </div>
         </div>
 
       </div>
 
-    </div>
+     </div>
       `
 
-      // console.log(share);
+      document.body.appendChild(share)
       
-
     }
-    document.appendChild(share)
+
+
+    const toggleMoreIcons = () => {
+      const extra = document.querySelector("#extraIcons")
+      const arrowIcon = document.querySelector("#arrowIcon")
+      
+      if (extra.classList.contains("hidden")) {
+        extra.classList.remove("hidden")
+        arrowIcon.style.transform = "rotate(0deg)"
+        
+      } else {
+        extra.classList.add("hidden")
+        arrowIcon.style.transform = "rotate(180deg)"
+      }
+    }
+    
+    const xmarkIcon = document.querySelector("#xmarkIcon")
+    
+    const xmarkdown = () =>{
+      if (share) {
+        document.body.removeChild(share)
+        
+      }
+    }
+
+    
+    const copyText = () =>{
+      const text = document.querySelector("#text")
+      try {
+        navigator.clipboard.writeText(text.value)  
+      } catch (error) {
+        console.log(error);
+        
+      }
+    } 
+
 
 
 

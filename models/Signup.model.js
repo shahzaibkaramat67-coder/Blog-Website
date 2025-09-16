@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
 import { Schema } from 'mongoose';
 
 const SingupSchema = new Schema({
@@ -17,7 +18,7 @@ const SingupSchema = new Schema({
         lowercase: true,
         trim: true
     },
-    gmail: {
+    Email: {
         type: String,
         required: true,
         unique: true,
@@ -29,14 +30,25 @@ const SingupSchema = new Schema({
         required: true,
         trim: true
     },
-    role:{
-        type:String,
-        enum : ['user', 'admin'],
-        default : 'user'
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
     },
     refreshToken: {
         type: String
+    },
+    resetPasswordToken: String,
+    resetTokenExpiry: Date,
+
+    otpCode : String,
+    otpExpiry : Date,
+    isValid :{
+        type : Boolean,
+        default : false
+
     }
+
 }, { timestamps: true });
 
 
@@ -57,10 +69,10 @@ SingupSchema.methods.isCorrectPassword = async function (password) {
 SingupSchema.methods.generateAccessToken = async function () {
     return jwt.sign(
         {
-            id: this._id,
+            _id: this._id,
             firstName: this.firstName
         },
-        process.env.generateAccessToken,
+        process.env.ACCESS_TOKEN_SECRET,
         {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         }
@@ -71,15 +83,45 @@ SingupSchema.methods.generateAccessToken = async function () {
 SingupSchema.methods.generateRefreshToken = async function () {
     return jwt.sign(
         {
-            id: this.id,
+            _id: this._id,
             firstName: this.firstName
         },
-        process.env.generateRefreshToken,
+
+        process.env.REFRESH_TOKEN_SECRET,
         {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
     )
 
+};
+
+SingupSchema.methods.generateResetPasswordToken = async function () {
+
+    const resetToken = crypto.randomBytes(32).toString("hex")
+
+    this.resetPasswordToken = crypto
+        .createHash("sha256")
+        .update(resetToken)
+        .digest("hex")
+
+    this.resetTokenExpiry = Date.now() + 10 * 60 * 1000;
+
+    return resetToken
+
+}
+
+SingupSchema.methods.generateOtpCode = async function () {
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString()
+
+    this.otpCode = crypto
+        .createHash("sha256")
+        .update(otp)
+        .digest("hex")
+
+    this.otpExpiry = Date.now() + 5 * 60 * 1000;
+
+    return otp
 }
 
 const User = mongoose.model('User', SingupSchema)

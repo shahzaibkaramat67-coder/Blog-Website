@@ -1,8 +1,8 @@
-import { body } from 'express-validator';
-import ApiError from '../utils/ApiError.js';
+import { body } from "express-validator";
+import ApiError from "../utils/ApiError.js";
 
-const loginValidationRules = [
-    body('identifier')
+const forgetPasswordValidation = [
+        body('identifier')
         .exists().withMessage('Username or email is required')
         .toLowerCase()
         .isString()
@@ -16,11 +16,5 @@ const loginValidationRules = [
 
             return true;
         }),
-
-
-    body('password')
-        .exists()
-        .withMessage('Password is required')
-];
-
-export default loginValidationRules;
+]
+export default forgetPasswordValidation;

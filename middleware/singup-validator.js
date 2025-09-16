@@ -16,7 +16,7 @@ const validatorForRegistration = [
         .isLength({ min: 3, max: 10 }).withMessage('min lenght should be 5 and max lenght  10')
         .isAlphanumeric().withMessage('just use number and letters'),
 
-    body('gmail')
+    body('Email')
         .notEmpty().withMessage('gmail is required')
         .escape().withMessage('space not allowed')
         .trim().normalizeEmail()

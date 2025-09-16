@@ -1,22 +1,24 @@
 import mongoose, { Schema } from "mongoose";
 
-const profileSchema = new Schema({
+const profileSchema = new mongoose.Schema({
   
-     user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // assuming you have a separate User model
-    required: true
-  },
+  //    User: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'User', // assuming you have a separate User model
+  //   required: true
+  // },
 
-  profile_image: {
+  profile_Image: {
     type: String, // Store image URL or file path
-    default: ''   // Optional default
+    required: true,
   },
 
   full_name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    minlength: [5, "fullname contain min 5 char"],
+    maxlength: [15, "fullname contain max 15 char"]
   },
 
   username: {
@@ -24,12 +26,14 @@ const profileSchema = new Schema({
     required: true,
     unique: true,
     lowercase: true,
-    trim: true
+    trim: true,
+     minlength: [5, "fullname contain min 5 char"],
+    maxlength: [15, "fullname contain max 15 char"]
   },
 
   about: {
     type: String,
-    maxlength: 1000
+    maxlength: 500
   },
 
   email: {
@@ -68,14 +72,14 @@ const profileSchema = new Schema({
     enum: [],
     validate : {
         validator : function(value) {
-         return value.length <=8
+         return value.length <=6
         },
-      message : "you can choose 8 Categories to write blogs"  
+      message : "you can choose 6 Categories to write blogs"  
    },
     default: []
   },
 
 }, {timeseries: true})
 
-export const Profile = mongoose.Schema('Profile', profileSchema)
+export const Profile = mongoose.model('Profile', profileSchema)
 

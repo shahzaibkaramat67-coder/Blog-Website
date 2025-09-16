@@ -1,8 +1,8 @@
-import app from './index.js'
 import dotenv from "dotenv";
-import { dbConnnection } from "./db/index.js";
-// import  BLOG_DATA  from './controller/host.controller';
 dotenv.config({ path: './.env' })
+import app from './index.js'
+import { dbConnnection } from "./db/userSingup.js";
+// import  BLOG_DATA  from './controller/host.controller';
 const port = process.env.PORT || 3001;
 
 dbConnnection()

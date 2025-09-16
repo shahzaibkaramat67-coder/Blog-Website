@@ -1,8 +1,8 @@
 import express from 'express'
-import {Categorys} from '../controller/host.controller.js'
+// import {Categorys} from '../controller/hostController/host.controller.js'
 const router = express.Router()
 
-router.get('/seed', Categorys)
+// router.get('/seed', Categorys)
 
 
 // router.get('/Dashbord/:role/:page', (req, res)=>{
