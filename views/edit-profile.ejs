@@ -11,22 +11,26 @@
 </head>
 
 <body>
-    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg mt-10 p-8">
-        <h1 class="capitalize text-black text-5xl p-3 text-center mb-3 font-bold">Create your profile</h1>
-        <form action="/api/user/profile/edit-profile/profile-save" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <div class=" max-w-4xl mx-auto bg-white shadow-md rounded-lg mt-10 p-8">
+        <h1 class="capitalize text-black text-5xl p-3 text-center mb-3 font-bold"><%= profile? "Update Your Profile" : "Create Your Profile"%></h1>
+        <form action="/api/user/profile" method="POST" enctype="multipart/form-data"
+            class="space-y-6 relative">
             <!-- Profile Header -->
             <div class="flex items-center space-x-6">
                 <div class="h-24 w-24">
-                    <img id="profilePreview" src="/assets/image/premium_photo-1664474619075-644dd191935f.jpeg" alt="Profile image preview" class="object-cover shadow w-full h-full cursor-pointer rounded-full">
+                    <img id="profilePreview" src="<%= profile? profile.profile_Image : ""%>"
+                        alt="Profile image preview"
+                        class="object-cover shadow w-full h-full cursor-pointer rounded-full" >
                     <input id="profileImage" name="profile_Image" type="file" accept="image/*" class="hidden">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input type="text" name="full_name"
+                    <label class="block text-sm font-medium text-gray-700">First Name</label>
+                    <input type="text" name="full_name"  value="<%= profile? profile.full_name : ""%>"
                         class="mt-1 block w-full rounded-md border p-1.5 border-gray-300 shadow-sm focus:ring-blue-500" />
                     <label class="block mt-4 text-sm font-medium text-gray-700">@Username</label>
-                    <input type="text" name="username"
-                        class="mt-1 block w-full border p-1.5 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                    <input type="text" name="username" value="<%= profile? profile.username : ""%>"
+                 <%= profile ? "readonly disabled" : "" %>
+                        class="mt-1 block w-full border p-1.5 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"  />
                 </div>
             </div>
 
@@ -34,7 +38,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700">About Me</label>
                 <textarea name="about" rows="4"
-                    class="mt-1 border p-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    class="mt-1 border p-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"><%= profile? profile.about : "" %></textarea>
             </div>
 
             <!-- Contact Info -->
@@ -42,18 +46,20 @@
                 <div>
                     <h2 class="text-lg font-semibold text-gray-700 mb-2">Contact Info</h2>
                     <label class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" name="email"
+                    <input type="email" name="email" disabled value="<%= profile? profile.email : "" %>"
+                       <%= profile ? "readonly disabled" : "" %>
                         class="mt-1 block w-full border p-1.5 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                     <label class="block mt-4 text-sm font-medium text-gray-700">Phone</label>
-                    <input type="tel" name="phone"
+                    <input type="tel" name="phone"  value="<%= profile? profile.phone : ""%>"
                         class="mt-1 block w-full border p-1.5 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                     <label class="block mt-4 text-sm font-medium text-gray-700">Location</label>
-                    <input type="text" name="location"
+                    <input type="text" name="location"  value="<%= profile? profile.location : ""%>"
                         class="mt-1 block w-full border p-1.5 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
 
                     <!-- New Field: Website -->
                     <label class="block mt-4 text-sm font-medium text-gray-700">Website</label>
-                    <input type="url" name="website" placeholder="https://yourwebsite.com"
+                    <input type="url" name="website" placeholder="https://yourwebsite.com"  value="<%= profile? profile.website : ""%>"
+                     <%= profile ? "readonly disabled" : "" %>
                         class="mt-1 block w-full rounded-md border p-1.5 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                 </div>
 
@@ -61,29 +67,64 @@
                 <div>
                     <h2 class="text-lg font-semibold text-gray-700 mb-2">Social Profiles</h2>
                     <label class="block text-sm font-medium text-gray-700">Twitter</label>
-                    <input type="url" name="twitter" placeholder="https://twitter.com/username"
+                    <input type="url" name="twitter" placeholder="https://twitter.com/username" value="<%= profile && profile.socials? profile.socials.twitter : ""%>"
+                     <%= profile ? "readonly disabled" : "" %>
                         class="mt-1 block w-full rounded-md border p-1.5 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                     <label class="block mt-4 text-sm font-medium text-gray-700">LinkedIn</label>
-                    <input type="url" name="linkedin" placeholder="https://linkedin.com/in/username"
+                    <input type="url" name="linkedin" placeholder="https://linkedin.com/in/username" value="<%= profile && profile.socials? profile.socials.linkedin : ""%>"
+                     <%= profile ? "readonly disabled" : "" %>
                         class="mt-1 block w-full rounded-md border p-1.5 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                     <label class="block mt-4 text-sm font-medium text-gray-700">Facebook</label>
-                    <input type="url" name="facebook" placeholder="https://facebook.com/username"
+                    <input type="url" name="facebook" placeholder="https://facebook.com/username" value="<%= profile && profile.socials? profile.socials.facebook : ""%>"
+                     <%= profile ? "readonly disabled" : "" %>
                         class="mt-1 block w-full rounded-md border p-1.5 border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                 </div>
             </div>
 
             <!-- Categories (Read-only or interactive tags) -->
-            <div>
-              
-                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                    <select name="category" id="category">
-                
-                    </select>
-               
-            </div>
+            <div class="w-64">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Select Categories</label>
+                <!-- Dropdown content -->
 
-            <!-- Submit -->
-            <div class="pt-6">
+                <button id="Dropdownbtn"
+                    class="w-full px-4 py-2 text-left border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Choose Topics
+                </button>
+
+
+                <div id="DropdownManu" name="category"
+                    class="hidden fixed top-0 ml-20 p-2 absolute z-50 mt-1 w-100 h-90 bg-white dark:bg-gray-200 grid grid-cols-2 border border-gray-300 rounded-md shadow-lg overflow-y-auto">
+                    <% if (category && category.length) {%>
+                        <% category.forEach(cat=> {%>
+                            <p class="text-lg font-bold text-gray-700">
+                                <%= cat.name%>
+                            </p>
+                            <% if (cat.topics && cat.topics.length) {%>
+                                <% cat.topics.forEach(topic=> {%>
+                                    <label class="flex items-center space-x-2 ml-2">
+                                        <input type="checkbox" name="category" value="<%= topic.slug %>"  <%= profile && profile.category && profile.category.includes(topic.slug) ? "checked" : ""%>
+                                         <%= profile ? "readonly disabled" : "" %>
+                                            class="form-checkbox h-4 w-4 text-blue-600">
+                                        <span class="text-sm">
+                                            <%= topic.title %>
+                                        </span>
+                                    </label>
+                                    <% }); %>
+                                        <% } %>
+                                            <% }); %>
+                                                <%} %>
+
+                </div>
+
+
+
+
+
+
+                <!-- Submit -->
+
+            </div>
+            <div class="pt-8">
                 <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
                     Save Profile
                 </button>
@@ -96,39 +137,81 @@
 
     <script>
 
-       
 
-   
 
-        //       fetch('http://localhost:3002/api/categorys/seed', methods ='get')
-        //   .then(res => res.json())
-        //   .then(data => console.log(data))
-        //   .catch(err => console.error(err));
-         const fileFromInput = document.querySelector("#profileImage")
+
+
+
+        const fileFromInput = document.querySelector("#profileImage")
         const imageToPlace = document.querySelector("#profilePreview")
 
-        imageToPlace.addEventListener('click', ()=>{     
-             fileFromInput.click()
+        imageToPlace.addEventListener('click', () => {
+            fileFromInput.click()
         })
 
 
-        fileFromInput.addEventListener('change', (e)=>{
-          const files =  e.target.files[0]
-          if (files) {
-            const reader = new FileReader()
-            reader.onload = ()=>{
-                imageToPlace.src = reader.result;
-            } 
-            
-            reader.readAsDataURL(files)
-          }
-            
+        fileFromInput.addEventListener('change', (e) => {
+            const files = e.target.files[0]
+            if (files) {
+                const reader = new FileReader()
+                reader.onload = () => {
+                    imageToPlace.src = reader.result;
+                }
+
+                reader.readAsDataURL(files)
+            }
+
         })
 
 
-         
+        const Dropdownbtn = document.querySelector("#Dropdownbtn")
+        const DropdownManu = document.querySelector("#DropdownManu")
+
+        Dropdownbtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            DropdownManu.classList.toggle("hidden")
+
+        })
+        document.addEventListener("click", (e) => {
+            if (!Dropdownbtn.contains(e.target) && !DropdownManu.contains(e.target)) {
+                DropdownManu.classList.add("hidden")
+
+            }
+        })
+
+        // let box = []
+        const checkbox = document.querySelectorAll('[type="checkbox"]')
+        checkbox.forEach(cb => {
+            cb.addEventListener("change", () => {
+                const checked = document.querySelectorAll('[type="checkbox"]:checked')
+                // box = Array.from(checkbox).filter(c => c.checked).map(c => c.value)
+                // console.log('this is checked list', box);
+               if (checked.length >= 6) {
+               checkbox.forEach(box =>{
+                if (!box.checked) {
+                     box.disabled = true
+                }
+               })
+               }else{
+                checkbox.forEach(box =>  box.disabled = false
+                
+            )}
+
+            })
+            // alert("you can not select upto 6 category")
+
+        })
+
+
+
+
+
+
+
 
     </script>
+
+
 
 
 </body>

@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const articalSchema = new mongoose.Schema({
   
+  
      
     title: {
       type: String,
@@ -38,12 +39,16 @@ const articalSchema = new mongoose.Schema({
       default: Date.now,
     },
 
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref : 'User',
-      required: true,
-  
+    category: {
+     type : String,
+      required : true
     },
+
+     username: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Profile", // make sure this matches your Profile model name
+    required: true
+  },
 
     meta_title: {
       type: String,

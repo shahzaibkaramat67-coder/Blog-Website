@@ -158,21 +158,23 @@ const submitLoginData = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", refreshToken, option)
 
 
-    const redirection = req.headers.accept || ""
+    return res.redirect("/api/user/home")
 
-    if (redirection.includes('text/html')) {
-        return res.redirect("/api/user/home")
-    } 
-        return res
-            .status(200)
-            .json(
-                new ApiResponse(
-                    200,
-                    {
-                        existedUser: loginUser, refreshToken, accessToken
-                    }, 'login successfull'
-                )
-            )
+    // const redirection = req.headers.accept || ""
+
+    // if (redirection.includes('text/html')) {
+    //     return res.redirect("/api/user/home")
+    // } 
+    //     return res
+    //         .status(200)
+    //         .json(
+    //             new ApiResponse(
+    //                 200,
+    //                 {
+    //                     existedUser: loginUser, refreshToken, accessToken
+    //                 }, 'login successfull'
+    //             )
+    //         )
     
 
 
@@ -264,7 +266,7 @@ const updatePassword = asyncHandler(async (req, res) => {
       })
 
         if (!userExist) {
-        throw new ApiError("Invalid or expired reset huefuywebu token", 400);
+        throw new ApiError("Invalid or expired reset token", 400);
 
     }
 

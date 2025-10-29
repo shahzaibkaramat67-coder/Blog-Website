@@ -8,16 +8,16 @@ const categorySchema = new mongoose.Schema({
      trim: true,
   },
 
-  Topic: [
+  topics: [
     {
       slug: {
         type: String,
         required: true,
-        unique: true,
         lowercase: true,
         trim : true
+        
       },
-      Title :{
+      title :{
         type: String,
         required: true,
         trim: true,
@@ -34,6 +34,8 @@ const categorySchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-export const categorie = mongoose.model('categories', categorySchema);
+const Categorie = mongoose.model("Categories", categorySchema)
+export default Categorie;
+// export const Categorie = mongoose.model('categories', categorySchema);
 
 

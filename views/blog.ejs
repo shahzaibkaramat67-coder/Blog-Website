@@ -1,238 +1,181 @@
-<%- include('../partial/Header.ejs')%>
+<!-- Main Container -->
+<div class="flex flex-col md:flex-row justify-center max-w-7xl mx-auto py-12 gap-6 px-4">
 
-
-
-
-
-  <!-- Container -->
-  <div class="flex max-w-6xl mx-auto py-12 gap-3">
-    <div class="flex-row ">
-
-      <div class="bg-white p-4 rounded-xl shadow-lg flex gap-4 mb-4">
-        <div>
-          <img src="/assets/image/premium_photo-1664474619075-644dd191935f.jpeg" alt="app" width="700px" height="700px">
-        </div>
-        <div class="">
-          <h1 class="text-3xl capitalize">
-            <strong>SentinelX the best ever app in the whole would</strong>
-          </h1>
-            <p>Aurther</p>
-          <p class="mt-3"> SentinelX is your ultimate digital bodyguard.
-            Built for professionals, investigators, and privacy-conscious users, it offers deep device
-            monitoring,
-            forensic-level tracking, and real-time security alerts — without the restrictions of
-            standard
-            app
-            stores
-
-          </p>
-
-          <!-- Like, Share, View Section -->
-          <div class="grid grid-cols-3 w-40 mt-3 text-gray-600 text-sm">
-            <div class="flex items-center  cursor-pointer">
-              <img src="/assets/icons/thumbs-up-regular-full.svg" alt="" class="w-5 h-5">
-              <span>125</span>
-            </div>
-            <div class="flex items-center ">
-              <img src="/assets/icons/eye-regular-full.svg" alt="" class="w-5 h-5">
-              <span>2.3k</span>
-            </div>
-            <div id="shareBtn" onclick="openPopup()" class="flex items-center  cursor-pointer ">
-              <img src="/assets/icons/share-nodes-solid-full.svg" href="/share" alt="" class="w-5 h-5">
-              <span>12k</span>
-              <!-- <button id="shareBtn">Share</button> -->
-            </div>
-          </div>
-          <div class="flex items-center justify-end">
-            <a href="./blog-contant"
-              class="w-full bg-teal-500  ml-50 px-6 py-3 text-sm font-bold tracking-wide text-white uppercase transition-none hover:bg-teal-600 sm:mt-0 sm:w-auto sm:shrink-0">
-              Read More
-            </a>
-          </div>
-        </div>
+  <!-- Sidebar -->
+  <div class="w-full md:w-80 md:flex-shrink-0">
+    <!-- Search Bar -->
+    <form class="w-full mb-4 sticky md:static top-0 bg-white z-10" action="/blog" method="get">
+      <div class="bg-white">
+        <input class="border p-2 w-full focus:outline-none focus:ring-2 focus:ring-teal-500 rounded-md" type="text"
+          id="search" name="Search" placeholder="Search" value="<%= searchQuery %>" />
+        <input type="hidden" name="page" value="<%= currentPage %>" />
+        <hr class="border-t-2 border-gray-900 mt-2">
       </div>
+    </form>
+
+    <!-- ✅ Sidebar Search Results (Desktop Only) -->
+    <div class="hidden md:block rounded-lg p-5 text-gray-500 shadow-lg overflow-y-auto max-h-[600px]">
+      <% if (SideAllArtical && SideAllArtical.length> 0) { %>
+        <% SideAllArtical.forEach(Artical=> { %>
+          <a href="/blog/blog-contant/<%= Artical._id %>" class="flex cursor-pointer items-center shadow mb-3 gap-4 hover:bg-gray-50 p-2 rounded-lg transition">
+            <img src="<%= Artical.featured_image %>" alt="app" class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <h1 class="font-bold text-sm md:text-base">
+                <%= Artical.title %>
+              </h1>
+              <p class="text-gray-600 text-sm mt-1">
+                <%= Artical.username ? Artical.username.username : "Unknown Author" %>
+              </p>
+              <p class="text-xs md:text-sm line-clamp-2">
+                <%= Artical.short_description %>
+              </p>
+            </div>
+          </a>
+          <% }) %>
+            <% } %>
     </div>
-
-
-
-    <div class="max-w-5xl rounded-lg p-5 text-gray-500 shadow-lg">
-      <div>
-        <input class="border p-2 focus:ring:nones" type="text" id="search" placeholder="Seach">
-      </div>
-      <hr class="border-t-2 border-gray-900 mt-12">
-
-      <div class="flex mt-12 max-w-3xl gap-2">
-        <div>
-          <img src="/assets/image/premium_photo-1664474619075-644dd191935f.jpeg" alt="app" width="50px" height="50px">
-        </div>
-        <div class="">
-          <strong class="mb-4">
-            <h1>SentinelX</h1>
-          </strong>
-          <p class="mb-4 "> SentinelX is your </p>
-        </div>
-
-      </div>
-    </div>
-
   </div>
 
-  <!-- Parent Container: Add relative positioning -->
+  <!-- ✅ Blog Posts Section (Scrollable) -->
+  <div class="flex-1 relative">
 
-
-  <!-- <div id="shareContainer" class="fixed absolute inset-0 bg-black text-white bg-opacity-50 z-50 h-screen flex items-center justify-center">
-    Modal Box: Set relative to position X mark absolutely inside it
-    
-  </div> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <%- include('../partial/footer.ejs')%>
-
-
-
-  <!-- usvfuvdyuvbvyefuyefyueb -->
-
-
-  <script>
-    //             const openPopup = () => {
-    //            const popupContainer = document.createElement("div");
-    //            popupContainer.className = "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center";
-
-    //            const container = document.createElement("div");
-    //            container.className="flex items-center justify-center bg-white shadow rounded-lg p-6 gap-4";
-
-    //            popupContainer.appendChild(container);
-
-    //            const input  = document.createElement("input");
-    //            input.type = "text";
-    //            input.className = "border border-gray-300 p-2 mt-4";
-    //            input.value = "usvfuvdyuvbvyefuyefyueb";
-
-    //            const clipBtn = document.createElement("img");
-    //            clipBtn.src = "/assets/icons/paste-regular-full.svg";
-    //            clipBtn.className =  "w-9 h-9 mt-4 cursor-pointer";
-
-
-
-    //            clipBtn.onclick =async ()=>{
-    //             await navigator.clipboard.writeText(input.value)
-    //            .then(()=> alert('Copied to clipboard!'))
-    //            .catch((error) => console.error("copy failed"+ error))
-    //         }
-
-    //            container.appendChild(input);
-    //            container.appendChild(clipBtn);
-    //            document.body.appendChild(popupContainer)
-    // }
-
-
-  let share
-
-    const openPopup = () => {
-       share = document.createElement("div")
-      share.className = "fixed absolute inset-0 bg-black bg-opacity-50 z-50 h-screen flex items-center justify-center"
-
-      share.innerHTML = `
-       <div
-      class="relative flex items-center justify-center flex-col bg-white shadow rounded-lg p-6 w-full max-w-md gap-6">
-
-      <button id="xmarkIcon"  onclick="xmarkdown()" class="fixed top-12 right-12 bg-white p-2  z-[9999]">
-        <img src="/assets/icons/xmark-solid-full.svg" alt="Close" class="h-10 w-10">
-      </button>
-
-
-      <!-- Input + copy icon -->
-      <div class=" w-full">
-        <div class="w-full gap-3 flex justify-center items-center">
-          <input id="text" class="border border-gray-900 p-2 w-80" readonly type="text" value="Shahzaib karamat">
-          <img  onclick="copyText()"  src="/assets/icons/paste-regular-full.svg" alt="copy"
-            class="w-9 h-9 p-2 rounded-xl cursor-pointer border border-gray-900">
-        </div>
-        <div class="flex justify-center items-center gap-3">
-          <div class="w-full gap-2 bg-white mt-6 shadow rounded-xl w-[600px] p-2">
-            <div class="w-full flex gap-3 p-1 mb-2">
-               <a href="#"><img src="/assets/icons/facebook-messenger-brands-solid-full.svg" alt="messinger"class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/linkedin-brands-solid-full.svg" alt="linksdin" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/snapchat-brands-solid-full.svg" alt="snapchat" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/telegram-brands-solid-full.svg" alt="telegram" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/share-nodes-solid-full.svg" alt="share" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/whatsapp-brands-solid-full.svg" class="w-12 h-12 " alt="WhatsApp"></a>
+    <!-- Scrollable container -->
+    <div class="overflow-y-auto max-h-[80vh] pr-2">
+      <!-- ✅ Mobile: Search results -->
+      <div class="<%= (searchQuery && SideAllArtical.length > 0) ? 'block md:hidden' : 'hidden' %>">
+        <% if (SideAllArtical && SideAllArtical.length> 0) { %>
+          <% SideAllArtical.forEach(Artical=> { %>
+            <div
+              class="bg-white p-4 rounded-xl shadow-lg flex flex-col sm:flex-row gap-4 mb-4 hover:shadow-xl transition">
+              <div class="flex-shrink-0">
+                <img src="<%= Artical.featured_image %>" alt="app" class="w-full sm:w-72 rounded-lg object-cover">
               </div>
-            <div  id="extraIcons" class=" w-full flex  gap-2 min-w-max hidden">
-              <a href="#"><img src="/assets/icons/x-twitter-brands-solid-full.svg" class="w-12 h-12 "alt="Twitter/X"></a>
-              <a href="#"><img src="/assets/icons/instagram-brands-solid-full.svg" class="w-12 h-12 "alt="Instagram"></a>
-              <a href="#"><img src="/assets/icons/facebook-brands-solid-full.svg" class="w-12 h-12 " alt="Facebook"></a>
-              <a href="#"><img src="/assets/icons/google-brands-solid-full.svg" class="w-12 h-12 " alt="Google"></a>
+              <div class="flex flex-col justify-between w-full">
+                <div>
+                  <h1 class="text-xl sm:text-2xl capitalize font-bold">
+                    <%= Artical.title %>
+                  </h1>
+                  <p class="text-gray-600 text-sm mt-1">
+                    <%= Artical.username ? Artical.username.username : "Unknown Author" %>
+                  </p>
+                  <p class="mt-3 text-gray-700 text-sm sm:text-base">
+                    <%= Artical.short_description %>
+                  </p>
+                </div>
+                <div class="flex justify-end mt-3">
+                  <a href="/blog/blog-contant/<%= Artical._id %>"
+                    class="bg-teal-500 px-4 py-2 sm:px-6 sm:py-3 text-white font-bold uppercase rounded-lg hover:bg-teal-600 transition">
+                    Read More
+                  </a>
+                </div>
+              </div>
             </div>
-          </div>
-          <div>
-            <button onclick="toggleMoreIcons()" class="w-12 h-12 border border-gray-900 rounded-full p-1 flex justify-center items-center ">
-            <img id="arrowIcon" src="/assets/icons/arrow-up-solid-full.svg" class="w-12 h-12 transition-transform duration-300 ease-in-out "alt="Arrow">
-            </button>
-          </div>
-        </div>
-
+            <% }) %>
+              <% } else { %>
+                <p class="text-center text-gray-500 mt-10 text-lg">No search results found.</p>
+                <% } %>
       </div>
 
-     </div>
-      `
+      <!-- ✅ Desktop or normal blog posts -->
+      <div class="<%= (searchQuery && SideAllArtical.length > 0) ? 'hidden md:block' : 'block' %>">
+        <% if (allArtical && allArtical.length> 0) { %>
+          <% allArtical.forEach(Artical=> { %>
+            <div
+              class="bg-white p-4 rounded-xl shadow-lg flex flex-col sm:flex-row gap-4 mb-4 hover:shadow-xl transition">
+              <div class="flex-shrink-0">
+                <img src="<%= Artical.featured_image %>" alt="app" class="w-full sm:w-72 rounded-lg object-cover">
+              </div>
+              <div class="flex flex-col justify-between w-full">
+                <div>
+                  <h1 class="text-xl sm:text-2xl capitalize font-bold">
+                    <%= Artical.title %>
+                  </h1>
+                  <p class="text-gray-600 text-sm mt-1">
+                    <%= Artical.username ? Artical.username.username : "Unknown Author" %>
+                  </p>
+                  <p class="mt-3 text-gray-700 text-sm sm:text-base">
+                    <%= Artical.short_description %>
+                  </p>
+                </div>
 
-      document.body.appendChild(share)
-      
-    }
+                <div class="grid grid-cols-3 w-40 mt-3 text-gray-600 text-sm">
+                  <div class="flex items-center cursor-pointer gap-1">
+                    <img src="/assets/icons/thumbs-up-regular-full.svg" class="w-5 h-5">
+                    <span>
+                      <%= Artical.like.length %>
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <img src="/assets/icons/eye-regular-full.svg" class="w-5 h-5">
+                    <span>
+                      <%= Artical.views%>
+                    </span>
+                  </div>
+                  <div class="flex items-center cursor-pointer gap-1">
+                    <img src="/assets/icons/share-nodes-solid-full.svg" class="w-5 h-5">
+                    <span>0</span>
+                  </div>
+                </div>
+
+                <div class="flex justify-end mt-3">
+                  <a href="/blog/blog-contant/<%= Artical._id %>"
+                    class="bg-teal-500 px-4 py-2 sm:px-6 sm:py-3 text-white font-bold uppercase rounded-lg hover:bg-teal-600 transition">
+                    Read More
+                  </a>
+                </div>
+              </div>
+            </div>
+            <% }) %>
+              <% } else { %>
+                <p class="text-center text-gray-500 mt-10 text-lg">No articles found.</p>
+                <% } %>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex justify-center mt-10 space-x-2 flex-wrap">
+  <!-- Previous Page -->
+  <% if (currentPage > 1) { %>
+  <a 
+  href="<%= topicSlug 
+    ? '/topics/' + topicSlug + '?page=' + (currentPage - 1)
+    : '/blog/?page=' + (currentPage - 1) + (searchQuery ? '&Search=' + encodeURIComponent(searchQuery) : '') %>"
+  class="cursor-pointer px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+>
+Previous
+</a>
+
+  <% } %>
+
+  <!-- Page Numbers -->
+  <% for (let i = 1; i <= totalPages; i++) { %>
+    <a href="<%= (typeof topicSlug !== 'undefined' && topicSlug) 
+      ? '/topics/' + topicSlug + '?page=' + i 
+      : '/blog/?page=' + i + (searchQuery ? '&Search=' + encodeURIComponent(searchQuery) : '') %>
+"
+       class="w-8 h-8 flex items-center justify-center rounded-lg
+              <%= i === currentPage ? 'bg-teal-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' %>
+              transition font-semibold shadow-md">
+      <%= i %>
+    </a>
+  <% } %>
+
+  <!-- Next Page -->
+  <% if (currentPage < totalPages) { %>
+  <a href="<%= topicSlug 
+    ? '/topics/' + topicSlug + '?page=' + (currentPage + 1)
+    : '/blog/?page=' + (currentPage + 1) + (searchQuery ? '&Search=' + encodeURIComponent(searchQuery) : '') %>"
+  class="cursor-pointer px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+>
+  Next
+</a>
 
 
-    const toggleMoreIcons = () => {
-      const extra = document.querySelector("#extraIcons")
-      const arrowIcon = document.querySelector("#arrowIcon")
-      
-      if (extra.classList.contains("hidden")) {
-        extra.classList.remove("hidden")
-        arrowIcon.style.transform = "rotate(0deg)"
-        
-      } else {
-        extra.classList.add("hidden")
-        arrowIcon.style.transform = "rotate(180deg)"
-      }
-    }
-    
-    const xmarkIcon = document.querySelector("#xmarkIcon")
-    
-    const xmarkdown = () =>{
-      if (share) {
-        document.body.removeChild(share)
-        
-      }
-    }
+  <% } %>
 
-    
-    const copyText = () =>{
-      const text = document.querySelector("#text")
-      try {
-        navigator.clipboard.writeText(text.value)  
-      } catch (error) {
-        console.log(error);
-        
-      }
-    } 
+</div>
+    </div>
+  </div>
+</div>
 
 
 
-
-  </script>
-
-
-  </body>
-
-  </html>

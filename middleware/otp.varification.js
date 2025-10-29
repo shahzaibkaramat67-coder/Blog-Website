@@ -7,8 +7,6 @@ import crypto from "crypto"
 const verifiOtp = asyncHandler(async(req, res)=>{
 
    const {otp, Email} = req.body;
-   console.log('this is otp',req.otp);
-   console.log('this is Email',req.Email);
    
    if (!(otp && Email)) {
     throw new ApiError("otp not found", 404);

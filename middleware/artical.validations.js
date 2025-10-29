@@ -31,10 +31,10 @@ const articalValidation = [
         .notEmpty().withMessage("title is required")
         .matches(/^[A-Za-z0-9 -]+$/),
 
-    body("author")
-        .trim()
-        .notEmpty().withMessage("title is required")
-        .matches(/^[A-Za-z0-9 _-]+$/),
+    // body("author")
+    //     .trim()
+    //     .notEmpty().withMessage("title is required")
+    //     .matches(/^[A-Za-z0-9 _-]+$/),
 
     body("meta_title")
         .trim()

@@ -1,152 +1,45 @@
-<%-include("../partial/Header.ejs")%>
+<div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg mt-8 p-6">
 
+  <!-- Title -->
+  <h1 class="text-3xl font-bold mb-2">
+    <%= artical.title %>
+  </h1>
+  <p class="text-gray-500 text-sm mb-4">By <span class="font-semibold">
+      <% if(artical.username) { %>
+        <%= artical.username.username%>
+          <% }else %>
 
-  <!-- Blog Container -->
-  <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg mt-8 p-6">
-    
-    <!-- Title -->
-    <h1 class="text-3xl font-bold mb-2">5 Reasons Why Our Cybersecurity App is the Ultimate Shield for Your Device</h1>
-    <p class="text-gray-500 text-sm mb-4">By <span class="font-semibold">Shahzaib Karamat</span> | August 13, 2025</p>
-    
-    <!-- Featured Image -->
-    <img src="/assets/image/images.jpeg" alt="Cybersecurity Shield" class=" rounded-lg mb-6 w-full h-20%" >
-    
-    <!-- Blog Content -->
-    <div class="prose max-w-none mb-6">
-      <p>In today’s hyper-connected world, your smartphone is a goldmine for hackers. From your personal photos to your banking information, everything is stored in one place. That’s why <strong>SentinelX</strong> was designed — to give you total control and peace of mind.</p>
-      
-      <h2>1. Real-Time Threat Detection</h2>
-      <p>The app continuously monitors your device for suspicious activity — including malicious apps, unauthorized settings changes, and dangerous network connections.</p>
-      
-      <h2>2. Deep System Monitoring</h2>
-      <p>Unlike regular antivirus tools, our app tracks hidden processes, suspicious file changes, and system setting modifications, even on rooted devices.</p>
-      
-      <h2>3. Message & App Activity Logging</h2>
-      <p>You can keep a secure log of sent/deleted messages, app usage history, and installation attempts — essential for both personal security and forensic investigations.</p>
-      
-      <h2>4. Cloud-Synced Security Logs</h2>
-      <p>All monitoring data can be securely synced to your private cloud account, so even if your device is lost or stolen, you don’t lose the evidence.</p>
-      
-      <h2>5. Stealth Mode for Ultimate Privacy</h2>
-      <p>Run the app silently in the background — invisible to intruders but always protecting you.</p>
-    </div>
-    
-    <!-- Like & Share -->
-    <div class="flex items-center justify-between border-t border-b py-3 mb-6">
-      <button class="flex items-center gap-2  text-blue-600 hover:text-blue-800">
-       <span id="Heart"> ❤ </span> Like
-      </button>
-      <div class="flex gap-3">
-        <a onclick="openPopup()" href="#" class="text-blue-500 hover:text-blue-700">🔗 Share</a>
-      </div>
-    </div>
-    
-   <%-include("../partial/comments.ejs")%>
-    
+    </span> |
+    <%= new Date(artical.publish_date).toLocaleDateString("en-US", { year: "numeric" , day: "numeric" , month: "long" })
+      %>
+  </p>
+
+  <!-- Featured Image -->
+  <img src="<%= artical.featured_image  %>" alt="Cybersecurity Shield" class=" rounded-lg mb-6 w-full h-15%">
+
+  <!-- Blog Content -->
+  <div class="prose max-w-none mb-6">
+    <%= artical.content %>
   </div>
 
+  <!-- Like & Share -->
+  <form action="/blog/blog-contant/like/<%= artical._id%>" method="post"
+    class="flex items-center justify-between border-t border-b py-3 mb-6">
+    <button type="submit" class="flex items-center gap-2  text-blue-600 hover:text-blue-800">
+     <% if (currentUser && artical.like.includes(currentUser._id)) { %>
+      <span id="heart">❤️</span> Unlike
+    <% } else { %>
+      <span id="heart">🤍</span> Like
+    <% } %>
 
 
-  <script>
-    
-  let share
-
-    const openPopup = () => {
-       share = document.createElement("div")
-      share.className = "fixed absolute inset-0 bg-black bg-opacity-50 z-50 h-screen flex items-center justify-center"
-
-      share.innerHTML = `
-       <div
-      class="relative flex items-center justify-center flex-col bg-white shadow rounded-lg p-6 w-full max-w-md gap-6">
-
-      <button id="xmarkIcon"  onclick="xmarkdown()" class="fixed top-12 right-12 bg-white p-2  z-[9999]">
-        <img src="/assets/icons/xmark-solid-full.svg" alt="Close" class="h-10 w-10">
-      </button>
+    </button>
+    <div class="flex gap-3">
+      <a onclick="openPopup()" href="#" class="text-blue-500 hover:text-blue-700">🔗 Share</a>
+    </div>
+  </form>
 
 
-      <!-- Input + copy icon -->
-      <div class=" w-full">
-        <div class="w-full gap-3 flex justify-center items-center">
-          <input id="text" class="border border-gray-900 p-2 w-80" readonly type="text" value="Shahzaib karamat">
-          <img  onclick="copyText()"  src="/assets/icons/paste-regular-full.svg" alt="copy"
-            class="w-9 h-9 p-2 rounded-xl cursor-pointer border border-gray-900">
-        </div>
-        <div class="flex justify-center items-center gap-3">
-          <div class="w-full gap-2 bg-white mt-6 shadow rounded-xl w-[600px] p-2">
-            <div class="w-full flex gap-3 p-1 mb-2">
-               <a href="#"><img src="/assets/icons/facebook-messenger-brands-solid-full.svg" alt="messinger"class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/linkedin-brands-solid-full.svg" alt="linksdin" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/snapchat-brands-solid-full.svg" alt="snapchat" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/telegram-brands-solid-full.svg" alt="telegram" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/share-nodes-solid-full.svg" alt="share" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/whatsapp-brands-solid-full.svg" class="w-12 h-12 " alt="WhatsApp"></a>
-              </div>
-            <div  id="extraIcons" class=" w-full flex  gap-2 min-w-max hidden">
-              <a href="#"><img src="/assets/icons/x-twitter-brands-solid-full.svg" class="w-12 h-12 "alt="Twitter/X"></a>
-              <a href="#"><img src="/assets/icons/instagram-brands-solid-full.svg" class="w-12 h-12 "alt="Instagram"></a>
-              <a href="#"><img src="/assets/icons/facebook-brands-solid-full.svg" class="w-12 h-12 " alt="Facebook"></a>
-              <a href="#"><img src="/assets/icons/google-brands-solid-full.svg" class="w-12 h-12 " alt="Google"></a>
-            </div>
-          </div>
-          <div>
-            <button onclick="toggleMoreIcons()" class="w-12 h-12 border border-gray-900 rounded-full p-1 flex justify-center items-center ">
-            <img id="arrowIcon" src="/assets/icons/arrow-up-solid-full.svg" class="w-12 h-12 transition-transform duration-300 ease-in-out "alt="Arrow">
-            </button>
-          </div>
-        </div>
 
-      </div>
-
-     </div>
-      `
-
-      document.body.appendChild(share)
-      
-    }
-
-
-    const toggleMoreIcons = () => {
-      const extra = document.querySelector("#extraIcons")
-      const arrowIcon = document.querySelector("#arrowIcon")
-      
-      if (extra.classList.contains("hidden")) {
-        extra.classList.remove("hidden")
-        arrowIcon.style.transform = "rotate(0deg)"
-        
-      } else {
-        extra.classList.add("hidden")
-        arrowIcon.style.transform = "rotate(180deg)"
-      }
-    }
-    
-    const xmarkIcon = document.querySelector("#xmarkIcon")
-    
-    const xmarkdown = () =>{
-      if (share) {
-        document.body.removeChild(share)
-        
-      }
-    }
-
-    
-    const copyText = () =>{
-      const text = document.querySelector("#text")
-      try {
-        navigator.clipboard.writeText(text.value)  
-      } catch (error) {
-        console.log(error);
-        
-      }
-    } 
-
-
-    const heart = document.querySelector("#Heart")
-    if (heart) {
-      
-    }
-
-
-  </script>
-
-</body>
-</html>
+</div>
+<%- include("../partial/comments.ejs")%>

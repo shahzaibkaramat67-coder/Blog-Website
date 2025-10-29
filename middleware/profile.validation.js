@@ -13,6 +13,7 @@ const profileValivation = [
         .isAlphanumeric().withMessage('just use number and letters'),
 
     body('username')
+        .optional({ checkFalsy : true })
         .notEmpty().withMessage('username is required')
         .matches(/^\S*$/).withMessage("No spaces allowed")
         .trim()
@@ -25,6 +26,7 @@ const profileValivation = [
         .isLength({ min: 5, max: 500 }).withMessage('min lenght should be 5 and max lenght 500'),
 
     body('email')
+        .optional({checkFalsy : true})
         .notEmpty().withMessage('gmail is required')
         .matches(/^\S*$/).withMessage("No spaces allowed")
         .trim().normalizeEmail()

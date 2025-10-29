@@ -1,109 +1,119 @@
-<%-include("../partial/Header.ejs")%>
+<div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg mt-10 p-8">
+  <div class="flex items-center space-x-6">
+    <img class="h-24 w-24 rounded-full object-cover" src=<%=profile.profile_Image%>
+    alt="Profile picture" />
+    <div>
+      <h1 class="text-2xl  text-gray-900">
+        <%=profile.full_name%>
+      </h1>
+      <p class="text-gray-600">
+        <%=profile.username%>
+      </p>
+    </div>
+  </div>
 
-  <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg mt-10 p-8">
-    <div class="flex items-center space-x-6">
-      <img class="h-24 w-24 rounded-full object-cover" src=<%=profile.profile_Image%>
-        alt="Profile picture" />
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900"><%=profile.full_name%></h1>
-        <p class="text-gray-600"> <%=profile.username%></p>
-        <p class="text-gray-500 mt-2 max-w-xl">
-         <%=profile.about%>
-        </p>
-      </div>
+  <div class="my-4">
+    <div  class="text-lg font-semibold text-gray-700 mb-2">
+      <h1>Introduction</h1>
+    </div>
+    <div class="p-2">
+      <p class="">
+        <%=profile.about%>
+      </p>
+    </div>
+  </div>
+
+  
+  <div>
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">Categories</h2>
+    <div class="grid grid-cols-2 gap-3 text-gray-700">
+      <% profile.category.forEach(cat=> {%>
+        <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition"
+          href="profile/postsAnalytics">
+          <%= cat%>
+        </a>
+        <% }); %>
+    </div>
+  </div>
+
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-700 mb-2">Contact Info</h2>
+      <ul class="text-gray-600 space-y-1">
+        <li><strong>Email:</strong>
+          <%=profile.email%>
+        </li>
+        <li><strong>Phone:</strong>
+          <%=profile.phone%>
+        </li>
+        <li><strong>Location:</strong>
+          <%=profile.location%>
+        </li>
+      </ul>
     </div>
 
     <div>
-      <h2 class="text-lg font-semibold text-gray-700 mb-2">Categories</h2>
-      <div class="grid grid-cols-2 gap-3 text-gray-700">
-        <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition"
-          href="profile/postsAnalytics">Technology</a>
-        <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition"
-          href="profile/postsAnalytics">Cybersecurity</a>
-        <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition"
-          href="profile/postsAnalytics">AI & ML</a>
-        <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition"
-          href="profile/postsAnalytics">Cloud Computing</a>
-        <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition"
-          href="profile/postsAnalytics">Programming</a>
-        <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition"
-          href="profile/postsAnalytics">Programming</a>
-        <!-- <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition" href="profile/Artical" >Technology</a>
-    <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition" href="profile/Artical">Cybersecurity</a>
-    <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition" href="profile/Artical">AI & ML</a>
-    <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition" href="profile/Artical">Cloud Computing</a>
-    <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition" href="profile/Artical">Programming</a>
-    <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition" href="profile/Artical">Programming</a> -->
-      </div>
+      <h2 class="text-lg font-semibold text-gray-700 mb-2">Social Profiles</h2>
+      <ul class="space-y-2">
+        <li>
+          <a href="#" class="text-blue-600 hover:underline flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M22.46 6c-.77.35-1.6.59-2.46.7a4.3 4.3 0 001.88-2.37 8.59 8.59 0 01-2.72 1.04 4.27 4.27 0 00-7.29 3.9A12.13 12.13 0 013 4.89a4.27 4.27 0 001.32 5.7 4.23 4.23 0 01-1.93-.53v.05a4.27 4.27 0 003.42 4.18 4.27 4.27 0 01-1.92.07 4.27 4.27 0 003.98 2.97A8.57 8.57 0 012 19.54 12.07 12.07 0 008.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18-.01-.35-.02-.53A8.35 8.35 0 0022.46 6z" />
+            </svg>
+            <span>
+              <%=profile.socials.twitter%>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="text-blue-800 hover:underline flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.75 0 5-2.24 5-5v-14c0-2.76-2.25-5-5-5zm-11.54 20h-2.92v-9.5h2.92v9.5zm-1.46-10.88c-.95 0-1.72-.77-1.72-1.72s.77-1.72 1.72-1.72 1.72.77 1.72 1.72-.77 1.72-1.72 1.72zm12.54 10.88h-2.92v-5.05c0-1.21-.02-2.77-1.69-2.77-1.69 0-1.95 1.32-1.95 2.68v5.14h-2.92v-9.5h2.8v1.3h.04c.39-.73 1.34-1.5 2.75-1.5 2.94 0 3.49 1.94 3.49 4.47v5.23z" />
+            </svg>
+            <span>
+              <%=profile.socials.linkedin%>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="text-gray-700 hover:underline flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 2.04c-5.5 0-9.96 4.46-9.96 9.96 0 4.41 3.6 8.04 8 8.88v-6.28h-2.4v-2.6h2.4v-2c0-2.32 1.4-3.6 3.5-3.6 1 0 1.86.08 2.12.11v2.47h-1.46c-1.15 0-1.37.55-1.37 1.34v1.68h2.74l-.36 2.6h-2.38v6.28c4.4-.84 8-4.47 8-8.88 0-5.5-4.46-9.96-9.96-9.96z" />
+            </svg>
+            <span>
+              <%=profile.socials.facebook%>
+            </span>
+          </a>
+        </li>
+      </ul>
     </div>
+  </div>
 
-
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <h2 class="text-lg font-semibold text-gray-700 mb-2">Contact Info</h2>
-        <ul class="text-gray-600 space-y-1">
-          <li><strong>Email:</strong>  <%=profile.email%></li>
-          <li><strong>Phone:</strong>  <%=profile.phone%></li>
-          <li><strong>Location:</strong>  <%=profile.location%></li>
-        </ul>
-      </div>
-
-      <div>
-        <h2 class="text-lg font-semibold text-gray-700 mb-2">Social Profiles</h2>
-        <ul class="space-y-2">
-          <li>
-            <a href="#" class="text-blue-600 hover:underline flex items-center space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M22.46 6c-.77.35-1.6.59-2.46.7a4.3 4.3 0 001.88-2.37 8.59 8.59 0 01-2.72 1.04 4.27 4.27 0 00-7.29 3.9A12.13 12.13 0 013 4.89a4.27 4.27 0 001.32 5.7 4.23 4.23 0 01-1.93-.53v.05a4.27 4.27 0 003.42 4.18 4.27 4.27 0 01-1.92.07 4.27 4.27 0 003.98 2.97A8.57 8.57 0 012 19.54 12.07 12.07 0 008.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18-.01-.35-.02-.53A8.35 8.35 0 0022.46 6z" />
-              </svg>
-              <span> <%=profile.socials.twitter%></span>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="text-blue-800 hover:underline flex items-center space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.75 0 5-2.24 5-5v-14c0-2.76-2.25-5-5-5zm-11.54 20h-2.92v-9.5h2.92v9.5zm-1.46-10.88c-.95 0-1.72-.77-1.72-1.72s.77-1.72 1.72-1.72 1.72.77 1.72 1.72-.77 1.72-1.72 1.72zm12.54 10.88h-2.92v-5.05c0-1.21-.02-2.77-1.69-2.77-1.69 0-1.95 1.32-1.95 2.68v5.14h-2.92v-9.5h2.8v1.3h.04c.39-.73 1.34-1.5 2.75-1.5 2.94 0 3.49 1.94 3.49 4.47v5.23z" />
-              </svg>
-             <span> <%=profile.socials.linkedin%></span>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="text-gray-700 hover:underline flex items-center space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M12 2.04c-5.5 0-9.96 4.46-9.96 9.96 0 4.41 3.6 8.04 8 8.88v-6.28h-2.4v-2.6h2.4v-2c0-2.32 1.4-3.6 3.5-3.6 1 0 1.86.08 2.12.11v2.47h-1.46c-1.15 0-1.37.55-1.37 1.34v1.68h2.74l-.36 2.6h-2.38v6.28c4.4-.84 8-4.47 8-8.88 0-5.5-4.46-9.96-9.96-9.96z" />
-              </svg>
-             <span> <%=profile.socials.facebook%></span>
-            </a>
-          </li>
-        </ul>
-      </div>
+  <div class="flex items-center justify-between">
+    <div class="mt-8">
+      <a href="/api/user/profile?edit=true" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Edit
+        Profile</a>
     </div>
-
-    <div class="flex items-center justify-between">
-      <div class="mt-8">
-        <a href="./profile/edit-profile"
-          class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Edit Profile</a>
-      </div>
-      <div class="mt-8">
-        <a href="./profile/Dashbord/EarningPage"
-          class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Dashbord</a>
-      </div>
+    <div class="mt-8">
+      <a href="./profile/Dashbord/my-Dashboard"
+        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Dashbord</a>
     </div>
+  </div>
   </div>
 
 
 
 
-  <%-include("../partial/footer.ejs")%>
 
 
 
 
 
 
+  <!-- 
 
 
     <script>
@@ -127,17 +137,13 @@
         }).catch(error => console.error(error))
 
 
-    </script>
+    </script> -->
 
 
 
-    </body>
+  </body>
 
-    </html>
-
-
-
-
+  </html>
 
 
 
@@ -164,7 +170,11 @@
 
 
 
-    <!-- 
+
+
+
+
+  <!-- 
  <li class="relative group">
                 <a class="text-gray-500 transition hover:text-gray-700 dark:text-white dark:hover:text-white" href="#">
                   Blogs

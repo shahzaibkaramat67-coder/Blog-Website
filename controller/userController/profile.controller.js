@@ -4,60 +4,144 @@ import ApiResponse from '../../utils/ApiResponse.js';
 import { Profile } from '../../models/profile.model.js';
 import uploadOnCloudinary from '../../utils/cloudinary.js';
 import { validationResult } from 'express-validator';
+import User from '../../models/Signup.model.js';
+import Categorie from '../../models/categorie.model.js';
+import { title } from 'process';
+import { log } from 'console';
 // import { Profile } from '../../models/profile.model.js';
 
 // profile controller 
 
-const createProfile = asyncHandler(async (req, res) => {
-   const { full_name, username, about, email, phone, location, website, category } = req.body
-   const socials = {
-      twitter  : req.body.twitter,
-      linkedin  : req.body.linkedin,
-      facebook  : req.body.facebook,
+const createORUpdateProfile = asyncHandler(async (req, res) => {
+   const { full_name, username, about, email, phone, location, website, twitter, linkedin, facebook } = req.body
+
+   let { category } = req.body;
+   if (!Array.isArray(category)) {
+      category = category ? [category] : []
    }
    //  const {profile_image} = req.file?.path
    const imageUrl = await uploadOnCloudinary(req.file?.path)
 
    const result = validationResult(req)
    if (!result.isEmpty()) {
-  console.log("❌ Validation errors:", result.array());  // <--- log all errors
+      console.log(" Validation errors:", result.array());  // <--- log all errors
       const errorMessage = result.array().map(errors => ({
-         field: errors.param,  
+         field: errors.param,
          msg: errors.msg
       }));
       throw new ApiError("validation failed", 400, errorMessage);
 
    }
+   let profile
+   profile = await Profile.findOne({ User: req.user._id })
 
-   const profile = await Profile.create({
-      User: req.user._id,
-      full_name,
-      username,
-      about,
-      email,
-      phone,
-      location,
-      website,
-      socials,
-      category,
-      profile_Image: imageUrl.secure_url
-   })
+   if (!profile) {
+      profile = await Profile.create({
+         User: req.user._id,
+         full_name,
+         username,
+         about,
+         email,
+         phone,
+         location,
+         website,
+         socials: { twitter, linkedin, facebook },
+         category,
+         profile_Image: imageUrl.secure_url || ""
+      })
 
-     const redirectPage = req.headers.accept || "";
-   if (redirectPage.includes('text/html')) {
-      return res.redirect("/api/user/profile")
+      // await profile.save()
+      return res.render('Profile', { title: 'profile', profile })
+   } else {
+      if (req.file) {
+       let  imageUrl =await uploadOnCloudinary(req.file.path)
+         // console.log("this is of", imageUrl);
+         
+         if (!imageUrl) throw new ApiError("image uploaded is fail", 500);
+         
+      }
+
+      const updateprofile = {
+         full_name,
+         about,
+         phone,
+         location,
+         profile_Image : imageUrl? imageUrl.secure_url : profile.profile_Image
+         
+      }
+      profile = await Profile.findOneAndUpdate(
+         { User: req.user._id },
+         { $set: updateprofile },
+         { new: true }
+      )
    }
 
+   return res.render('Profile', { title: 'profile', profile })
 
 
-   if (!profile) return ApiError('something went wrong', 400)
-
-
-   return res
-      .status(201)
-      .json(new ApiResponse("prodile data add successfull", 200, profile))
 
 
 })
 
-export default createProfile
+
+
+const getProfileForUpdate = asyncHandler(async (req, res) => {
+   const profile = await Profile.findOne({ User: req.user._id })
+   if (req.query.edit === "true") {
+    return res.render("edit-profile", { layout : false, title: "Edit Profile", profile });
+  }
+   if (profile) {
+      res.render("Profile", { title: "Profile", profile })
+   } else {
+      res.render("edit-profile", {
+       
+         title: "edit-profile",
+         profile,
+         // category: await Categorie.find()
+      })
+   }
+
+
+})
+
+
+// const ProfileUpdate = asyncHandler(async (req, res) => {
+
+//    //  const {full_name, username, about, email, phone, location, website, twitter, linkedin, facebook,} = req.body
+//    const { full_name, username } = req.body
+//    if (req.file.path) {
+//       profile.profile_Image = req.file.path
+//    }
+//    const profile = await Profile.findByIdAndUpdate(
+//       req.params.id,
+//       {
+//          $set: {
+//             full_name,
+//             username,
+//             // about,
+//             // email,
+//             // phone,
+//             // location,
+//             // website,
+//             // twitter,
+//             // linkedin,
+//             // facebook
+//          }
+//       },
+//       { new: true }
+//    )
+
+//    res.redirect(`/api/user/profile/${req.params.id}`)
+
+// })
+
+
+
+
+
+export {
+   createORUpdateProfile,
+   getProfileForUpdate,
+   // ProfileUpdate
+}
+

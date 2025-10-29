@@ -11,13 +11,16 @@ try {
  
     
     if(!token){
-        throw new ApiError(401,'no token found')
+    //    res.redirect('/api/user/login')
+    throw new ApiError("the noken is not found", 404);
+    
     }
     
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)    
 
-    const user = await User.findById(decodedToken._id).select('-password -refreshToken')
+    const user = await User.findById(decodedToken.id).select('-password -refreshToken')
 
+    console.log("this is user ",user);
     
     
     if (!user) {

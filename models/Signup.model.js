@@ -3,8 +3,16 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import { Schema } from 'mongoose';
+// import { types } from 'util';
 
 const SingupSchema = new Schema({
+    GoogleId: {
+        type: String,
+        required: false,
+        unique: true,
+        sparse : true,
+
+    },
     firstName: {
         type: String,
         required: true,
@@ -14,9 +22,12 @@ const SingupSchema = new Schema({
     },
     lastName: {
         type: String,
-        required: true,
         lowercase: true,
-        trim: true
+        trim: true,
+        required: function () {
+            return !this.GoogleId;
+        },
+       
     },
     Email: {
         type: String,
@@ -27,8 +38,10 @@ const SingupSchema = new Schema({
     },
     password: {
         type: String,
-        required: true,
-        trim: true
+        trim: true,
+       required: function () {
+            return !this.GoogleId; // password only required if not Google user
+        }
     },
     role: {
         type: String,
@@ -41,11 +54,11 @@ const SingupSchema = new Schema({
     resetPasswordToken: String,
     resetTokenExpiry: Date,
 
-    otpCode : String,
-    otpExpiry : Date,
-    isValid :{
-        type : Boolean,
-        default : false
+    otpCode: String,
+    otpExpiry: Date,
+    isValid: {
+        type: Boolean,
+        default: false
 
     }
 
@@ -69,7 +82,7 @@ SingupSchema.methods.isCorrectPassword = async function (password) {
 SingupSchema.methods.generateAccessToken = async function () {
     return jwt.sign(
         {
-            _id: this._id,
+            id: this._id,
             firstName: this.firstName
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -83,7 +96,7 @@ SingupSchema.methods.generateAccessToken = async function () {
 SingupSchema.methods.generateRefreshToken = async function () {
     return jwt.sign(
         {
-            _id: this._id,
+            id: this._id,
             firstName: this.firstName
         },
 

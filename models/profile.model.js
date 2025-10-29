@@ -2,15 +2,16 @@ import mongoose, { Schema } from "mongoose";
 
 const profileSchema = new mongoose.Schema({
   
-  //    User: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'User', // assuming you have a separate User model
-  //   required: true
-  // },
+     User: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // assuming you have a separate User model
+    required: true
+  },
 
   profile_Image: {
     type: String, // Store image URL or file path
     required: true,
+    default: ""
   },
 
   full_name: {
@@ -38,7 +39,7 @@ const profileSchema = new mongoose.Schema({
 
   email: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
     lowercase: true,
       unique : true
