@@ -11,7 +11,7 @@ try {
  
     
     if(!token){
-    //    res.redirect('/api/user/login')
+ 
     throw new ApiError("the noken is not found", 404);
     
     }
@@ -30,7 +30,7 @@ try {
     req.user= user;
     next()
 } catch (error) {
-    throw new ApiError(404, error?.message || 'user not found');
+     return res.redirect("/login");
     
     
 }

@@ -1,7 +1,7 @@
 import express from "express"
 const app = express();
 // import  CategoryRouter  from "./routes/host.routes.js";
-// import hostRouter from "./routes/host.routes.js";
+import hostRouter from "./routes/host.routes.js";
 import userRouter from "./routes/user.routes.js";
 import session from "express-session";
 import passport from "passport";
@@ -121,15 +121,15 @@ app.use(express.static('public'))
 app.use("/", userRouter)
 // app.use("/api/host/",hostRouter)
 
-// app.get("/", (req, res) => {
-//    res.redirect("/home")
-// })
-app.use("/api/user/", userRouter)
-// app.use("/api/host/",hostRouter)
-
 app.get("/", (req, res) => {
-   res.redirect("api/user/home")
+   res.redirect("/home")
 })
+// app.use("/api/user/", userRouter)
+app.use("/admin",hostRouter)
+
+// app.get("/", (req, res) => {
+//    res.redirect("api/user/home")
+// })
 
 // app.use('/api/categorys', hostRouter)
 

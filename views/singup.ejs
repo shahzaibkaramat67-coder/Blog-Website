@@ -15,7 +15,7 @@
         <h1>Singup Here</h1>
       </div>
       <div class="form_Hendler">
-        <form action="/api/user/submit-singup" method="POST">
+        <form action="/submit-singup" method="POST">
           <div class="form_date">
             <label for="firstName">Username</label>
             <input type="text" id="firstName" name="firstName">
@@ -43,7 +43,7 @@
             <button type="submit">submit</button>
           </div>
           <div>
-            <p>if you have account then login : <a href="./login">Login</a> </p>
+            <p>if you have account then login : <a href="/login">Login</a> </p>
           </div>
 
            <div>
@@ -53,7 +53,7 @@
             <hr>
           </div>
           <div class="singup_option">
-            <a href="/api/user/auth/google">
+            <a href="/auth/google">
             <!-- <i class="fa-brands fa-google"></i> -->
              <img src="/assets/icons/google-brands-solid-full.svg" alt="G" srcset="">
             </a>

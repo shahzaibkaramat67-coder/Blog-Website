@@ -22,8 +22,13 @@ categoryShareToArtical,
 getSearchAndRandomArticals,
   getArticalesById,
   like,
-  viewControl
+  viewControl,
+  shareArtical,
+  profile_Image
 } from '../controller/userController/artical.controller.js'
+import contactValidator from '../middleware/contact.validation.js'
+import contactController from '../controller/userController/contact.controller.js'
+import {allPostedBlogs} from "../controller/userController/user.Dashbord/Dashbord.Controller.js"
 // import {categoryShareToArtical} from '../controller/userController/artical.controller.js'
 import {categoryHendler} from '../controller/userController/category.controller.js'
 // import {getTopicBlog} from '../controller/userController/category.controller.js'
@@ -38,6 +43,7 @@ import sendOtpMail from '../controller/userController/otp.controller.js'
 import verifiOtp from "../middleware/otp.varification.js"
 import { title } from 'process'
 import {postInTable} from "../controller/userController/user.Dashbord/post.controller.js"
+import { profile } from 'console'
 // import { title } from 'process'
 // import { profile } from 'console'
 // import ApiError from '../utils/ApiError.js'
@@ -69,7 +75,7 @@ router.get('/auth/google/callback',
 
     res.cookie("refreshToken", refresh_Token, option)
     res.cookie("accessToken", access_Token, option)
-    return res.redirect('/api/user/profile/edit-profile')
+    return res.redirect('/profile/edit-profile')
 
   }
 
@@ -82,7 +88,8 @@ router.post('/profile', verifijwt, upload.single("profile_Image"), profileValiva
 router.get('/profile/postsAnalytics', (req, res) => { res.render('postsAnalytics', {layout : false, title: "postsAnalytics" }) })
 router.get('/profile/postsAnalytics/Artical', (req, res) => { res.render('Artical', {layout : false, title: "Artical" }) })
 router.get('/profile/Dashbord/EarningPage', (req, res) => { res.render('Dashbord/EarningPage', {layout : false, title: 'Earning-Page' }) })
-router.get('/profile/Dashbord/my-Dashboard', (req, res) => { res.render('Dashbord/my-Dashboard', {layout : false, title: 'BlogGraph-Page' }) })
+router.get('/profile/Dashbord/my-Dashboard', allPostedBlogs)
+// router.get('/profile/Dashbord/my-Dashboard', likedBlogs)
 router.get('/profile/Dashbord/Withdraw', (req, res) => { res.render('Dashbord/Withdraw', {layout : false, title: 'Withdraw-Page' }) })
 router.get('/profile/Dashbord/postsAnalytics',postInTable)
 router.get('/profile/Dashbord/craete-Artical', categoryShareToArtical)
@@ -92,11 +99,12 @@ router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, upload.si
 //  there are Singup , Login , forgetPassport , Logout logics
 router.get('/singup', (req, res) => {
   if (req.isAuthenticated()) {
-    return res.redirect("/api/user/login")
+    return res.redirect("/login")
+  }else{
+
+    res.render('singup', {layout : false, title: "singup" })
   }
-  console.log(req.user);
   
-  res.render('singup', {layout : false, title: "singup" })
 })
 router.post('/submit-singup', validatorForRegistration, submitSingupData)
 router.get('/otp', (req, res) => {
@@ -125,28 +133,47 @@ router.post("/submit-updatePassword", updatePasswordValidation, updatePassword)
 // router.get("/home",(req, res) => {res.render("home", { title: "home" })})
 
 
-router.get("/home", (req, res) => { res.render("home", { title: "home"}) })
+router.get("/home",verifijwt, (req, res) => { res.render("home", { title: "home"}) })
 // router.get("/Profile", (req, res) => { res.render("Profile", { title: "Profile"}) })
-router.get("/about", (req, res) => { res.render("about", { title: "about" }) })
+router.get("/about",verifijwt, (req, res) => { res.render("about", { title: "about" }) })
 
 // blog roytes
 router.get("/blog", getSearchAndRandomArticals)
 // router.post("/blog/blog-contant/:id", getArticalesById)
 
-router.get("/topics/:slug", getArticales)
-router.get("/blog/blog-contant/:id", getArticalComment,getArticalesById)
-router.post('/blog/blog-contant/submit-comment', commentHendeler)
-router.post('/blog/blog-contant/delete-comment/:id', deleteComment)
+router.get("/topics/:slug",verifijwt, getArticales)
+router.get(
+  "/blog/blog-contant/:id",
+  verifijwt,
+  viewControl,
+  getArticalesById,
+  getArticalComment,
+  profile_Image,
+  (req, res) => {
+    res.render("blog-contant", {
+      title: "blog-contant",
+      artical: req.artical,
+      comments: req.comments,
+      profile: req.profile?.profile_Image,
+      username: req.profile?.username,
+    });
+  }
+);
+
+
+// router.get("/blog/blog-contant/:id",verifijwt, )
+router.post('/blog/blog-contant/submit-comment',verifijwt, commentHendeler)
+router.post('/blog/blog-contant/delete-comment/:id',verifijwt, deleteComment)
 router.post("/blog/blog-contant/like/:articalId", like)
-router.get("/blog/blog-contant/:id", viewControl)
-router.get("/share", (req, res) => { })
+router.post("/blog/share/update", shareArtical);
 
 
 
 
 
 router.get("/Categorie", categoryHendler)
-router.get("/contact", (req, res) => { res.render("contact", { title: "contact" }) })
+router.get("/contact",verifijwt, (req, res) => { res.render("contact", { title: "contact" }) })
+router.post("/contact/contact-form-submit", verifijwt, contactValidator, contactController)
 
 
 

@@ -8,19 +8,21 @@ import { Profile } from "../../models/profile.model.js";
 import User from "../../models/Signup.model.js";
 import { Articals } from "../../models/ArticalModel.js";
 import { title } from "process";
-const getArticalComment = asyncHandler(async (req, res) => {
+const getArticalComment = asyncHandler(async (req, res, next) => {
   const artical = await Articals.findById(req.params.id);
   if (!artical) throw new ApiError("Article not found", 404);
 
   const comments = await Comment.find({ articls: artical._id })
     .sort({ createdAt: -1 })
     
+req.comments = comments;
+  // res.render("blog-contant", {
+  //   title: "blog-contant",
+  //   artical, // ✅ consistent with EJS
+  //   comments,
+  // });
 
-  res.render("blog-contant", {
-    title: "blog-contant",
-    artical, // ✅ consistent with EJS
-    comments,
-  });
+  next()
 });
 
 

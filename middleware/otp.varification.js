@@ -40,7 +40,7 @@ otpFound.otpExpiry = undefined
 
  const redirect = req.headers.accept || "";
     if (redirect.includes('text/html')) {
-        return res.redirect('/api/user/login')
+        return res.redirect('/login')
     }
    
 

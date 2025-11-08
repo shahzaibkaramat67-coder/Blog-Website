@@ -13,7 +13,7 @@
 <body>
   <header class="bg-white dark:bg-gray-900 shadow relative">
     <div class="mx-auto max-w-screen-xl pt-2 lg:px-8">
-      <div class="flex h-16 items-center justify-between relative"> <!-- Left: Logo --> <a href="home"
+      <div class="flex h-16 items-center justify-between relative"> <!-- Left: Logo --> <a href="/home"
           class="flex items-center text-teal-600 dark:text-teal-400"> <svg class="h-8 w-8" fill="currentColor"
             viewBox="0 0 24 24">
             <path
@@ -67,15 +67,14 @@
           </ul> <!-- Right: Auth Buttons -->
           <ul class="flex justify-start md:justify-end gap-3 mt-4 md:mt-0 md:pr-4">
             <% if (currentUser && currentUser.role==="user" ) { %>
-              <div class="flex gap-3"> <a href="/profile"
-                  class="bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-500">Profile</a> <a href="/logOut"
-                  class="bg-gray-100 text-teal-600 px-4 py-2 rounded-md dark:bg-gray-800 dark:text-white hover:bg-gray-200">Logout</a>
+              <div class="flex gap-3">
+                 <a href="/profile" class="bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-500">Profile</a>
+                  <a href="/logOut" class="bg-gray-100 text-teal-600 px-4 py-2 rounded-md dark:bg-gray-800 dark:text-white hover:bg-gray-200">Logout</a>
               </div>
               <% } else { %>
-                <div class="flex gap-3"> <a href="/signup"
-                    class="bg-gray-100 text-teal-600 px-4 py-2 rounded-md dark:bg-gray-800 dark:text-white hover:bg-gray-200">Register</a>
-                  <a href="/login"
-                    class="bg-gray-100 text-teal-600 px-4 py-2 rounded-md dark:bg-gray-800 dark:text-white hover:bg-gray-200">Login</a>
+                <div class="flex gap-3"> 
+                  <a href="./signup" class="bg-gray-100 text-teal-600 px-4 py-2 rounded-md dark:bg-gray-800 dark:text-white hover:bg-gray-200">Register</a>
+                  <a href="/login"class="bg-gray-100 text-teal-600 px-4 py-2 rounded-md dark:bg-gray-800 dark:text-white hover:bg-gray-200">Login</a>
                 </div>
                 <% } %>
           </ul>

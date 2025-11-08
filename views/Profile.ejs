@@ -29,7 +29,7 @@
     <div class="grid grid-cols-2 gap-3 text-gray-700">
       <% profile.category.forEach(cat=> {%>
         <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition"
-          href="profile/postsAnalytics">
+          href="/profile/postsAnalytics">
           <%= cat%>
         </a>
         <% }); %>
@@ -94,7 +94,7 @@
 
   <div class="flex items-center justify-between">
     <div class="mt-8">
-      <a href="/api/user/profile?edit=true" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Edit
+      <a href="/profile?edit=true" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Edit
         Profile</a>
     </div>
     <div class="mt-8">

@@ -1,5 +1,6 @@
 import express from 'express'
 // import {Categorys} from '../controller/hostController/host.controller.js'
+import checkUserRole from "../middleware/checkRole.js"
 const router = express.Router()
 
 // router.get('/seed', Categorys)
@@ -13,7 +14,7 @@ const router = express.Router()
 
 
 // there are for host router sidebar
-// router.get('/Dashbord/', (req, res)=>{res.render('Dashbord', {title : 'Dashbord', page: "Dashbord"})})
+router.get('/admin-dashboard',  (req, res)=>{res.render('Dashbord', {layout : false, title : 'Dashbord', page: "Dashbord"})})
 // router.get('/Dashbord/appDetailUploadPage', (req, res)=>{res.render('admin/appDetailUploadPage', {title : 'appDetailUploadPage'})})
 // router.get('/Dashbord/blogFileUpload', (req, res)=>{res.render('admin/blogFileUpload', {title : 'blogFileUpload'})})
 

@@ -6,6 +6,7 @@ import { Articals } from "../../models/ArticalModel.js";
 import { Profile } from "../../models/profile.model.js";
 import mongoose, { Query } from "mongoose";
 import User from "../../models/Signup.model.js";
+import { url } from "inspector";
 
 const articalUpload = asyncHandler(async (req, res) => {
 
@@ -50,59 +51,12 @@ const articalUpload = asyncHandler(async (req, res) => {
 
   }
 
-  res.redirect('/api/user/blog')
+  res.redirect('/blog')
   // return res
   //   .status(201)
   //   .json(new ApiResponse(200, createArtical, "the Artical is create successfully"))
 
 })
-
-
-// const getArticales = asyncHandler(async (req, res) => {
-//   // const topicSlug = req.params.slug || null;
-
-//   // console.log("this is topicSlug", topicSlug);
-  
-
-//   const page = parseInt(req.query.page) || 1;
-//   const limit = 2
-//   const skip = (page - 1) * limit;
-//   let allArtical
-//   let totalPages = 0;
-//   // const SideAllArtical = [];
-//   const filter = {};
-//   const Topic = req.query.Search
-
-// if (Topic) {
-//   filter.title = {$regex : Topic, $options : "i"}
-  
-// }
-
-
-// console.log(filter);
-
-//    const totalArticals = await Articals.countDocuments(filter)
-//    console.log(totalArticals);
-   
-//        allArtical = await Articals.find(filter) 
-//     .populate("username", "username")
-//     .skip(skip)
-//     .limit(limit)
-//     .sort({ createdAt: -1 })
-//     totalPages = Math.ceil(totalArticals / limit) || 1;
-
-
-
-// res.render("blog", {
-//   title: "Blog",
-//   allArtical,
-//   currentPage: page,
-//   searchQuery : Topic,
-//   totalPages,
-//   // SideAllArtical,
-//   topicSlug: null, // ✅ Always define this
-// });
-
 
 
 
@@ -148,10 +102,10 @@ const getArticales = asyncHandler(async (req, res) => {
 });
 
 
-const getArticalesById = asyncHandler(async (req, res) => {
-  const artical = await Articals.findById(req.params.id)
+const getArticalesById = asyncHandler(async (req, res, next) => {
+  const Artical = await Articals.findById(req.params.id)
     .populate("username", "username")
-  if (!artical) {
+  if (!Artical) {
     throw new ApiError("articalId not found ", 404);
   }
 
@@ -159,7 +113,10 @@ const getArticalesById = asyncHandler(async (req, res) => {
 
 
   // res.render('blog-contant', { title : 'blog-contant', articalId, comments})
-  res.render('blog-contant', { title: 'blog-contant', artical })
+  // res.render('blog-contant', { title: 'blog-contant', Artical })
+  req.artical= Artical
+  next()
+  
 
 })
 
@@ -179,86 +136,6 @@ const categoryShareToArtical = asyncHandler(async (req, res) => {
 });
 
 
-// const searchArticals = asyncHandler(async(req, res)=>{
-// const {Search} = req.body;
-
-// if (!Search || Search.trim() === "") {
-//      throw new ApiError("Please Search sometrhing", 404);
-// }
-
-// const searchFromArticals = await Articals.find({
-//   title : { $regex : Search, $options : 'i' }
-// })
-
-// res.render("blog", {title : "Search", searchArtical : searchFromArticals,  searchQuery: Search })
-
-// })
-
-
-// const  getAllRandomArtical = asyncHandler(async(req, res)=>{
-//  const  allArtical = await Articals.find()
-//  res.render("blog", {title : "Blogs", allArtical, searchArtical:[]}) 
-// })
-
-// const getSearchAndRandomArticals = asyncHandler(async (req, res) => {
-//   const Search = decodeURIComponent(req.query.Search || "").replace(/\+/g, " ").trim();
-//   const page = parseInt(req.query.page) || 1;
-//   const limit = 3;
-//   const skip = (page - 1) * limit;
-//   let allArtical = []
-//   let SideAllArtical = []
-//   let totalArticals = 0;
-//   let totalPages ;
-
-//   totalArticals = await Articals.countDocuments()
-//    allArtical = await Articals.find()
-//   .populate("username", "username")
-//   .skip(skip)
-//   .limit(limit)
-//   .sort({ createdAt : -1})
-  
-
-//   if (Search !== "") {
-//     // totalArticals = await Articals.countDocuments({ title: { $regex: Search, $options: "i" } })
-
-//   totalArticals = await Articals.countDocuments()
-//    allArtical = await Articals.find()
-//   .populate("username", "username")
-//   .skip(skip)
-//   .limit(limit)
-//   .sort({ createdAt : -1})
-//    totalPages = Math.ceil(totalArticals / limit)
-
-//     SideAllArtical = await Articals.find({ title: { $regex: Search, $options: "i" } })
-//     .populate("username", "username")
-//       // .limit(limit)
-//       // .skip(skip)
-//       .sort({ createdAt: -1 })
-//       // SideAllArtical = allArtical
-//   } 
-//   else {
-//     totalArticals = await Articals.countDocuments()
-//    allArtical = await Articals.find()
-//   .populate("username", "username")
-//   .skip(skip)
-//   .limit(limit)
-//   .sort({ createdAt : -1})
-//    totalPages = Math.ceil(totalArticals / limit)
-//   }
-
-
-
-//   res.render("blog", {
-//     title: Search ? `${Search}` : "Blogs",
-//     // searchArtical,
-//     SideAllArtical,
-//     searchQuery: Search || "",
-//     currentPage: page,
-//     totalPages,
-//     allArtical
-//   })
-
-// })
 
 const getSearchAndRandomArticals = asyncHandler(async (req, res) => {
   const Search = decodeURIComponent(req.query.Search || "").replace(/\+/g, " ").trim();
@@ -301,63 +178,110 @@ const getSearchAndRandomArticals = asyncHandler(async (req, res) => {
 // const sideBlogContent = asyncHandler(async(req, res) =>{
 
 // })
+const like = asyncHandler(async (req, res) => {
+  const { articalId } = req.params;
+  const userId = req.user?.id;
 
-const like = asyncHandler(async(req, res)=>{
-      const { articalId } = req.params; // ✅ correct
-     const userId = req.user?._id
+  if (!articalId) {
+    throw new ApiError("id is missing for like", 400);
+  }
 
-       if (!articalId) {
-        throw new ApiError("id is missing for like", 400);  
-       }
-    // console.log(articalId);
+  const artical = await Articals.findById(articalId);
+  if (!artical) throw new ApiError("Artical not found", 404);
 
-    const artical = await Articals.findById(articalId)
+  const isLiked = artical.like.some(
+    (likeObj) =>
+      likeObj.user && likeObj.user.toString() === userId
+  );
 
-    console.log("this is artical id", artical);
-      const isliked =  artical.like.includes(userId)
+  if (isLiked) {
+    artical.like = artical.like.filter(
+      (likeObj) =>
+        likeObj.user && likeObj.user.toString() !== userId
+    );
+  } else {
+    artical.like.push({ user: userId });
+  }
 
-      if (isliked) {
-       artical.like.pull(userId)
-      }else{
-        artical.like.push(userId)
-      }
-console.log("this user is liek the artical", isliked);
+  await artical.save();
+});
 
 
-      
-    await artical.save()
-   
-  //  return res.render("blog-contant", {
-  //   artical,
-  //   user: req.user,
-  // });
-
-      // res.redirect("back");
-    
-     
-       
-})
-
-const viewControl = asyncHandler(async(req, res)=>{
+const viewControl = asyncHandler(async(req, res, next)=>{
   const viewArticalId = req.params.id
+  console.log("this is artical id", viewArticalId);
+  
  
-  const Artical = await Articals.findById(viewArticalId)
+  const artical = await Articals.findById(viewArticalId)
+  console.log("this is find artical", artical);
+  
 
-  if (!Artical) {
+  if (!artical) {
     throw new ApiError("artical not found", 400);
     
     
   }
 
-  Artical.views = (Artical.views || 0) + 1;
+  artical.views.push({
+    view : 1,
+      likedAt: new Date()
+  })
 
- await Artical.save();
+  console.log("this is liked artical ", artical);
+  
 
- res.render("blog-contant", {Artical})
+ await artical.save();
+
+//  res.render("blog-contant", {artical})
+next()
    
    
 
 })
+
+const shareArtical = asyncHandler(async(req, res)=>{
+  const{ articalId, platform} = req.body
+
+  console.log("the url is ", articalId);
+  console.log("this is platform", platform);
+  
+
+  if (!(articalId && platform)) {
+    throw new ApiError("the share artical id not is missing", 401 );  
+  }
+
+   const validPlatform = [
+     "messenger", "linkedin", "snapchat", "telegram", "whatsapp", 
+     "twitter", "instagram", "facebook", "google",
+  ]
+
+    if (!validPlatform.includes(platform)) {
+      throw new ApiError("the platform that you are using is not valid", 400);
+    }
+
+  const shareArtical = await Articals.findById(articalId)
+
+  if (!shareArtical) {
+    throw new ApiError("the shareArtical not found", 404);
+    
+  }
+
+  if (!shareArtical.shares) shareArtical.shares = {}
+
+  shareArtical.shares[platform] =( shareArtical.shares[platform] || 0 ) + 1;
+
+  await shareArtical.save()
+
+
+})
+
+const profile_Image = asyncHandler(async (req, res, next) => {
+  const profile = await Profile.findOne({ User: req.user._id })
+    .select("profile_Image username");
+
+  req.profile = profile; // ✅ object, not array
+  next();
+});
 
 
 
@@ -369,5 +293,7 @@ export {
   getArticalesById,
   categoryShareToArtical,
   getSearchAndRandomArticals,
-  like
+  like,
+  shareArtical,
+  profile_Image
 }

@@ -84,7 +84,7 @@ const submitSingupData = asyncHandler(async (req, res) => {
 
     const redirectToOtpPage = req.headers.accept || "";
     if (redirectToOtpPage.includes("html")) {
-        return res.redirect(`/api/user/otp?Email=${userSingup.Email}`)
+        return res.redirect(`/otp?Email=${userSingup.Email}`)
     }else{
         console.log('the otp page not found');
         
@@ -93,7 +93,7 @@ const submitSingupData = asyncHandler(async (req, res) => {
     // After signup, redirect to login page
     const redirection = req.headers.accept || "";
     if (redirection.includes('text/html')) {
-        return res.redirect('/api/user/login')
+        return res.redirect('/login')
     } else {
 
         return res
@@ -158,7 +158,7 @@ const submitLoginData = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", refreshToken, option)
 
 
-    return res.redirect("/api/user/home")
+    return res.redirect("/home")
 
     // const redirection = req.headers.accept || ""
 
@@ -222,12 +222,12 @@ const submitForgetPassword = asyncHandler(async (req, res) => {
     await user.save({validateBeforeSave : false})
 
     //  const resetUrl = `${req.protocol}://${req.get("host")}/updatePassword/${resetToken}`;
-const resetUrl = `http://localhost:3002/api/user/updatePassword/${resetToken}`;
+const resetUrl = `http://localhost:3002/updatePassword/${resetToken}`;
 
 
     const redirection = req.headers.accept || ""
     if (redirection.includes('html')) {
-        return res.redirect(`/api/user/updatePassword/${resetToken}`)
+        return res.redirect(`/updatePassword/${resetToken}`)
     }
 
     return res
@@ -292,7 +292,7 @@ const updatePassword = asyncHandler(async (req, res) => {
 
     const redirect = req.headers.accept || "";
     if (redirect.includes('text/html')) {
-        return res.redirect('/api/user/home')
+        return res.redirect('/home')
     }
 
     return res
@@ -345,7 +345,7 @@ const logOut = asyncHandler(async (req, res) => {
     sameSite: "strict"
   });
 
-  res.redirect("/api/user/home");
+  res.redirect("/home");
 });
 
 
