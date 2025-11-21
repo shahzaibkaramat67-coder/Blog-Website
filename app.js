@@ -8,7 +8,7 @@ const port = process.env.PORT || 3001;
 dbConnnection()
     .then(() => {
         app.listen(port, () => {
-            console.log(`the server is runing on http://localhost:${port}`);
+            console.log(`the server is runing on :${port}`);
 
         })
         app.on('error', (error) => {
