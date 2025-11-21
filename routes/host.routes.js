@@ -1,6 +1,7 @@
 import express from 'express'
 // import {Categorys} from '../controller/hostController/host.controller.js'
-import checkUserRole from "../middleware/checkRole.js"
+import AdminMessages from '../controller/hostController/admin-contact.controller.js'
+// import checkUserRole from "../middleware/checkRole.js"
 const router = express.Router()
 
 // router.get('/seed', Categorys)
@@ -14,25 +15,11 @@ const router = express.Router()
 
 
 // there are for host router sidebar
-router.get('/admin-dashboard',  (req, res)=>{res.render('Dashbord', {layout : false, title : 'Dashbord', page: "Dashbord"})})
-// router.get('/Dashbord/appDetailUploadPage', (req, res)=>{res.render('admin/appDetailUploadPage', {title : 'appDetailUploadPage'})})
-// router.get('/Dashbord/blogFileUpload', (req, res)=>{res.render('admin/blogFileUpload', {title : 'blogFileUpload'})})
-
-// blog upload file route
-// router.get('/Dashbord/blogContentUpload', (req, res)=>{res.render('admin/blogContentUpload', {title : 'blogContentUpload'})})
-// router.post('/Dashbord/blogContentUpload/upload-blog', upload.single("featured_image"),(req, res)=>{
-//     console.log(req.body);
-//     console.log(req.file);
-    
-    
-// })
-
-
-// router.get('/Dashbord/postsAnalytics', (req, res)=>{res.render('admin/postsAnalytics', {title : 'postAnalytics'})})
-// router.get('/Dashbord/appDetailUploadPage', (req, res)=>{res.render('admin/appDetailUploadPage', {title : 'app-Detail-Upload-Page'})})
-// router.get('/Dashbord/EarningPage', (req, res)=>{res.render('admin/EarningPage', {title : 'Earning-Page'})})
-// router.get('/Dashbord/BlogGraph', (req, res)=>{res.render('admin/BlogGraph', {title : 'BlogGraph-Page'})})
-// router.get('/Dashbord/Appgraph', (req, res)=>{res.render('admin/Appgraph', {title : 'Appgraph-Page'})})
+router.get('/admin-dashboard',  (req, res)=>{res.render('Admin.Dashbord/Dashbord', {layout : false, title : 'Dashbord', page: "Dashbord"})})
+router.get('/admin-users',  (req, res)=>{res.render('Admin.Dashbord/artical', {layout : false, title : 'artical', page: "artical"})})
+router.get('/admin-articles',  (req, res)=>{res.render('Admin.Dashbord/user', {layout : false, title : 'user', page: "user"})})
+router.get('/admin-messages',  AdminMessages)
+router.get('/admin-settings',  (req, res)=>{res.render('Admin.Dashbord/setting', {layout : false, title : 'setting', page: "setting"})})
 
 
 export default router

@@ -16,9 +16,13 @@ const SingupSchema = new Schema({
     firstName: {
         type: String,
         required: true,
-        unique: true,
         lowercase: true,
-        trim: true
+        trim: true,
+       validate: {
+        validator: v => /^[A-Za-z][A-Za-z0-9]{2,9}$/.test(v),
+        message: "Only letters & numbers, 5–10 characters"
+    }
+
     },
     lastName: {
         type: String,
@@ -27,22 +31,33 @@ const SingupSchema = new Schema({
         required: function () {
             return !this.GoogleId;
         },
-       
+     validate: {
+        validator: v => /^[A-Za-z][A-Za-z0-9]{2,9}$/.test(v),
+        message: "Only letters & numbers, 5–10 characters"
+    }
     },
-    Email: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true
-    },
-    password: {
-        type: String,
-        trim: true,
-       required: function () {
-            return !this.GoogleId; // password only required if not Google user
-        }
-    },
+   Email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    validate: {
+        validator: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+        message: "Invalid email format"
+    }
+},
+
+ password: {
+    type: String,
+    required: function () { return !this.GoogleId },
+    validate: {
+        validator: v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,20}$/.test(v),
+        message: "Password must be 8–20 chars, include upper, lower, number & special"
+    }
+},
+
+
     role: {
         type: String,
         enum: ['user', 'admin'],
@@ -90,7 +105,6 @@ SingupSchema.methods.generateAccessToken = async function () {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         }
     )
-
 }
 
 SingupSchema.methods.generateRefreshToken = async function () {

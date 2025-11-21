@@ -1,36 +1,49 @@
-import User from "../../models/Signup.model.js";
-import ApiError from "../../utils/ApiError.js";
-import ApiResponse from "../../utils/ApiResponse.js";
-import asyncHandler from "../../utils/asyncHandler.js";
-import sendmail from "../../utils/nodemailer.js";
+import User from "../../models/Signup.model.js"
+import ApiError from "../../utils/ApiError.js"
+import asyncHandler from "../../utils/asyncHandler.js"
+import crypto from "crypto";
 
-const sendOtpMail = asyncHandler(async(req, res)=>{
-    const {Email} = req.body;
-    if (!Email) {
-        throw new ApiError("the Email not found", 404);
+const OTP = asyncHandler(async (req, res) => {
+    res.render("otp", { layout: false, title: "OTP Page" });
+});
+
+const otpVerify = asyncHandler(async (req, res) => {
+    const otp = req.body.otp;
+    const Email = req.user.Email;
+
+    if (!otp || !Email) {
+        throw new ApiError("OTP or Email not found", 404);
     }
 
-   let account = await User.findOne(
-     {Email}
-)
+    const hashedOtp = crypto
+        .createHash("sha256")
+        .update(otp)
+        .digest("hex");
 
-   if (!account) {
-      throw new ApiError("Account not found", 404);
-   }
+    const otpFound = await User.findOne({
+        Email,
+        otpCode: hashedOtp,
+        otpExpiry: { $gte: Date.now() }
+    });
+console.log("otpFound", otpFound);
 
+    if (!otpFound) {
+        throw new ApiError("OTP is expired or invalid", 400);
+    }
 
-   const otpCode = await account.generateOtpCode();
-   await account.save({validateBeforeSave : false})
+    otpFound.isValid = true;
+    otpFound.otpCode = undefined;
+    otpFound.otpExpiry = undefined;
 
-   await sendmail({Email:account.Email, otp: otpCode})
-   
-    return res
-    .status(200)
-    .json(
-        new ApiResponse('the otp send successfull', 200, {Email:account.Email})
-    )
+    await otpFound.save({ validateBeforeSave: false });
 
+    const acceptHeader = req.headers.accept || "";
 
-})
+    if (acceptHeader.includes("text/html")) {
+        return res.redirect("/login");
+    }
 
-export default sendOtpMail
+    res.status(200).json({ success: true, message: "OTP verified" });
+});
+
+export { OTP, otpVerify };

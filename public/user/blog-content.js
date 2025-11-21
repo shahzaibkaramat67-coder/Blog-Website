@@ -25,17 +25,21 @@ const openPopup = () => {
       <div class=" w-full">
         <div class="w-full gap-3 flex justify-center items-center">
           <input id="text"  class="border border-gray-900 p-2 w-80" readonly type="text" value="">
-             <input type="hidden" class="articalId" value="<%= articalId %>">
+           <input type="hidden" id="hiddenArticleId">
+
+
           <img  onclick="copyText()"  src="/assets/icons/paste-regular-full.svg" alt="copy"
             class="w-9 h-9 p-2 rounded-xl cursor-pointer border border-gray-900">
         </div>
         <div class="flex justify-center items-center gap-3">
           <div class="w-full gap-2 bg-white mt-6 shadow rounded-xl w-[600px] p-2">
             <div class="w-full flex gap-3 p-1 mb-2">
+         
+
                <a   onclick="updateShare('messenger')" href="fb-messenger://share/?link=${currentUrl}"><img src="/assets/icons/facebook-messenger-brands-solid-full.svg" alt="messinger"class="w-12 h-12"></a>
               <a onclick="updateShare('linkedin')" href="https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}"><img src="/assets/icons/linkedin-brands-solid-full.svg" alt="linksdin" class="w-12 h-12"></a>
               <a onclick="updateShare('snapchat')" href="https://www.snapchat.com/scan?attachmentUrl=${currentUrl}"><img src="/assets/icons/snapchat-brands-solid-full.svg" alt="snapchat" class="w-12 h-12"></a>
-              <a onclick="updateShare('t.me')" href="https://t.me/share/url?url=${currentUrl}&text=${shareText}"><img src="/assets/icons/telegram-brands-solid-full.svg" alt="telegram" class="w-12 h-12"></a>
+              <a onclick="updateShare('telegram')" href="https://telegram.com/share/url?url=${currentUrl}&text=${shareText}"><img src="/assets/icons/telegram-brands-solid-full.svg" alt="telegram" class="w-12 h-12"></a>
               <a  href="#"><img src="/assets/icons/share-nodes-solid-full.svg" alt="share" class="w-12 h-12"></a>
               <a onclick="updateShare('whatsapp')" href="https://api.whatsapp.com/send?text=${shareText}%20${currentUrl}"><img src="/assets/icons/whatsapp-brands-solid-full.svg" class="w-12 h-12 " alt="WhatsApp"></a>
               </div>
@@ -57,12 +61,14 @@ const openPopup = () => {
 
      </div>
       `
+  document.body.appendChild(share);
+  document.querySelector("#hiddenArticleId").value = ARTICAL_ID;
+  shareUrl();
 
-  document.body.appendChild(share)
-  shareUrl()
+
 
 }
-
+const ARTICAL_ID = window.ARTICAL_ID;
 
 const toggleMoreIcons = () => {
   const extra = document.querySelector("#extraIcons")
@@ -98,24 +104,34 @@ const shareUrl = () => {
 const copyText = () => {
   const text = document.querySelector("#text")
   try {
-    navigator.clipboard.writeText(text.value)
+    navigator.clipboard.writeText(text.value).then(() => {
+      setTimeout(() => {
+        const message = document.createElement("h1");
+        message.innerText = "the text is copied!"
+        message.className = "bg-white text-black px-8 py-8 rounded fixed top-4 left-1/2 transform -translate-x-1/2 z-50 transition";
+        document.body.appendChild(message)
+
+        setTimeout(() => {
+          document.body.removeChild(message)
+        }, 1000);
+      },);
+    })
   } catch (error) {
     console.log(error);
 
   }
 }
-
 function updateShare(platform) {
-  const articalId = document.querySelector(".articalId").value;
+  const articalId = document.querySelector("#hiddenArticleId").value;
+
+  console.log("Sending to backend ->", { platform, articalId });
+
   fetch("/blog/share/update", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      platform: platform,
-      articalId
-    })
-
-
-  }).catch(err => console.log(err));
+    body: JSON.stringify({ platform, articalId }),
+  })
+    .then((res) => res.json())
+    .then((data) => console.log("Share updated:", data))
+    .catch((err) => console.log("Error:", err));
 }
- 

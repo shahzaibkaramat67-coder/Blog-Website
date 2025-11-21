@@ -1,31 +1,48 @@
- <main class="flex-1 p-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-semibold">Manage Articles</h1>
-            <button class="bg-indigo-600 text-white px-4 py-2 rounded">Add New Article</button>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
 
-        <table class="w-full mt-5 bg-white rounded shadow">
-            <thead class="bg-gray-200">
-                <tr>
-                    <th class="px-4 py-2">Title</th>
-                    <th class="px-4 py-2">Author</th>
-                    <th class="px-4 py-2">Created</th>
-                    <th class="px-4 py-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-                <tr class="border-b">
-                    <td class="px-4 py-2">How to Secure Website</td>
-                    <td class="px-4 py-2">Shahzaib</td>
-                    <td class="px-4 py-2">2025-11-01</td>
-                    <td class="px-4 py-2">
-                        <button class="bg-blue-600 text-white px-3 py-1 rounded">Edit</button>
-                        <button class="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
-                    </td>
-                </tr>
+<body class="bg-gray-100">
 
-            </tbody>
-        </table>
 
-    </main>
+    <%-include("../../partial/AdminHeader.ejs")%>
+        <main class="flex-1 p-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-semibold">Manage Articles</h1>
+                <button class="bg-indigo-600 text-white px-4 py-2 rounded">Add New Article</button>
+            </div>
+
+            <table class="w-full mt-5 bg-white rounded shadow">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="px-4 py-2">Title</th>
+                        <th class="px-4 py-2">Author</th>
+                        <th class="px-4 py-2">Created</th>
+                        <th class="px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr class="border-b">
+                        <td class="px-4 py-2">How to Secure Website</td>
+                        <td class="px-4 py-2">Shahzaib</td>
+                        <td class="px-4 py-2">2025-11-01</td>
+                        <td class="px-4 py-2">
+                            <button class="bg-blue-600 text-white px-3 py-1 rounded">Edit</button>
+                            <button class="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </main>
+
+   </body>
+</html>

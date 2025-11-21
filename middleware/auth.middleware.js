@@ -12,7 +12,7 @@ try {
     
     if(!token){
  
-    throw new ApiError("the noken is not found", 404);
+    return res.redirect("/login")
     
     }
     

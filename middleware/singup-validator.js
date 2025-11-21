@@ -6,14 +6,14 @@ const validatorForRegistration = [
         .notEmpty().withMessage('firstName is required')
         .escape().withMessage('space not allowed')
         .trim()
-        .isLength({ min: 3, max: 10 }).withMessage('min lenght should be 5 and max lenght  10')
+        .isLength({ min: 5, max: 10 }).withMessage('min lenght should be 5 and max lenght  10')
         .isAlphanumeric().withMessage('just use number and letters'),
 
     body('lastName')
         .notEmpty().withMessage('lastName is required')
         .escape().withMessage('space not allowed')
         .trim()
-        .isLength({ min: 3, max: 10 }).withMessage('min lenght should be 5 and max lenght  10')
+        .isLength({ min: 5, max: 10 }).withMessage('min lenght should be 5 and max lenght  10')
         .isAlphanumeric().withMessage('just use number and letters'),
 
     body('Email')
@@ -25,13 +25,13 @@ const validatorForRegistration = [
         .notEmpty().withMessage('password is required')
         .escape().withMessage('space not allowed')
         .trim()
-        .isLength({ min: 7, max: 13 }).withMessage('min lenght should be 7 and max should be 13')
+        .isLength({ min: 8, max: 20 }).withMessage('min lenght should be 7 and max should be 13')
         .isStrongPassword().withMessage('password should be contain uppercase, lowercase, symbols and numbers'),
     body('confirmPassword')
         .notEmpty().withMessage('confirmPassword is required')
         .escape().withMessage('space not allowed')
         .trim()
-        .isLength({ min: 7, max: 13 }).withMessage('min lenght should be 7 and max should be 13')
+        .isLength({ min: 8, max: 20 }).withMessage('min lenght should be 7 and max should be 13')
         .isStrongPassword().withMessage('confirmPassword should be contain uppercase, lowercase, symbols and numbers')
 ]
 

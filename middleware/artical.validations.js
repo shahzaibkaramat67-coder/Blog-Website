@@ -46,6 +46,7 @@ const articalValidation = [
         .notEmpty().withMessage("title is required")
         .matches(/^[A-Za-z0-9 ,.?'""!]+$/),
 
+        
 
 
 

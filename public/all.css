@@ -124,8 +124,23 @@ span {
 
    height: 20px;    
    width: 20px;
+
 }
 
+
+
+/* this is for postAnanlysist in side user dashbord */
+
+.btn-day {
+  background: #f3f4f6;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.btn-day:hover {
+  background: #d1d5db;
+}
 
 /* 
 Container styling

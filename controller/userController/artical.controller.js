@@ -204,6 +204,10 @@ const like = asyncHandler(async (req, res) => {
   }
 
   await artical.save();
+
+   res.json({
+    liked: !isLiked,               // true if now liked, false if unliked
+  });
 });
 
 
@@ -238,42 +242,39 @@ next()
    
 
 })
-
 const shareArtical = asyncHandler(async(req, res)=>{
-  const{ articalId, platform} = req.body
-
-  console.log("the url is ", articalId);
-  console.log("this is platform", platform);
-  
+  const { articalId, platform } = req.body;
 
   if (!(articalId && platform)) {
-    throw new ApiError("the share artical id not is missing", 401 );  
+    return res.status(400).json({ error: "Missing article ID or platform" });
   }
 
-   const validPlatform = [
-     "messenger", "linkedin", "snapchat", "telegram", "whatsapp", 
-     "twitter", "instagram", "facebook", "google",
-  ]
+  const validPlatform = [
+    "messenger","linkedin","snapchat","telegram","whatsapp",
+    "twitter","instagram","facebook","google"
+  ];
 
-    if (!validPlatform.includes(platform)) {
-      throw new ApiError("the platform that you are using is not valid", 400);
-    }
-
-  const shareArtical = await Articals.findById(articalId)
-
-  if (!shareArtical) {
-    throw new ApiError("the shareArtical not found", 404);
-    
+  if (!validPlatform.includes(platform)) {
+    return res.status(400).json({ error: "Invalid platform" });
   }
 
-  if (!shareArtical.shares) shareArtical.shares = {}
+  const artical = await Articals.findById(articalId);
+  if (!artical) {
+    return res.status(404).json({ error: "Article not found" });
+  }
 
-  shareArtical.shares[platform] =( shareArtical.shares[platform] || 0 ) + 1;
+  if (!artical.shares) artical.shares = {};
+  artical.shares[platform] = (artical.shares[platform] || 0) + 1;
 
-  await shareArtical.save()
-
-
+artical.shareHistory.push({
+  platform,
+  sharedAt: new Date()
 })
+
+  await artical.save();
+
+  return res.json({ success: true, message: "Share updated!" });
+});
 
 const profile_Image = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findOne({ User: req.user._id })

@@ -16,6 +16,7 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
    const { full_name, username, about, email, phone, location, website, twitter, linkedin, facebook } = req.body
 
    let { category } = req.body;
+   
    if (!Array.isArray(category)) {
       category = category ? [category] : []
    }
@@ -94,7 +95,7 @@ const getProfileForUpdate = asyncHandler(async (req, res) => {
       res.render("Profile", { title: "Profile", profile })
    } else {
       res.render("edit-profile", {
-       
+         layout : false,
          title: "edit-profile",
          profile,
          // category: await Categorie.find()

@@ -5,12 +5,14 @@
     <%= artical.title %>
   </h1>
   <a href="/profile" class="flex  gap-2">
-  <img src="<%= profile %>" alt="profile_image" class="rounded-lg mb-6 h-10 w-10">
-  <h1 class="text-2xl font-bold "><%= username %></h1>
-</a>
+    <img src="<%= profile %>" alt="profile_image" class="rounded-lg mb-6 h-10 w-10">
+    <h1 class="text-2xl font-bold ">
+      <%= username %>
+    </h1>
+  </a>
 
   <p class="text-gray-500 text-sm mb-4">By <span class="font-semibold">
-   
+
       <% if(artical.username) { %>
         <%= artical.username.username%>
           <% } %>
@@ -31,12 +33,12 @@
   <!-- Like & Share -->
   <form action="/blog/blog-contant/like/<%= artical._id%>" method="post"
     class="flex items-center justify-between border-t border-b py-3 mb-6">
-    <button type="submit" class="flex items-center gap-2  text-blue-600 hover:text-blue-800">
-     <% if (currentUser && artical.like.includes(currentUser._id)) { %>
-      <span id="heart">❤️</span> Unlike
-    <% } else { %>
-      <span id="heart">🤍</span> Like
-    <% } %>
+    <button id="like-btn" type="submit" class="flex items-center gap-2  text-blue-600 hover:text-blue-800">
+      <% if (currentUser && artical.like.includes(currentUser._id)) { %>
+        <span id="heart">❤️</span> Unlike
+        <% } else { %>
+          <span id="heart">🤍</span> Like
+          <% } %>
 
 
     </button>
@@ -49,3 +51,32 @@
 
 </div>
 <%- include("../partial/comments.ejs")%>
+
+
+  <script>
+    window.ARTICAL_ID = "<%= artical._id %>";
+    const likebtn = document.querySelector("#like-btn");
+const heart = document.querySelector("#heart");
+const blofId = "<%= artical._id %>";
+
+likebtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await fetch(`/blog/blog-contant/like/${blofId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    const data = await res.json();
+
+    heart.textContent = data.liked ? '❤️' : '🤍';
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+
+
+
+  </script>

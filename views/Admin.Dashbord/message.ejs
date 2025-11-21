@@ -1,24 +1,111 @@
- <main class="flex-1 p-6">
-        <h1 class="text-2xl font-semibold mb-5">Contact Messages</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-        <table class="w-full bg-white rounded shadow overflow-hidden">
-            <thead class="bg-gray-200">
-                <tr>
-                    <th class="px-4 py-2">Name</th>
-                    <th class="px-4 py-2">Email</th>
-                    <th class="px-4 py-2">Message</th>
-                    <th class="px-4 py-2">Date</th>
-                </tr>
-            </thead>
-            <tbody>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-                <tr class="border-b">
-                    <td class="px-4 py-2">Bilal</td>
-                    <td class="px-4 py-2">bilal@example.com</td>
-                    <td class="px-4 py-2">I have issue logging in...</td>
-                    <td class="px-4 py-2">2025-10-30</td>
-                </tr>
+<body class="bg-gray-100">
 
-            </tbody>
-        </table>
-    </main>
+    <%-include("../../partial/AdminHeader.ejs")%>
+        <main class="flex-1 p-6 ">
+            <div class="flex items-center justify-between bg-white p-8 mb-5 rounded shadow-md">
+                <!-- Left: Title -->
+                <div>
+                    <h1 class="text-2xl font-semibold mb-0">Contact Messages</h1>
+                </div>
+
+                <!-- Right: Stats -->
+                <div class="flex items-center gap-6">
+                    <div class="text-center cursor-pointer">
+                        <p class="text-gray-500">Un Read</p>
+                        <span class="font-bold text-gray-800">54</span>
+                    </div>
+                    <div class="text-center cursor-pointer">
+                        <p class="text-gray-500">Read</p>
+                        <span class="font-bold text-gray-800">45</span>
+                    </div>
+                    <div class="text-center cursor-pointer">
+                        <p class="text-gray-500">Total</p>
+                        <span class="font-bold text-gray-800">99</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <table class="w-full bg-white rounded shadow overflow-hidden">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="px-4 py-2">Name</th>
+                        <th class="px-4 py-2">Email</th>
+                        <th class="px-4 py-2">Message</th>
+                        <th class="px-4 py-2">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <% if(adminMessages) { %>
+                        <% adminMessages.forEach(Message=> { %>
+                            <tr onclick="message('<%= Message._id%>')"
+                                class="border-b font-semibold mt-2 cursor-pointer hover:bg-blue-300">
+                                <td class="px-4  py-2">
+                                    <%= Message.name%>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= Message.email%>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= Message.subject%>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= Message.createdAt.toLocaleString("en-PK", {day:"2-digit", month:"short",
+                                        year:"numeric"})%>
+                                </td>
+                            </tr>
+
+                            <% }); %>
+                                <% } else {%>
+                                    <h1>no message yet</h1>
+                                    <% } %>
+                </tbody>
+            </table>
+<!-- 
+            <div id="popup" class="max-w-7xl h-[100px] ">
+
+            </div> -->
+
+            <div  id="massage" ></div>
+        </main>
+
+       <script>
+ const res = fetch("http://localhost:3002/contact/contact-form-submit")
+   console.log(res);
+   
+ 
+
+function message(id) {
+    const massage = document.querySelector("#massage");
+
+    massage.innerHTML = `
+        <div id="chartModal" class="fixed w-full  inset-0 bg-black/60 flex justify-center items-center">
+            <div class="bg-white p-6 rounded-xl max-w-7xl h-[100px] shadow-lg">
+                <button onclick="closeModal()" class="float-right text-red-500 text-2xl font-bold">✖</button>
+                <h2 class="text-2xl font-bold mb-4">Message ID: ${Message.name}</h2>
+
+                <p class="text-gray-700">Popup loaded successfully.</p>
+            </div>
+        </div>
+    `;
+}
+
+function closeModal() {
+    document.querySelector("#massage").innerHTML = "";
+}
+</script>
+
+</body>
+
+</html>

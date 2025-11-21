@@ -27,8 +27,9 @@ getSearchAndRandomArticals,
   profile_Image
 } from '../controller/userController/artical.controller.js'
 import contactValidator from '../middleware/contact.validation.js'
-import contactController from '../controller/userController/contact.controller.js'
-import {allPostedBlogs} from "../controller/userController/user.Dashbord/Dashbord.Controller.js"
+import {contactController} from '../controller/userController/contact.controller.js'
+import {OTP, otpVerify} from '../controller/userController/otp.controller.js'
+import {userDashboard, getDashbordChartData} from "../controller/userController/user.Dashbord/Dashbord.Controller.js"
 // import {categoryShareToArtical} from '../controller/userController/artical.controller.js'
 import {categoryHendler} from '../controller/userController/category.controller.js'
 // import {getTopicBlog} from '../controller/userController/category.controller.js'
@@ -38,12 +39,12 @@ import passport from 'passport'
 import '../auth/google-Strategy.js'
 import upload from '../middleware/multer.middleware.js'
 import updatePasswordValidation from '../middleware/updatePassword.js'
-import sendOtpMail from '../controller/userController/otp.controller.js'
+// import sendOtpMail from '../controller/userController/otp.controller.js'
 // import { getProfileUserDarta } from '../controller/userController/profile.controller.js'
-import verifiOtp from "../middleware/otp.varification.js"
+// import verifiOtp from "../middleware/otp.varification.js"
 import { title } from 'process'
-import {postInTable} from "../controller/userController/user.Dashbord/post.controller.js"
-import { profile } from 'console'
+import {postInTable, chart} from "../controller/userController/user.Dashbord/postAnalysist.controller.js"
+// import { profile } from 'console'
 // import { title } from 'process'
 // import { profile } from 'console'
 // import ApiError from '../utils/ApiError.js'
@@ -84,14 +85,19 @@ router.get('/auth/google/callback',
 
 
 router.get('/profile', verifijwt, getProfileForUpdate)
+// router.get('/edit-profile',verifijwt, (req, res)=>{res.render('edit-profile', {layout : false, title: 'edit-profile'})})
 router.post('/profile', verifijwt, upload.single("profile_Image"), profileValivation, createORUpdateProfile)
-router.get('/profile/postsAnalytics', (req, res) => { res.render('postsAnalytics', {layout : false, title: "postsAnalytics" }) })
-router.get('/profile/postsAnalytics/Artical', (req, res) => { res.render('Artical', {layout : false, title: "Artical" }) })
+// router.get('/profile/postsAnalytics', (req, res) => { res.render('postsAnalytics', {layout : false, title: "postsAnalytics" }) })
+router.get('/profile/Dashbord/postsAnalytics', postInTable)
 router.get('/profile/Dashbord/EarningPage', (req, res) => { res.render('Dashbord/EarningPage', {layout : false, title: 'Earning-Page' }) })
-router.get('/profile/Dashbord/my-Dashboard', allPostedBlogs)
+router.get('/profile/Dashbord/my-Dashboard',verifijwt, userDashboard)
+router.get('/profile/Dashbord/my-Dashboard/data',verifijwt, getDashbordChartData)
 // router.get('/profile/Dashbord/my-Dashboard', likedBlogs)
 router.get('/profile/Dashbord/Withdraw', (req, res) => { res.render('Dashbord/Withdraw', {layout : false, title: 'Withdraw-Page' }) })
-router.get('/profile/Dashbord/postsAnalytics',postInTable)
+router.get('/profile/Dashbord/postsAnalytics', postInTable);
+
+router.get('/profile/Dashbord/postsAnalytics/:id', chart);
+
 router.get('/profile/Dashbord/craete-Artical', categoryShareToArtical)
 router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, upload.single("featured_image"), articalValidation, articalUpload)
 
@@ -107,16 +113,18 @@ router.get('/singup', (req, res) => {
   
 })
 router.post('/submit-singup', validatorForRegistration, submitSingupData)
-router.get('/otp', (req, res) => {
-  const Email = req.query.Email
-  //     const Email =  req.body.Email
-  if (!Email) {
-    return res.status(400).send('Email is required')
-  } else {
-    res.render('otp', {layout : false, title: "otpPage", Email })
-  }
-})
-router.post('/otp-submit', verifiOtp)
+router.get('/otp', verifijwt, OTP)
+// router.get('/otp', verifijwt, (req, res) => {
+// router.get('/otp', verifijwt, (req, res) => {
+  //   const Email = req.query.Email
+//   //     const Email =  req.body.Email
+//   if (!Email) {
+  //     return res.status(400).send('Email is required')
+    // } else {
+    //     res.render('otp', {layout : false, title: "otpPage", Email })
+    //   }
+    // })
+router.post('/otp-submit',verifijwt, otpVerify)
 router.get("/login", (req, res) => { res.render('login', {layout : false, title: "login" }) })
 router.get("/logOut", logOut)
 router.post('/submit-login', loginValidationRules, submitLoginData)

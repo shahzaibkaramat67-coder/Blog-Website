@@ -4,7 +4,7 @@ import ApiError from '../../utils/ApiError.js'
 import ApiResponse from '../../utils/ApiResponse.js';
 import User from '../../models/Signup.model.js'
 import crypto, { createHash } from 'crypto'
-import sendmail from '../../utils/nodemailer.js'
+import sendMail from '../../utils/nodemailer.js'
 import { strict } from 'assert';
 // import sendmail from '../../utils/nodemailer.js';
 
@@ -51,7 +51,7 @@ const submitSingupData = asyncHandler(async (req, res) => {
     const reasult = validationResult(req)
 
     if (!reasult.isEmpty()) {
-        // console.log(reasult.array());
+        console.log(reasult.array());
 
         const errorMessage = reasult.array().map(error => ({
             field: error.param,
@@ -76,34 +76,38 @@ const submitSingupData = asyncHandler(async (req, res) => {
         Email,
         password,
     })
+
+
+    
+ 
+    
     const otpCode = await userSingup.generateOtpCode()
     await userSingup.save({validateBeforeSave : false});
 
 
-    await sendmail({Email : userSingup.Email, otp : otpCode})
+    try {
+    await sendMail({
+      to: userSingup.Email,
+      subject: "Your OTP Code",
+      text: `Your OTP code is ${otpCode}. It will expire in 5 minutes.`,
+      html: `<p>Your OTP code is <b>${otpCode}</b>. It will expire in 5 minutes.</p>`,
+    });
+  } catch (err) {
+    console.error("Failed to send OTP email:", err.message);
+    // optional: log in DB or flag user
+   
+  }
 
-    const redirectToOtpPage = req.headers.accept || "";
-    if (redirectToOtpPage.includes("html")) {
-        return res.redirect(`/otp?Email=${userSingup.Email}`)
-    }else{
-        console.log('the otp page not found');
-        
-    }
+  const accessToken =await userSingup.generateAccessToken();
+const option = {
+     httpOnly: true,
+        secure: false,
+        sameSite: 'strict',
+        maxAge: 5 * 60 * 60 * 1000,
+}
 
-    // After signup, redirect to login page
-    const redirection = req.headers.accept || "";
-    if (redirection.includes('text/html')) {
-        return res.redirect('/login')
-    } else {
-
-        return res
-            .status(201)
-            // .json(new ApiResponse('The User is Succcessfully Singup', 200, {Email : userSingup.Email}))
-            .json(new ApiResponse('The User is Succcessfully Singup', 200, userSingup))
-
-    }
-
-
+  res.cookie("accessToken", accessToken, option)
+ return res.redirect('/otp');
 
 })
 
@@ -158,7 +162,7 @@ const submitLoginData = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", refreshToken, option)
 
 
-    return res.redirect("/home")
+    return res.redirect("/profile")
 
     // const redirection = req.headers.accept || ""
 
