@@ -142,36 +142,17 @@ span {
   background: #d1d5db;
 }
 
-/* 
-Container styling
-.form_date {
-  position: relative;
-  margin-bottom: 20px;
+.flash-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 18px;
+    background: #ef4444; /* red */
+    color: white;
+    border-radius: 6px;
+    z-index: 9999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
-
-Input field with padding for the eye icon
-.form_date input[type="password"] {
-  width: 100%;
-  padding: 10px 40px 10px 10px; padding-right allows space for the icon
-  font-size: 16px;
-  box-sizing: border-box;
+.flash-popup-success {
+    background: #22c55e; /* green */
 }
-
-The eye icon image inside input
-.form_date .toggle-password {
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s ease;
-}
-
-Optional: On hover, make it more visible
-.form_date .toggle-password:hover {
-  opacity: 1;
-}
- */

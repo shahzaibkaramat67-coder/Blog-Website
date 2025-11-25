@@ -12,7 +12,8 @@ const otpVerify = asyncHandler(async (req, res) => {
     const Email = req.user.Email;
 
     if (!otp || !Email) {
-        throw new ApiError("OTP or Email not found", 404);
+        req.flash("error", "Invalid request");
+        return res.redirect("/otp");
     }
 
     const hashedOtp = crypto
@@ -25,10 +26,10 @@ const otpVerify = asyncHandler(async (req, res) => {
         otpCode: hashedOtp,
         otpExpiry: { $gte: Date.now() }
     });
-console.log("otpFound", otpFound);
 
     if (!otpFound) {
-        throw new ApiError("OTP is expired or invalid", 400);
+       req.flash("error", "Invalid otp");
+        return res.redirect("/otp");
     }
 
     otpFound.isValid = true;
@@ -37,13 +38,19 @@ console.log("otpFound", otpFound);
 
     await otpFound.save({ validateBeforeSave: false });
 
-    const acceptHeader = req.headers.accept || "";
+      req.flash("success", "otp correct")
+       return res.redirect("/login")
+        
 
-    if (acceptHeader.includes("text/html")) {
-        return res.redirect("/login");
-    }
+    // const acceptHeader = req.headers.accept || "";
 
-    res.status(200).json({ success: true, message: "OTP verified" });
+    // if (acceptHeader.includes("text/html")) {
+    //     return res.redirect("/login");
+    // }
+     
+    // res.status(200).json({ success: true, message: "OTP verified" });
+
+    
 });
 
 export { OTP, otpVerify };

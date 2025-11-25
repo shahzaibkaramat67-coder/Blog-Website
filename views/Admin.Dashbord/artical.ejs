@@ -4,45 +4,46 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dashboard</title>
+    <title><%= title %></title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100">
 
+    <%- include("../../partial/AdminHeader.ejs") %>
 
-    <%-include("../../partial/AdminHeader.ejs")%>
-        <main class="flex-1 p-6">
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-semibold">Manage Articles</h1>
-                <button class="bg-indigo-600 text-white px-4 py-2 rounded">Add New Article</button>
+    <main class="md:ml-64 flex-1 p-6">
+
+        <!-- PAGE TITLE -->
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Blog Categories</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <% allArticalCategories.forEach(cat => { %>
+            <div class="bg-white rounded-lg shadow p-5 flex flex-col">
+                <!-- CATEGORY NAME -->
+                <h2 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">
+                    <%= cat.name %>
+                </h2>
+
+                <!-- TOPICS -->
+                <div class="flex flex-col gap-3">
+                    <% cat.topics.forEach(topic => { %>
+                    <div class="border p-3 rounded-md flex items-center justify-between hover:bg-gray-50 transition">
+                        <p class="text-gray-700 font-medium"><%= topic.title %></p>
+                        <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-bold">
+                            <%= topic.count || 0 %>
+                        </span>
+                    </div>
+                    <% }) %>
+                </div>
             </div>
+            <% }) %>
 
-            <table class="w-full mt-5 bg-white rounded shadow">
-                <thead class="bg-gray-200">
-                    <tr>
-                        <th class="px-4 py-2">Title</th>
-                        <th class="px-4 py-2">Author</th>
-                        <th class="px-4 py-2">Created</th>
-                        <th class="px-4 py-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+        </div>
 
-                    <tr class="border-b">
-                        <td class="px-4 py-2">How to Secure Website</td>
-                        <td class="px-4 py-2">Shahzaib</td>
-                        <td class="px-4 py-2">2025-11-01</td>
-                        <td class="px-4 py-2">
-                            <button class="bg-blue-600 text-white px-3 py-1 rounded">Edit</button>
-                            <button class="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
-                        </td>
-                    </tr>
+    </main>
 
-                </tbody>
-            </table>
+</body>
 
-        </main>
-
-   </body>
 </html>

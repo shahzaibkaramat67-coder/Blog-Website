@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin - Earnings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 ">
+
+    <!-- ADMIN HEADER -->
+    <%- include("../../partial/AdminHeader.ejs") %>
+
+        <main class="md:ml-64 flex-1 p-6">
+
+            <!-- PAGE TITLE -->
+            <h1 class="text-3xl font-bold mb-6 text-gray-800">Earnings Overview</h1>
+
+            <!-- STAT CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+
+                <!-- Total Earnings -->
+                <div class="bg-white p-5 rounded-lg shadow hover:shadow-md transition">
+                    <h3 class="text-lg font-semibold mb-3">💰 Total Earnings</h3>
+                    <p class="text-2xl font-bold">$12,450</p>
+                </div>
+
+                <!-- This Month -->
+                <div class="bg-white p-5 rounded-lg shadow hover:shadow-md transition">
+                    <h3 class="text-lg font-semibold mb-3">📅 This Month</h3>
+                    <p class="text-2xl font-bold">$2,450</p>
+                </div>
+
+                <!-- Today -->
+                <div class="bg-white p-5 rounded-lg shadow hover:shadow-md transition">
+                    <h3 class="text-lg font-semibold mb-3">📈 Today</h3>
+                    <p class="text-2xl font-bold">$245</p>
+                </div>
+
+                <!-- Pending Withdrawals -->
+                <div class="bg-white p-5 rounded-lg shadow hover:shadow-md transition">
+                    <h3 class="text-lg font-semibold mb-3">⏳ Pending Withdrawals</h3>
+                    <p class="text-2xl font-bold">$1,200</p>
+                </div>
+            </div>
+
+            <!-- Earnings Chart -->
+            <section class="bg-white p-6 rounded-xl shadow mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Earnings Trend</h2>
+                    <select class="border border-gray-300 px-3 py-2 rounded">
+                        <option>Last 7 Days</option>
+                        <option>Last 15 Days</option>
+                        <option>Last 1 Month</option>
+                        <option>Last 3 Months</option>
+                    </select>
+                </div>
+                <div class="bg-gray-50 h-64 flex items-center justify-center rounded text-gray-400">
+                    Chart Placeholder
+                </div>
+            </section>
+
+            <!-- VENDOR EARNINGS TABLE -->
+            <section class="bg-white p-6 rounded-xl shadow">
+                <h2 class="text-xl font-bold mb-4">Withdrawal Requests</h2>
+
+                <div class="mb-4 flex justify-between items-center">
+                    <div>
+                        <input type="text" placeholder="Search withdrawals..." class="px-3 py-2 rounded border w-3/3" />
+                        <!-- <button class="px-4 py-2 bg-green-600 text-white rounded">Process Selected</button> -->
+                    </div>
+                    <div class="text-center flex gap-4 cursor-pointer">
+                        <div>
+                            <p class="text-gray-500">Un Read</p>
+                            <span class="font-bold text-gray-800">
+                                567
+                            </span>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Un Read</p>
+                            <span class="font-bold text-gray-800">
+                                567
+                            </span>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Un Read</p>
+                            <span class="font-bold text-gray-800">
+                                567
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="py-3 px-2 border-b">Vendor Name</th>
+                            <th class="py-3 px-2 border-b">Email</th>
+                            <th class="py-3 px-2 border-b">Requested Amount</th>
+                            <th class="py-3 px-2 border-b">Status</th>
+                            <th class="py-3 px-2 border-b">Requested Date</th>
+                            <th class="py-3 px-2 border-b">Processed Date</th>
+                            <th class="py-3 px-2 border-b">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        <tr class="border-b">
+                            <td class="py-2 px-2">M. Shahzaib</td>
+                            <td class="py-2 px-2">shahzaib@gmail.com</td>
+                            <td class="py-2 px-2">$300</td>
+                            <td class="py-2 px-2"><span class="text-yellow-600 font-semibold">Pending</span></td>
+                            <td class="py-2 px-2">2025-11-20</td>
+                            <td class="py-2 px-2">-</td>
+                            <td class="py-2 px-2">
+                                <button class="px-2 py-1 bg-green-600 text-white rounded text-sm">Approve</button>
+                                <button class="px-2 py-1 bg-red-600 text-white rounded text-sm">Decline</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2 px-2">Fashion House</td>
+                            <td class="py-2 px-2">fashion@example.com</td>
+                            <td class="py-2 px-2">$500</td>
+                            <td class="py-2 px-2"><span class="text-green-600 font-semibold">Completed</span></td>
+                            <td class="py-2 px-2">2025-11-18</td>
+                            <td class="py-2 px-2">2025-11-20</td>
+                            <td class="py-2 px-2">
+                                <button class="px-2 py-1 bg-gray-400 text-white rounded text-sm"
+                                    disabled>Processed</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2 px-2">Tech World</td>
+                            <td class="py-2 px-2">techworld@example.com</td>
+                            <td class="py-2 px-2">$200</td>
+                            <td class="py-2 px-2"><span class="text-yellow-600 font-semibold">Pending</span></td>
+                            <td class="py-2 px-2">2025-11-21</td>
+                            <td class="py-2 px-2">-</td>
+                            <td class="py-2 px-2">
+                                <button class="px-2 py-1 bg-green-600 text-white rounded text-sm">Approve</button>
+                                <button class="px-2 py-1 bg-red-600 text-white rounded text-sm">Decline</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </main>
+
+</body>
+
+</html>

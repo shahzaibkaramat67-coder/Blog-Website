@@ -2,15 +2,15 @@ import { body } from "express-validator"
 // import , body from 'express-validator'
 
 const validatorForRegistration = [
-    body('firstName')
-        .notEmpty().withMessage('firstName is required')
-        .escape().withMessage('space not allowed')
-        .trim()
-        .isLength({ min: 5, max: 10 }).withMessage('min lenght should be 5 and max lenght  10')
-        .isAlphanumeric().withMessage('just use number and letters'),
+    // body('firstName')
+    //     .notEmpty().withMessage('firstName is required')
+    //     .escape().withMessage('space not allowed')
+    //     .trim()
+    //     .isLength({ min: 5, max: 10 }).withMessage('min lenght should be 5 and max lenght  10')
+    //     .isAlphanumeric().withMessage('just use number and letters'),
 
-    body('lastName')
-        .notEmpty().withMessage('lastName is required')
+    body('Username')
+        .notEmpty().withMessage('Username is required')
         .escape().withMessage('space not allowed')
         .trim()
         .isLength({ min: 5, max: 10 }).withMessage('min lenght should be 5 and max lenght  10')

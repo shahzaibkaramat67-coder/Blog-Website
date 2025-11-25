@@ -16,18 +16,19 @@
     <div class="section-page">
       <div class="Singup">
         <h1>Singup Here</h1>
+        
       </div>
       <div class="form_Hendler">
         <form action="/submit-singup" method="POST">
-          <div class="form_date">
+          <!-- <div class="form_date">
             <label for="firstName">Username</label>
             <input type="text" id="firstName" name="firstName">
             <p id="firstNameError" class="text-[2px] mt-1 text-red-500"></p>
-          </div>
+          </div> -->
           <div class="form_date">
-            <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName">
-            <p id="lastNameError" class="text-sm mt-1 text-red-500"></p>
+            <label for="Username">Username</label>
+            <input type="text" id="Username" name="Username">
+            <p id="UsernameError" class="text-sm mt-1 text-red-500"></p>
           </div>
           <div class="form_date">
             <label for="email">Gmail</label>
@@ -112,8 +113,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 document.addEventListener("DOMContentLoaded", () => {
   const fields = [
-    { id: "firstName", regex: nameRegex, msg: "5-10 chars, start with letter, letters & numbers" },
-    { id: "lastName", regex: nameRegex, msg: "5-10 chars, start with letter, letters & numbers" },
+    { id: "Username", regex: nameRegex, msg: "5-10 chars, start with letter, letters & numbers" },
     { id: "email", regex: emailRegex, msg: "Enter valid email like: abc@gmail.com" },
     { id: "password", regex: strongPasswordRegex, msg: "8–20 chars, upper, lower, number & special" },
   ];

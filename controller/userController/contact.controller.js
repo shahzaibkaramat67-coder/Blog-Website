@@ -33,7 +33,7 @@ const contactController = asyncHandler(async (req, res) => {
     ipAddress
   })
 
-  console.log("saveMassage", saveMassage);
+ 
 
   // await saveMassage.save()
 
@@ -45,30 +45,7 @@ const contactController = asyncHandler(async (req, res) => {
     html: `<p><b>Name:</b> ${name}</p><p><b>Email:</b> ${email}</p><p>${message}</p>`
   });
 
-
-
-  // await sendMail({
-  //   to: process.env.EMAIL_USER,
-  //   subject: `New contact message from ${name}`,
-  //   text: `
-  //          Name: ${name}
-  //          Email: ${email}
-  //          Subject: ${subject}
-  //          Message: ${message}
-  // `
-  // });
-
-
-
-
-  return res
-    .status(200)
-    .json({
-      name,
-      email,
-      subject,
-      message
-    })
+  return res.render("contact", { title: "contact"})
 
 });
 
@@ -87,23 +64,23 @@ const sendOtpMail = asyncHandler(async (req, res) => {
 
 
   const otpCode = await account.generateOtpCode();
-  console.log("otpCode", otpCode);
+ 
 
   await account.save({ validateBeforeSave: false })
 
   await sendMail({
-    to: account.Email,
+    to: process.env.EMAIL_USER,
     subject: "Your OTP Code",
     text: `Your OTP is ${otpCode}.`,
     html: `<p>Your OTP is <b>${otpCode}</b>.</p>`
   });
 
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse('the otp send successfull', 200, { Email: account.Email })
-    )
+  // return res
+  //   .status(200)
+  //   .json(
+  //     new ApiResponse('the otp send successfull', 200, { Email: account.Email })
+  //   )
 
 
 })

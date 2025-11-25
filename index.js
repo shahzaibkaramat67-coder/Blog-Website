@@ -11,6 +11,7 @@ import User from "./models/Signup.model.js";
 import ApiError from "./utils/ApiError.js";
 import expressEjsLayouts from "express-ejs-layouts";
 import Categorie from "./models/categorie.model.js";
+import flash from "connect-flash"
 
 // import .env from './'
 
@@ -18,7 +19,7 @@ import Categorie from "./models/categorie.model.js";
 
 
 app.use(session({
-   secret: "shahzaib1234",
+   secret: process.env.SESSION_ID,
    resave: false,
    saveUninitialized: true
 }))
@@ -29,7 +30,7 @@ app.use(passport.session())
 
 
 
-
+app.use(flash())
 app.set("view engine", "ejs");
 app.use(expressEjsLayouts)
 app.set("layout", "layout")
@@ -38,6 +39,12 @@ app.use(cookieParser())
 app.use((req, res,next)=>{
    res.locals.scripts = "";
    next()
+})
+
+app.use((req, res, next)=>{
+   res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+  next()
 })
 
 

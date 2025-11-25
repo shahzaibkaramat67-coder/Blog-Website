@@ -6,6 +6,7 @@ import User from '../../models/Signup.model.js'
 import crypto, { createHash } from 'crypto'
 import sendMail from '../../utils/nodemailer.js'
 import { strict } from 'assert';
+import flash from "connect-flash"
 // import sendmail from '../../utils/nodemailer.js';
 
 
@@ -37,14 +38,16 @@ const generateAccessAndRefreshToken = async (userId) => {
 /*****======== Section singup Form Hendler Start ==========*****/
 
 const submitSingupData = asyncHandler(async (req, res) => {
-    const { firstName, lastName, Email, password, confirmPassword } = req.body;
-
-    if ([firstName, lastName, Email, password].some((field => !field))) {
-        throw new ApiError('All input fields are required', 400)
+    const {Username, Email, password, confirmPassword } = req.body;
+    
+    if ([Username, Email, password].some((field => !field))) {
+        req.flash("error", "All fields are required!");
+         return res.redirect("/signup");
     }
 
     if (password !== confirmPassword) {
-        throw new ApiError("Passwords do not match", 400);
+         req.flash("error", "Password should be matched");
+         return res.redirect("/signup");
     }
 
 
@@ -62,22 +65,23 @@ const submitSingupData = asyncHandler(async (req, res) => {
 
     }
 
-    const userExisted = await User.findOne({
-        $or: [{ firstName }, { Email }]
-    })
+const userExisted = await User.findOne({ Email });
+if (userExisted) {
+    req.flash("error", "User already exists with that Email");
+    return res.redirect("/signup");
+}
 
-    if (userExisted) {
-        throw new ApiError('User with this firstName and gmail allready existed', 400)
-    }
+
+// continue with creating the user
+
 
     const userSingup = await User.create({
-        firstName,
-        lastName,
+        Username,
         Email,
         password,
     })
 
-
+     
     
  
     
@@ -103,16 +107,21 @@ const option = {
      httpOnly: true,
         secure: false,
         sameSite: 'strict',
-        maxAge: 5 * 60 * 60 * 1000,
+        maxAge: 5 * 60 * 1000,
 }
 
   res.cookie("accessToken", accessToken, option)
- return res.redirect('/otp');
+  req.flash("success", "Signup successful! OTP sent to your email.");
+return res.redirect('/otp');
+
+
 
 })
 
 const submitLoginData = asyncHandler(async (req, res) => {
     const { identifier, password } = req.body
+      
+   
 
     const reasult = validationResult(req)
     if (!reasult.isEmpty()) {
@@ -131,11 +140,13 @@ const submitLoginData = asyncHandler(async (req, res) => {
 
     const existedUser = !isEmail
 
-        ? await User.findOne({ firstName: normalizeIdentifier })
-        : await User.findOne({ email: normalizeIdentifier })
+        ? await User.findOne({ Username: normalizeIdentifier })
+        : await User.findOne({ Email: normalizeIdentifier })
 
     if (!existedUser) {
-        throw new ApiError('username or gmail does not match', 404)
+    req.flash("error", "Invalid username or email");
+     return res.redirect('/login');
+
     }
 
 
@@ -144,11 +155,13 @@ const submitLoginData = asyncHandler(async (req, res) => {
 
     const isPasswordCorrect = await existedUser.isCorrectPassword(password)
     if (!isPasswordCorrect) {
-        throw new ApiError('password is not corresct', 400)
+         req.flash("error", "Invalid Password is incorrect");
+     return res.redirect('/login');
     }
 
     const { refreshToken, accessToken } = await generateAccessAndRefreshToken(existedUser._id)
     const loginUser = await User.findById(existedUser._id).select("-refreshToken -password")
+  
 
     const option = {
         httpOnly: true,
@@ -161,7 +174,7 @@ const submitLoginData = asyncHandler(async (req, res) => {
     res.cookie("accessToken", accessToken, option)
     res.cookie("refreshToken", refreshToken, option)
 
-
+  req.flash("success", "login successfully");
     return res.redirect("/profile")
 
     // const redirection = req.headers.accept || ""
@@ -207,7 +220,7 @@ const submitForgetPassword = asyncHandler(async (req, res) => {
 
     const user = !isEmail
 
-        ? await User.findOne({ firstName: normalizeIdentifier })
+        ? await User.findOne({ Username: normalizeIdentifier })
         : await User.findOne({ Email: normalizeIdentifier })
 
 

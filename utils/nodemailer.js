@@ -10,16 +10,26 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendMail = async ({ to, subject, text, html }) => {
-  if (!to) throw new Error("Recipient email is required");
+const sendMail = async ({ to, subject, text, html, from }) => {
+  if (!to) {
+    console.error("Recipient email is missing");
+    return false;
+  }
 
-  return await transporter.sendMail({
-    from: `Your Website <${process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    text,
-    html
-  });
+  try {
+    await transporter.sendMail({
+      from: from || `Your Website <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      text,
+      html
+    });
+    console.log(`Email sent to ${to} successfully.`);
+    return true; // indicates email was sent
+  } catch (err) {
+    console.error(`Failed to send email to ${to}:`, err);
+    return false; // indicates email failed
+  }
 };
 
 export default sendMail;

@@ -1,0 +1,17 @@
+<% if (error && error.length > 0) { %>
+<div class="flash-popup flash-popup-error bg-red-500 text-white p-3 rounded mb-3 fixed top-5 right-5 z-50">
+    <%= error[0] %>
+</div>
+<% } %>
+
+<% if (success && success.length > 0) { %>
+<div class="flash-popup flash-popup-success bg-green-500 text-white p-3 rounded mb-3 fixed top-5 right-5 z-50">
+    <%= success[0] %>
+</div>
+<% } %>
+
+<script>
+setTimeout(() => {
+    document.querySelectorAll('.flash-popup').forEach(el => el.remove());
+}, 3000);
+</script>

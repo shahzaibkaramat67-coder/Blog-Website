@@ -13,18 +13,18 @@ const SingupSchema = new Schema({
         sparse : true,
 
     },
-    firstName: {
-        type: String,
-        required: true,
-        lowercase: true,
-        trim: true,
-       validate: {
-        validator: v => /^[A-Za-z][A-Za-z0-9]{2,9}$/.test(v),
-        message: "Only letters & numbers, 5–10 characters"
-    }
+    // firstName: {
+    //     type: String,
+    //     required: true,
+    //     lowercase: true,
+    //     trim: true,
+    //    validate: {
+    //     validator: v => /^[A-Za-z][A-Za-z0-9]{2,9}$/.test(v),
+    //     message: "Only letters & numbers, 5–10 characters"
+    // }
 
-    },
-    lastName: {
+    // },
+    Username: {
         type: String,
         lowercase: true,
         trim: true,
