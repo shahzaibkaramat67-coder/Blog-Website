@@ -41,10 +41,13 @@ const readMail = asyncHandler(async (req, res) => {
         {status : "read"},
         {new : true}
     )
+    //  const unread = await ContactMessage.countDocuments({ status: "unread" });
+    // const read = await ContactMessage.countDocuments({ status: "read" });
     console.log("mail", mail);
     
    
-     return res.redirect(`/admin/admin-messages?Show=${id}`);
+    return res.redirect(`/admin/admin-messages?show=${id}`);
+
 });
 
 

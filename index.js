@@ -6,6 +6,7 @@ import userRouter from "./routes/user.routes.js";
 import session from "express-session";
 import passport from "passport";
 import cookieParser from "cookie-parser";
+import MongoStore from "connect-mongo";
 import jwt from "jsonwebtoken";
 import User from "./models/Signup.model.js";
 import ApiError from "./utils/ApiError.js";
@@ -19,10 +20,20 @@ import flash from "connect-flash"
 
 
 app.use(session({
-   secret: process.env.SESSION_ID,
-   resave: false,
-   saveUninitialized: true
-}))
+  secret: process.env.SESSION_ID,
+  resave: false,
+  saveUninitialized: false, // better for production
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI, // your MongoDB connection string
+    collectionName: 'sessions',
+    ttl: 14 * 24 * 60 * 60 // session expiration in seconds (optional)
+  }),
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // only HTTPS in production
+    httpOnly: true,
+    maxAge: 14 * 24 * 60 * 60 * 1000 // 14 days
+  }
+}));
 
 app.use(passport.initialize())
 app.use(passport.session())

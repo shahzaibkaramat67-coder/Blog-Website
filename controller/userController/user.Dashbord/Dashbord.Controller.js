@@ -1,18 +1,18 @@
 import { Articals } from "../../../models/ArticalModel.js";
 import asyncHandler from "../../../utils/asyncHandler.js";
-import { like } from "../artical.controller.js";
+// import { like } from "../artical.controller.js";
 import Comment from "../../../models/comment.model.js";
 import { Profile } from "../../../models/profile.model.js";
-import Categorie from "../../../models/categorie.model.js";
+// import Categorie from "../../../models/categorie.model.js";
 
 
 const userDashboard = asyncHandler(async (req, res) => {
 
+  const profile = await Profile.findOne({ User: req.user._id });
   // all blogs
-  const allPostedArtical = await Articals.countDocuments();
+  const allPostedArtical = await Articals.countDocuments({username: profile._id});
 
   console.log("these are all posted artical", allPostedArtical);
-  const profile = await Profile.findOne({ User: req.user._id });
 
 
 
@@ -20,7 +20,12 @@ const userDashboard = asyncHandler(async (req, res) => {
 
   const startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
   const endDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999)
-  const monthlyCreatedArtical = await Articals.countDocuments({ createdAt: { $gte: startDate, $lte: endDate } })
+  const monthlyCreatedArtical = await Articals.countDocuments(
+    {   
+       username: profile._id,
+       createdAt: { $gte: startDate, $lte: endDate }
+     }
+  )
 
   console.log("these are all monthly posted artical", monthlyCreatedArtical);
 
@@ -31,12 +36,17 @@ const userDashboard = asyncHandler(async (req, res) => {
   const endDay = new Date()
   endDay.setHours(23, 59, 59, 999)
 
-  const todayArtical = await Articals.countDocuments({ createdAt: { $gte: startDay, $lte: endDay } })
+  const todayArtical = await Articals.countDocuments(
+    { username: profile._id,
+       createdAt: { $gte: startDay, $lte: endDay } 
+      }
+    )
   console.log("these are all today posted artical", todayArtical);
 
 
   //    Total like of all blogs
   const likes = await Articals.aggregate([
+    {$match :{username: profile._id}},
     {
       $project: {
         likeCount: { $size: "$like" }
@@ -57,6 +67,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   const endDateForLikes = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999)
 
   const monthlyLikesOfArtical = await Articals.aggregate([
+     {$match :{username: profile._id}},
     { $unwind: "$like" },
     {
       $match: {
@@ -83,6 +94,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   dayend.setHours(23, 59, 59, 999)
 
   const dayLikesOfArtical = await Articals.aggregate([
+     {$match :{username: profile._id}},
     {
       $unwind: "$like"
     },
@@ -104,7 +116,7 @@ const userDashboard = asyncHandler(async (req, res) => {
 
 
 
-  const comments = await Comment.countDocuments();
+  const comments = await Comment.countDocuments({User : req.user._id});
   console.log("all commmensts are", comments);
 
 
@@ -113,7 +125,11 @@ const userDashboard = asyncHandler(async (req, res) => {
   const monthlyCommentEnd = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999)
 
 
-  const monthlyComment = await Comment.countDocuments({ createdAt: { $gte: monthlyCommentStart, $lte: monthlyCommentEnd } })
+  const monthlyComment = await Comment.countDocuments(
+    {  username: profile._id,
+       createdAt: { $gte: monthlyCommentStart, $lte: monthlyCommentEnd } 
+      }
+    )
   console.log("these are monylt commments ", monthlyComment);
 
   const dayCommetStart = new Date()
@@ -123,7 +139,13 @@ const userDashboard = asyncHandler(async (req, res) => {
   const dayCommetEnd = new Date()
   dayCommetEnd.setHours(23, 59, 59, 999)
 
-  const dayCommets = await Comment.countDocuments({ createdAt: { $gte: dayCommetStart, $lte: dayCommetEnd } })
+  const dayCommets = await Comment.countDocuments(
+    {  username: profile._id,
+       createdAt: { $gte: dayCommetStart, $lte: dayCommetEnd }
+       
+      }
+    
+    )
   console.log("these are  day comments", dayCommets);
 
 
@@ -135,6 +157,7 @@ const userDashboard = asyncHandler(async (req, res) => {
 
 
   const articalcount = await Articals.aggregate([
+    {$match : {username: profile._id}},
     { $match: { category: { $in: Categorie } } },
     { $group: { _id: "$category", count: { $sum: 1 } } }
   ])
@@ -165,6 +188,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   const endMonthlyViews = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999);
 
   let monthlyViews = await Articals.aggregate([
+    {$match : {username: profile._id}},
     { $unwind: "$views" },
     {
       $match: {
@@ -200,6 +224,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   endViewDay.setHours(23, 59, 59, 999)
 
   let dailyViews = await Articals.aggregate([
+     {$match : {username: profile._id}},
     { $unwind: "$views" },
     {
       $match: {
@@ -216,7 +241,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   /*****======== Section share Start ==========*****/
 
 
-  const articals = await Articals.find().select("shares");
+  const articals = await Articals.find({username: profile._id}).select("shares");
 
   let totalShareArticals = 0;
   articals.forEach(artical => {
@@ -235,6 +260,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   const endMonthlyShare = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999);
 
   let monthlyShares = await Articals.aggregate([
+     {$match : {username: profile._id}},
     { $unwind: "$shareHistory" },
     { $match: { "shareHistory.sharedAt": { $gte: startMonthlyShare, $lte: endMonthlyShare } } },
     { $count: "monthlyShareCount" }
@@ -251,6 +277,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   endDayShare.setHours(23, 59, 59, 999);
 
   let dayShares = await Articals.aggregate([
+     {$match : {username: profile._id}},
     { $unwind: "$shareHistory" },
     { $match: { "shareHistory.sharedAt": { $gte: startDayShare, $lte: endDayShare } } },
     { $count: "dailyShareCount" }
@@ -298,6 +325,7 @@ const userDashboard = asyncHandler(async (req, res) => {
 
 const getDashbordChartData = asyncHandler(async (req, res) => {
   const days = parseInt(req.query.days) || 30;
+  const profile = await Profile.findOne({ User: req.user._id });
   const labels = [];
   const viewsArr = [];
   const likesArr = [];
@@ -316,6 +344,7 @@ const getDashbordChartData = asyncHandler(async (req, res) => {
 
     // Views
     const dailyV = await Articals.aggregate([
+       {$match : {username: profile._id}},
       { $unwind: "$views" },
       { $match: { "views.viewdAt": { $gte: start, $lte: end } } },
       { $count: "count" }
@@ -324,6 +353,7 @@ const getDashbordChartData = asyncHandler(async (req, res) => {
 
     // Likes
     const dailyL = await Articals.aggregate([
+       {$match : {username: profile._id}},
       { $unwind: "$like" },
       { $match: { "like.likedAt": { $gte: start, $lte: end } } },
       { $count: "count" }
@@ -332,6 +362,7 @@ const getDashbordChartData = asyncHandler(async (req, res) => {
 
     // Shares
     const dailyS = await Articals.aggregate([
+       {$match : {username: profile._id}},
       { $unwind: "$shareHistory" },
       { $match: { "shareHistory.sharedAt": { $gte: start, $lte: end } } },
       { $count: "count" }

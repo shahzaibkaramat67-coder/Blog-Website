@@ -2,6 +2,7 @@ import express from 'express'
 // import {Categorys} from '../controller/hostController/host.controller.js'
 import {AdminMessages, readMail} from '../controller/hostController/admin-contact.controller.js'
 import articalCategories from "../controller/hostController/artical.controller.js"
+import admianDashbord from "../controller/hostController/Admin-Dashbord.controller.js"
 // import checkUserRole from "../middleware/checkRole.js"
 const router = express.Router()
 
@@ -16,7 +17,7 @@ const router = express.Router()
 
 
 // there are for host router sidebararticalCategories
-router.get('/admin-dashboard',  (req, res)=>{res.render('Admin.Dashbord/Dashbord', {layout : false, title : 'Dashbord', page: "Dashbord"})})
+router.get('/admin-dashboard', admianDashbord)
 router.get('/admin-users',  (req, res)=>{res.render('Admin.Dashbord/user', {layout : false, title : 'artical', page: "artical"})})
 router.get('/admin-earning',  (req, res)=>{res.render('Admin.Dashbord/earning', {layout : false, title : 'earning', page: "earning"})})
 router.get('/admin-categories',  articalCategories)
