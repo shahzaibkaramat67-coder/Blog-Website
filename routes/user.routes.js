@@ -4,37 +4,40 @@ import profileValivation from '../middleware/profile.validation.js'
 import articalValidation from '../middleware/artical.validations.js'
 import loginValidationRules from '../middleware/login.middleware.js'
 import { createORUpdateProfile } from '../controller/userController/profile.controller.js'
-import {getProfileForUpdate} from '../controller/userController/profile.controller.js'
+import { getProfileForUpdate } from '../controller/userController/profile.controller.js'
 // import {ProfileUpdate} from '../controller/userController/profile.controller.js'
 import forgetPasswordValidation from '../middleware/forgetPassword.js'
 import verifijwt from '../middleware/auth.middleware.js'
 import {
   submitSingupData,
   submitLoginData,
+  forgetPassword,
   submitForgetPassword,
   updatePassword,
-  logOut
+  logOut,
+  googlecontroller
 } from '../controller/userController/user.controller.js'
 import {
   articalUpload,
   getArticales,
-categoryShareToArtical,
-getSearchAndRandomArticals,
+  categoryShareToArtical,
+  getSearchAndRandomArticals,
   getArticalesById,
   like,
   viewControl,
   shareArtical,
   profile_Image
 } from '../controller/userController/artical.controller.js'
+import userEarning from '../controller/userController/user.Dashbord/Earning.Controller.js'
 import contactValidator from '../middleware/contact.validation.js'
-import {contactController} from '../controller/userController/contact.controller.js'
-import {OTP, otpVerify} from '../controller/userController/otp.controller.js'
-import {userDashboard, getDashbordChartData} from "../controller/userController/user.Dashbord/Dashbord.Controller.js"
+import { contactController } from '../controller/userController/contact.controller.js'
+import { OTP, otpVerify } from '../controller/userController/otp.controller.js'
+import { userDashboard, getDashbordChartData } from "../controller/userController/user.Dashbord/Dashbord.Controller.js"
 // import {categoryShareToArtical} from '../controller/userController/artical.controller.js'
-import {categoryHendler} from '../controller/userController/category.controller.js'
+import { categoryHendler } from '../controller/userController/category.controller.js'
 // import {getTopicBlog} from '../controller/userController/category.controller.js'
 // import {commentHendeler} from '../controller/userController/comment.controller.js'
-import {commentHendeler, getArticalComment, deleteComment} from '../controller/userController/comment.controller.js'
+import { commentHendeler, getArticalComment, deleteComment } from '../controller/userController/comment.controller.js'
 import passport from 'passport'
 import '../auth/google-Strategy.js'
 import upload from '../middleware/multer.middleware.js'
@@ -43,7 +46,10 @@ import updatePasswordValidation from '../middleware/updatePassword.js'
 // import { getProfileUserDarta } from '../controller/userController/profile.controller.js'
 // import verifiOtp from "../middleware/otp.varification.js"
 import { title } from 'process'
-import {postInTable, chart} from "../controller/userController/user.Dashbord/postAnalysist.controller.js"
+import { postInTable, chart } from "../controller/userController/user.Dashbord/postAnalysist.controller.js"
+import { Profile } from '../models/profile.model.js'
+import isAdmin from '../middleware/checkUserForAdmin.js'
+import withdraw from '../controller/userController/user.Dashbord/withdraw.Controller.js'
 // import { profile } from 'console'
 // import { title } from 'process'
 // import { profile } from 'console'
@@ -58,29 +64,9 @@ const router = express.Router()
 // singup user with register 
 
 router.get('/auth/google',
-  passport.authenticate(
-    'google',
-    { scope: ['profile', 'email'] }
-  ));
-router.get('/auth/google/callback',
-  passport.authenticate('google', { session: false }),
-  (req, res) => {
-    const { user, access_Token, refresh_Token } = req.user
-
-    const option = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",   // strict breaks OAuth redirects
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    }
-
-    res.cookie("refreshToken", refresh_Token, option)
-    res.cookie("accessToken", access_Token, option)
-    return res.redirect('/profile/edit-profile')
-
-  }
-
+  passport.authenticate('google', { scope: ['profile', 'email'] })
 );
+router.get('/auth/google/callback',passport.authenticate('google'), googlecontroller);
 
 
 
@@ -88,52 +74,52 @@ router.get('/profile', verifijwt, getProfileForUpdate)
 // router.get('/edit-profile',verifijwt, (req, res)=>{res.render('edit-profile', {layout : false, title: 'edit-profile'})})
 router.post('/profile', verifijwt, upload.single("profile_Image"), profileValivation, createORUpdateProfile)
 // router.get('/profile/postsAnalytics', (req, res) => { res.render('postsAnalytics', {layout : false, title: "postsAnalytics" }) })
-router.get('/profile/Dashbord/postsAnalytics', postInTable)
-router.get('/profile/Dashbord/EarningPage', (req, res) => { res.render('Dashbord/EarningPage', {layout : false, title: 'Earning-Page' }) })
-router.get('/profile/Dashbord/my-Dashboard',verifijwt, userDashboard)
-router.get('/profile/Dashbord/my-Dashboard/data',verifijwt, getDashbordChartData)
+router.get('/profile/Dashbord/postsAnalytics',verifijwt, postInTable)
+router.get('/profile/Dashbord/EarningPage',verifijwt,userEarning)
+router.get('/profile/Dashbord/my-Dashboard', verifijwt, userDashboard)
+router.get('/profile/Dashbord/my-Dashboard/data', verifijwt, getDashbordChartData)
 // router.get('/profile/Dashbord/my-Dashboard', likedBlogs)
-router.get('/profile/Dashbord/Withdraw', (req, res) => { res.render('Dashbord/Withdraw', {layout : false, title: 'Withdraw-Page' }) })
-router.get('/profile/Dashbord/postsAnalytics', postInTable);
+router.get('/profile/Dashbord/Withdraw',verifijwt, (req, res) => { res.render('Dashbord/Withdraw', { layout: false, title: 'Withdraw-Page' }) })
+router.post('/profile/Dashbord/Withdraw/submit',verifijwt, withdraw)
+// router.get('/profile/Dashbord/postsAnalytics', postInTable);
 
 router.get('/profile/Dashbord/postsAnalytics/:id', chart);
 
-router.get('/profile/Dashbord/craete-Artical', categoryShareToArtical)
+router.get('/profile/Dashbord/craete-Artical',verifijwt, categoryShareToArtical)
 router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, upload.single("featured_image"), articalValidation, articalUpload)
 
 
 //  there are Singup , Login , forgetPassport , Logout logics
-router.get('/singup', (req, res) => {
+router.get('/signup', (req, res) => {
   if (req.isAuthenticated()) {
-    return res.redirect("/login")
-  }else{
-
-    res.render('singup', {layout : false, title: "singup" })
+    return res.redirect("/login");
   }
-  
-})
+
+  res.render("signup", { layout: false, title: "Signup" });
+});
+
 router.post('/submit-singup', validatorForRegistration, submitSingupData)
-router.get('/otp', verifijwt, OTP)
+router.get('/otp', OTP)
 // router.get('/otp', verifijwt, (req, res) => {
 // router.get('/otp', verifijwt, (req, res) => {
-  //   const Email = req.query.Email
+//   const Email = req.query.Email
 //   //     const Email =  req.body.Email
 //   if (!Email) {
-  //     return res.status(400).send('Email is required')
-    // } else {
-    //     res.render('otp', {layout : false, title: "otpPage", Email })
-    //   }
-    // })
-router.post('/otp-submit',verifijwt, otpVerify)
-router.get("/login", (req, res) => { res.render('login', {layout : false, title: "login" }) })
+//     return res.status(400).send('Email is required')
+// } else {
+//     res.render('otp', {layout : false, title: "otpPage", Email })
+//   }
+// })
+router.post('/otp-submit', otpVerify)
+router.get("/login", (req, res) => { res.render('login', { layout: false, title: "login", isAdmin: false }) })
 router.get("/logOut", logOut)
 router.post('/submit-login', loginValidationRules, submitLoginData)
-router.get("/forgetPassword", (req, res) => { res.render("forgetPassword", {layout : false, title: "forgetPassword" }) })
+router.get("/forgetPassword", forgetPassword)
 router.post("/submit-forgetPassword", forgetPasswordValidation, submitForgetPassword)
 router.get('otp', (req, res) => {
-  
+
 })
-router.get("/updatePassword/:token", (req, res) => { res.render("updatePassword", {layout : false, title: "updatePassword", token: req.params.token }) })
+router.get("/updatePassword/:token", (req, res) => { res.render("updatePassword", { layout: false, title: "updatePassword", token: req.params.token }) })
 router.post("/submit-updatePassword", updatePasswordValidation, updatePassword)
 
 
@@ -141,15 +127,15 @@ router.post("/submit-updatePassword", updatePasswordValidation, updatePassword)
 // router.get("/home",(req, res) => {res.render("home", { title: "home" })})
 
 
-router.get("/home",verifijwt, (req, res) => { res.render("home", { title: "home"}) })
+router.get("/home", verifijwt, (req, res) => { res.render("home", { title: "home" }) })
 // router.get("/Profile", (req, res) => { res.render("Profile", { title: "Profile"}) })
-router.get("/about",verifijwt, (req, res) => { res.render("about", { title: "about" }) })
+router.get("/about", verifijwt, (req, res) => { res.render("about", { title: "about" }) })
 
 // blog roytes
 router.get("/blog", getSearchAndRandomArticals)
 // router.post("/blog/blog-contant/:id", getArticalesById)
 
-router.get("/topics/:slug",verifijwt, getArticales)
+router.get("/topics/:slug", verifijwt, getArticales)
 router.get(
   "/blog/blog-contant/:id",
   verifijwt,
@@ -158,6 +144,7 @@ router.get(
   getArticalComment,
   profile_Image,
   (req, res) => {
+      res.set("Cache-Control", "no-store");
     res.render("blog-contant", {
       title: "blog-contant",
       artical: req.artical,
@@ -170,8 +157,8 @@ router.get(
 
 
 // router.get("/blog/blog-contant/:id",verifijwt, )
-router.post('/blog/blog-contant/submit-comment',verifijwt, commentHendeler)
-router.post('/blog/blog-contant/delete-comment/:id',verifijwt, deleteComment)
+router.post('/blog/blog-contant/submit-comment', verifijwt, commentHendeler)
+router.post('/blog/blog-contant/delete-comment/:id', verifijwt, deleteComment)
 router.post("/blog/blog-contant/like/:articalId", like)
 router.post("/blog/share/update", shareArtical);
 
@@ -180,7 +167,8 @@ router.post("/blog/share/update", shareArtical);
 
 
 router.get("/Categorie", categoryHendler)
-router.get("/contact",verifijwt, (req, res) => { res.render("contact", { title: "contact" }) })
+router.get("/contact", verifijwt, (req, res) => { res.render("contact", { title: "contact" }) })
+// router.get("/my-blogs", verifijwt, (req, res) => { res.render("my-blogs", { title: "my-blogs" }) })
 router.post("/contact/contact-form-submit", verifijwt, contactValidator, contactController)
 
 

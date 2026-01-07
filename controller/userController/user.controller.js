@@ -7,6 +7,9 @@ import crypto, { createHash } from 'crypto'
 import sendMail from '../../utils/nodemailer.js'
 import { strict } from 'assert';
 import flash from "connect-flash"
+import { Profile } from '../../models/profile.model.js';
+import ms from 'ms';
+import { title } from 'process';
 // import sendmail from '../../utils/nodemailer.js';
 
 
@@ -38,81 +41,63 @@ const generateAccessAndRefreshToken = async (userId) => {
 /*****======== Section singup Form Hendler Start ==========*****/
 
 const submitSingupData = asyncHandler(async (req, res) => {
-    const {Username, Email, password, confirmPassword } = req.body;
-    
+    const { Username, Email, password, confirmPassword, role } = req.body;
+
     if ([Username, Email, password].some((field => !field))) {
         req.flash("error", "All fields are required!");
-         return res.redirect("/signup");
+        return res.redirect("/singup");
     }
 
     if (password !== confirmPassword) {
-         req.flash("error", "Password should be matched");
-         return res.redirect("/signup");
+        req.flash("error", "Password should be matched");
+        return res.redirect("/singup");
     }
 
 
     const reasult = validationResult(req)
 
     if (!reasult.isEmpty()) {
-        console.log(reasult.array());
-
-        const errorMessage = reasult.array().map(error => ({
-            field: error.param,
-            msg: error.msg
-        }))
-
-        throw new ApiError("validation is failed", 400, errorMessage);
-
+        reasult.array().forEach(err => req.flash("error", err.msg))
+        return res.redirect("/singup");
     }
 
-const userExisted = await User.findOne({ Email });
-if (userExisted) {
-    req.flash("error", "User already exists with that Email");
-    return res.redirect("/signup");
-}
+    const userExisted = await User.findOne({ Email });
+    if (userExisted) {
+        req.flash("error", "User already exists with that Email");
+        return res.redirect("/singup");
+    }
 
 
-// continue with creating the user
+    // continue with creating the user
 
 
     const userSingup = await User.create({
         Username,
         Email,
         password,
+        role: "user"
     })
 
-     
-    
- 
-    
     const otpCode = await userSingup.generateOtpCode()
-    await userSingup.save({validateBeforeSave : false});
+    await userSingup.save({ validateBeforeSave: false });
+
 
 
     try {
-    await sendMail({
-      to: userSingup.Email,
-      subject: "Your OTP Code",
-      text: `Your OTP code is ${otpCode}. It will expire in 5 minutes.`,
-      html: `<p>Your OTP code is <b>${otpCode}</b>. It will expire in 5 minutes.</p>`,
-    });
-  } catch (err) {
-    console.error("Failed to send OTP email:", err.message);
-    // optional: log in DB or flag user
-   
-  }
+        await sendMail({
+            to: userSingup.Email,
+            subject: "Your OTP Code",
+            text: `Your OTP code is ${otpCode}. It will expire in 5 minutes.`,
+            html: `<p>Your OTP code is <b>${otpCode}</b>. It will expire in 5 minutes.</p>`,
+        });
+    } catch (err) {
+        console.error("Failed to send OTP email:", err.message);
+        // optional: log in DB or flag user
 
-  const accessToken =await userSingup.generateAccessToken();
-const option = {
-     httpOnly: true,
-        secure: false,
-        sameSite: 'strict',
-        maxAge: 5 * 60 * 1000,
-}
-
-  res.cookie("accessToken", accessToken, option)
-  req.flash("success", "Signup successful! OTP sent to your email.");
-return res.redirect('/otp');
+    }
+    req.session.Email = userSingup.Email;
+    // req.flash("success", "Signup successful! OTP sent to your email.");
+    return res.redirect('/otp');
 
 
 
@@ -120,18 +105,17 @@ return res.redirect('/otp');
 
 const submitLoginData = asyncHandler(async (req, res) => {
     const { identifier, password } = req.body
-      
-   
+
+    if (!identifier || !password) {
+        req.flash("error", "Both username/email and password are required.");
+        return res.redirect("/login");
+    }
+
 
     const reasult = validationResult(req)
     if (!reasult.isEmpty()) {
-        // throw new ApiError('validation failed', 400)
-        const errorMessage = reasult.array().map(error => ({
-            field: error.param,
-            msg: error.msg
-        }))
-
-        throw new ApiError("validation failed", errorMessage);
+        reasult.array().forEach(err => req.flash("error", err.msg))
+        return res.redirect("/login");
     }
 
 
@@ -144,75 +128,73 @@ const submitLoginData = asyncHandler(async (req, res) => {
         : await User.findOne({ Email: normalizeIdentifier })
 
     if (!existedUser) {
-    req.flash("error", "Invalid username or email");
-     return res.redirect('/login');
+        req.flash("error", "Invalid Username or Email");
+        return res.redirect('/login');
 
     }
-
-
-
 
 
     const isPasswordCorrect = await existedUser.isCorrectPassword(password)
     if (!isPasswordCorrect) {
-         req.flash("error", "Invalid Password is incorrect");
-     return res.redirect('/login');
+        req.flash("error", " Input data is incorrect");
+        return res.redirect('/login');
     }
+
+
+    // Check email verification before login
+    if (!existedUser.isValid || !existedUser.emailVerified) {
+        req.flash("error", "Please verify your email before logging in.");
+        return res.redirect("/login");
+    }
+
+    existedUser.lastLoginAt = new Date();
+    await existedUser.save({validateBeforeSave : false});
+    //   userExist.lastLoginAt = new Date();
 
     const { refreshToken, accessToken } = await generateAccessAndRefreshToken(existedUser._id)
     const loginUser = await User.findById(existedUser._id).select("-refreshToken -password")
-  
 
-    const option = {
+
+    const accessTokenOption = {
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
         sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: ms(process.env.ACCESS_TOKEN_EXPIRY)
+    }
+    const refreshTokenOption = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: 'strict',
+        maxAge: ms(process.env.REFRESH_TOKEN_EXPIRY)
     }
 
 
-    res.cookie("accessToken", accessToken, option)
-    res.cookie("refreshToken", refreshToken, option)
+    res.cookie("accessToken", accessToken, accessTokenOption)
+    res.cookie("refreshToken", refreshToken, refreshTokenOption)
 
-  req.flash("success", "login successfully");
+    req.flash("success", "login successfully");
     return res.redirect("/profile")
-
-    // const redirection = req.headers.accept || ""
-
-    // if (redirection.includes('text/html')) {
-    //     return res.redirect("/api/user/home")
-    // } 
-    //     return res
-    //         .status(200)
-    //         .json(
-    //             new ApiResponse(
-    //                 200,
-    //                 {
-    //                     existedUser: loginUser, refreshToken, accessToken
-    //                 }, 'login successfull'
-    //             )
-    //         )
-    
-
 
 
 })
 
 
-
+const forgetPassword = asyncHandler(async (req, res) => {
+    res.render("forgetPassword", { layout: false, title: "forgetPassword" })
+})
 
 const submitForgetPassword = asyncHandler(async (req, res) => {
 
     const { identifier } = req.body
+    if (!identifier) {
+        req.flash("error", "Input Email or Username")
+        return res.redirect("forgetPassword")
+    }
 
     const result = validationResult(req)
     if (!result.isEmpty()) {
-        const errorMessage = result.array().map(error => ({
-            field: error.param,
-            msg: error.msg
-        }))
-        throw new ApiError("the validation failed", errorMessage);
-
+        result.array().forEach(err => req.flash("error", err.msg))
+        return res.redirect("forgetPassword")
     }
 
     const normalizeIdentifier = identifier.trim().toLowerCase();
@@ -225,144 +207,139 @@ const submitForgetPassword = asyncHandler(async (req, res) => {
 
 
     if (!user) {
-        throw new ApiError("the user is not existed", 400);
+        req.flash("error", "User not exist with this Email or Username")
+        return res.redirect("forgetPassword")
 
     }
+    const resetPasswordToken = await user.generateResetPasswordToken()
+    await user.save({ validateBeforeSave: false })
+    const resetUrl = `${req.protocol}://${req.get("host")}/updatePassword/${resetPasswordToken}`;
 
-    //  const otp = user.generateOtpCode();
-    //  user.otpCode = createHash('sha256').update(otp).digest("hex")
-    //  user.otpExpiry = Date.now() + 5 * 60 * 1000;
-    //  await user.save({validateBeforeSave : false})
-    //  await sendmail({Email : identifier})
-    const resetToken = await  user.generateResetPasswordToken()
+    try {
+        await sendMail({
+            to: user.Email,
+            subject: "Password Reset Request",
+            html: `<p>You requested a password reset. Click <a href="${resetUrl}">here</a> to reset your password.</p>
+            <p>This link will expire in ${process.env.RESET_PASSWORD_EXPIRY}.</p>`
+        });
+        req.flash("success", "Password reset link sent to your email");
+        return res.redirect("forgetPassword");
+    } catch (err) {
+        console.error("Failed to send OTP email:", err.message);
+        user.resetPasswordToken = undefined;
+        user.resetTokenExpiry = undefined;
+        await user.save({ validateBeforeSave: false })
+        req.flash("error", "Failed to send email. Try again later.");
+        return res.redirect("/forgot-password");
 
-    await user.save({validateBeforeSave : false})
-
-    //  const resetUrl = `${req.protocol}://${req.get("host")}/updatePassword/${resetToken}`;
-const resetUrl = `http://localhost:3002/updatePassword/${resetToken}`;
-
-
-    const redirection = req.headers.accept || ""
-    if (redirection.includes('html')) {
-        return res.redirect(`/updatePassword/${resetToken}`)
+        // optional: log in DB or flag user
     }
-
-    return res
-        .status(200)
-        .json(
-            new ApiResponse("the user match in databse",200,{resetUrl})
-
-        )
-
-
 })
 
 
 const updatePassword = asyncHandler(async (req, res) => {
-      const token = req.params.token || req.body.token;
-      if (!token) {
-        throw new ApiError("no token provide ", 400);
-        
-        
-      }
-    const {newPassword, confirmPassword } = req.body
+    const token = req.params.token || req.body.token;
+    if (!token) {
+        req.flash("error", "Please verify your email before reset Password.");
+        return res.redirect("forgot-password");
+
+
+    }
+    const { newPassword, confirmPassword } = req.body
 
     if (newPassword !== confirmPassword) {
-        throw new ApiError("the password does not matched for reset password", 401);
+        req.flash("error", "Passwords do not match.");
+        return res.redirect(`/updatePassword/${token}`);
+    }
+
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest('hex')
+
+
+
+    const userExist = await User.findOne({
+        resetPasswordToken: hashedToken,
+        resetTokenExpiry: { $gt: Date.now() }
+    })
+
+    if (!userExist) {
+        req.flash("error", "Please verify your email before reset Password.");
+        return res.redirect("forgot-password");
 
     }
 
-     
-      const hashedToken = crypto.createHash("sha256").update(token).digest('hex')
+        userExist.password = newPassword;
+        userExist.resetPasswordToken = undefined;
+        userExist.resetTokenExpiry = undefined;
+        // await userExist.save({ validateBeforeSave: false })
 
 
-
-      const userExist = await User.findOne({
-         resetPasswordToken: hashedToken,
-         resetTokenExpiry: { $gt: Date.now() }
-      })
-
-        if (!userExist) {
-        throw new ApiError("Invalid or expired reset token", 400);
-
-    }
-
-      userExist.password = newPassword,
-      userExist.resetPasswordToken = undefined,
-      userExist.resetTokenExpiry = undefined,
-      await userExist.save()
-
-
+         userExist.lastLoginAt = new Date();
 
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(userExist._id)
+    //  userExist.refreshToken = refreshToken;
+     await userExist.save({validateBeforeSave : false})
 
     const userUpdated = await User.findById(userExist._id).select("-password -refreshToken")
-    const  option = {
+    const accessTokenOption = {
         httpOnly: true,
-        secure: false,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: ms(process.env.ACCESS_TOKEN_EXPIRY),
+        sameSite: 'strict'
+    }
+    const refreshTokenOption = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: ms(process.env.REFRESH_TOKEN_EXPIRY),
         sameSite: 'strict'
     }
 
-    res.cookie("accessToken", accessToken, option)
-    res.cookie("refreshToken", refreshToken, option)
+    res.cookie("accessToken", accessToken, accessTokenOption)
+    res.cookie("refreshToken", refreshToken, refreshTokenOption)
 
-    const redirect = req.headers.accept || "";
-    if (redirect.includes('text/html')) {
-        return res.redirect('/home')
+    return res.render("home", { title: "home" })
+})
+
+const googlecontroller = asyncHandler(async (req, res) => {
+      
+    const { user, access_Token, refresh_Token } = req.user;
+
+    const accessTokenOption = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: ms(process.env.ACCESS_TOKEN_EXPIRY),
+    };
+    const refreshTokenOption = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: ms(process.env.REFRESH_TOKEN_EXPIRY),
+    };
+
+    res.cookie("accessToken", access_Token, accessTokenOption)
+    res.cookie("refreshToken", refresh_Token, refreshTokenOption)
+
+
+    const profile = await Profile.findOne({ User: req.user._id })
+    if (profile) {
+        return res.render("profile", { title: "profile", profile });
+    } else {
+        return res.render("edit-profile", { layout: false, title: "edit-profile", profile });
     }
-
-    return res
-        .status(201)
-        .json(
-            new ApiResponse("Password reset successful. now you are  loged in.", 200,
-            {
-               userUpdated: userUpdated,
-                refreshToken,
-                accessToken
-            }
-            )
-        )
-
+    //  return res.render("/edit-profile", { layout : false, title: "Edit Profile", profile });
 
 })
 
 
-
-// const otpCodeVarification = asyncHandler(async(req, res)=>{
-  
-//     const {Email} = req.body;
-
-//     const user = await User.findOne({Email})
-//     if (!user) {
-//         throw new ApiError("the Email not found", 404);
-        
-//     }
-//     const  otp = user.generateOtpCode()
-//     user.otpCode = otp;
-//     await user.save({validateBeforeSave : false})
-
-
-//     console.log("the otp send on email ", otp);
-
-//     return res
-//     .status(201)
-//     .json(
-//        new ApiResponse('otp send successfully', otp)
-//     )
-    
-
-// })
-
-
 const logOut = asyncHandler(async (req, res) => {
-  res.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // secure only in prod
-    sameSite: "strict"
-  });
+    res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // secure only in prod
+        sameSite: "strict"
+    });
 
-  res.redirect("/home");
+    res.redirect("/home");
 });
 
 
@@ -372,8 +349,10 @@ const logOut = asyncHandler(async (req, res) => {
 export {
     submitSingupData,
     submitLoginData,
+    forgetPassword,
     submitForgetPassword,
     updatePassword,
-    logOut
+    logOut,
+    googlecontroller
 }
 /*****======== Section singup Form Hendler End  ==========*****/

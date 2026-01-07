@@ -7,10 +7,14 @@ import { Profile } from "../../models/profile.model.js";
 import mongoose, { Query } from "mongoose";
 import User from "../../models/Signup.model.js";
 import { url } from "inspector";
+// import Category from "../../models/categorie.model.js";
+import Category from "../../models/categorie.model.js";
+import { RPMGroup } from "../../models/RPMGroup.model.js";
 
 const articalUpload = asyncHandler(async (req, res) => {
 
   const { title, tags, short_description, content, publish_date, meta_title, meta_description, category } = req.body;
+console.log("category", category);
 
   const imageUrl = await uploadOnCloudinary(req.file?.path)
 
@@ -19,10 +23,75 @@ const articalUpload = asyncHandler(async (req, res) => {
 
   }
 
-  const profile = await Profile.findOne({ User: req.user._id })
+  const profile = await Profile.findOne({ User: req.user._id });
+//   const cate = await Category.find()
+// console.log("cate", cate);
+const RPMG = await RPMGroup.find()
+// console.log("RPM", RPMG);
+
+  const Categories = await Category.aggregate([
+    {$unwind : "$topics"},
+    {$match :{"topics.slug" : category}},
+    {
+      $project:{
+        rpm_group_id : "$topics.rpm_group_id"
+      }
+    }
+
+  ])
+
+  const rpm_group_id = Categories[0].rpm_group_id
+  // console.log(Categories);
+ const rpm = RPMG.filter(r => r.name === rpm_group_id)
+//  console.log("rpm", );
+ 
+ if (!rpm) {
+  throw new ApiError("you have wrong RPM data ", 400);
+  
+ }
+console.log("rpm", rpm);
+
+//  const artical
+
+const View_Per_$1 = 1000
+ const earning = await Articals.find({User : req.user._id}).select("views")
+ console.log("earning", );
+ const monetized = earning[0].views.monetized
+ 
+  const ear_per_100Views =(monetized/View_Per_$1)*100
+
+  console.log("ear_per_100Views", ear_per_100Views);
+  
+  // console.log("topic are ",);
+  // console.log(Categories?.rpm);
+  
+//   console.log(Categories);
+//  const rpm = Categories
+//   .flatMap(cat => cat.topics)
+//   .find(topic => topic.slug === req.params.slug);
+
+// console.log(rpm?.rpm_group_id);
+
+
+  //       console.log("rpm", rpm);
+  // console.log("Categories.topics", Categories.topics);
+  
+  //   const Topics =  Categories.topics
+  //   console.log("topic", Topics);
+
+   
+
+    
+    
+
+  
+  // console.log(rpm_group_id.rpm_group_id);
+  
+
 
 
   const createArtical = await Articals.create({
+    User: req.user._id,
     title,
     featured_image: imageUrl.secure_url,
     tags,
@@ -31,6 +100,8 @@ const articalUpload = asyncHandler(async (req, res) => {
     publish_date,
     username: profile._id,
     category,
+    rpm : rpm[0].rate_per_1000,
+    estimatedEarning : ear_per_100Views,
     meta_description,
     meta_title,
     // author: profile._id,
@@ -41,7 +112,7 @@ const articalUpload = asyncHandler(async (req, res) => {
 
   const populateArtical = await Articals.findById(createArtical._id).populate("username", "username")
 
-  console.log("this artical after populateartical", createArtical);
+  // console.log("this artical after populateartical", createArtical);
 
 
 
@@ -211,37 +282,67 @@ const like = asyncHandler(async (req, res) => {
 });
 
 
-const viewControl = asyncHandler(async(req, res, next)=>{
-  const viewArticalId = req.params.id
-  console.log("this is artical id", viewArticalId);
+// const viewControl = asyncHandler(async(req, res, next)=>{
+//   const viewArticalId = req.params.id
+//   // console.log("this is artical id", viewArticalId);
   
  
-  const artical = await Articals.findById(viewArticalId)
-  console.log("this is find artical", artical);
+//   const artical = await Articals.findById(viewArticalId)
+//   // console.log("this is find artical", artical);
   
 
-  if (!artical) {
-    throw new ApiError("artical not found", 400);
+//   if (!artical) {
+//     throw new ApiError("artical not found", 400);
     
     
-  }
+//   }
 
-  artical.views.push({
-    view : 1,
-      likedAt: new Date()
-  })
+//   artical.views.push({
+//     view : 1,
+//       likedAt: new Date()
+//   })
 
-  console.log("this is liked artical ", artical);
+//   // console.log("this is liked artical ", artical);
   
 
- await artical.save();
+//  await artical.save();
 
-//  res.render("blog-contant", {artical})
-next()
+// //  res.render("blog-contant", {artical})
+// next()
    
    
 
-})
+// })
+
+const viewControl = asyncHandler(async (req, res, next) => {
+  const artical = await Articals.findById(req.params.id);
+  if (!artical) throw new ApiError("artical not found", 400);
+  
+    await Articals.findByIdAndUpdate(
+      artical._id,
+      {
+        $inc :{
+          "views.total": 1,
+        "views.today": 1,
+        "views.thisMonth": 1,
+        }
+      }
+    )
+
+  // Only count if user hasn't viewed this article in session
+  // if (!req.session.viewedArticles) req.session.viewedArticles = [];
+
+  // if (!req.session.viewedArticles.includes(artical._id.toString())) {
+  //   // artical.views.push({ view: 1, likedAt: new Date() });
+  //   // await artical.save();
+
+
+  //   req.session.viewedArticles.push(artical._id.toString());
+  // }
+
+  next();
+});
+
 const shareArtical = asyncHandler(async(req, res)=>{
   const { articalId, platform } = req.body;
 

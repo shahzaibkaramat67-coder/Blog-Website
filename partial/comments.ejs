@@ -3,9 +3,11 @@
   <h2 class="text-xl font-semibold mb-4">Comments</h2>
 
   <!-- Comment Form -->
-  <form class="mb-6" action="/blog/blog-contant/submit-comment" method="post">
-    <input class="hidden" type="text" name="articalId" id="" value="<%= artical._id%>">
-    <textarea name="text" placeholder="Write your comment..."
+  <!-- <form class="mb-6" action="/blog/blog-contant/submit-comment" method="post"> -->
+  <form id="comments"  action="/blog/blog-contant/submit-comment"
+  method="POST" class="mb-6">
+    <input id="id" class="hidden" type="text" name="articalId"  value="<%= artical._id%>">
+    <textarea id="text" name="text" autocomplete="off" placeholder="Write your comment..."
       class="w-full border border-gray-300 rounded-lg p-3 mb-3"></textarea>
     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800">Post Comment</button>
   </form>

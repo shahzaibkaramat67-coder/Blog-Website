@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>
+    <%= title%>
+  </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+
+  <%- include("../../partial/AdminHeader.ejs") %>
+
+    <div class="w-full max-w-lg bg-white rounded-lg shadow-lg p-8">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Add / Update RPM Group</h1>
+
+      <form id="rpmForm" action="/Api/admin-RPM/submit" method="POST"
+        class="space-y-4">
+
+        <!-- Name -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1" for="name">RPM Name</label>
+          <input type="text" id="name" name="name" placeholder="High / Medium / Normal / Low"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+        </div>
+
+        <!-- Rate -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1" for="rate">Rate per 1000 Views ($)</label>
+          <input type="number" step="0.01" id="rate" name="rate" placeholder="3, 2, 1, 0.5"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1" for="status">Status</label>
+          <select id="status" name="status"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+
+        <!-- Color -->
+        <!-- <div>
+          <label class="block text-gray-700 font-medium mb-1" for="color">Badge Color (Tailwind)</label>
+          <select id="color" name="color"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            <option value="blue-600">Blue</option>
+            <option value="green-600">Green</option>
+            <option value="yellow-600">Yellow</option>
+            <option value="red-600">Red</option>
+          </select>
+        </div> -->
+
+        <!-- Submit -->
+        <button type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-semibold">
+          Save RPM Group
+        </button>
+
+      </form>
+    </div>
+
+
+</body>
+
+</html>

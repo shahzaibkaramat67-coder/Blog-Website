@@ -9,7 +9,7 @@ const OTP = asyncHandler(async (req, res) => {
 
 const otpVerify = asyncHandler(async (req, res) => {
     const otp = req.body.otp;
-    const Email = req.user.Email;
+    const Email = req.session.Email;
 
     if (!otp || !Email) {
         req.flash("error", "Invalid request");
@@ -28,29 +28,23 @@ const otpVerify = asyncHandler(async (req, res) => {
     });
 
     if (!otpFound) {
-       req.flash("error", "Invalid otp");
+        req.flash("error", "Invalid or expired OTP");
         return res.redirect("/otp");
     }
 
     otpFound.isValid = true;
+    otpFound.emailVerified = true;
     otpFound.otpCode = undefined;
     otpFound.otpExpiry = undefined;
 
     await otpFound.save({ validateBeforeSave: false });
 
-      req.flash("success", "otp correct")
-       return res.redirect("/login")
-        
+    delete req.session.Email
 
-    // const acceptHeader = req.headers.accept || "";
+    req.flash("success", "OTP verified successfully! You can now login.");
+    return res.redirect("/login")
 
-    // if (acceptHeader.includes("text/html")) {
-    //     return res.redirect("/login");
-    // }
-     
-    // res.status(200).json({ success: true, message: "OTP verified" });
 
-    
 });
 
 export { OTP, otpVerify };

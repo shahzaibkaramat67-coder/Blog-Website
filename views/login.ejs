@@ -1,47 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    <%= title%>
-  </title>
+  <title><%= title %></title>
+   <!-- <script src="https://cdn.tailwindcss.com"></script> -->
   <link rel="stylesheet" href="/all.css">
 </head>
-
 <body>
   <section>
     <div class="section-page">
-      <div class="Singup">
-        <h1>Login Here</h1>
+      <div class="Signup">
+        <h1><%= isAdmin ? "Admin Panel Login" : "User Login" %></h1>
       </div>
-      <div class="form_Hendler">
-        <form action="/submit-login" method="POST">
-          <div class="form_date">
+      <div class="form_Handler">
+        <form action="<%= isAdmin ? '/Api/submit-login' : '/submit-login' %>" method="POST">
+          <div class="form_data">
             <label for="identifier">Username or Email</label>
             <input type="text" id="identifier" name="identifier" required>
           </div>
-
-          <div class="form_date">
+          <div class="form_data">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password">
+            <input type="password" id="password" name="password" required>
+          </div>
+          <div class="form_data">
+            <button type="submit">Submit</button>
           </div>
 
-          <div class="form_date">
-            <button type="submit-login">submit</button>
-          </div>
+          <% if (!isAdmin) { %>
           <div>
-            <p>if you have not account then Singup : <a href="./singup">Singup</a> </p>
+            <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+            <p>Forgot password? <a href="/forgetPassword">Reset</a></p>
           </div>
-
-          <p><strong>if password not remember:</strong> <a href="/forgetPassword">forget password</a></p>
+          <% } %>
         </form>
-
       </div>
     </div>
   </section>
 </body>
-
 </html>
-<!-- <p>if you have not account then singup <a href="./singup.html">singup</a> </p> -->
+
+

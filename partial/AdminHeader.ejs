@@ -22,19 +22,10 @@
   <h2 class="text-lg font-semibold text-white">Admin Panel</h2>
 
   <!-- Menu button -->
-  <button
-    id="menu-btn"
-    class="p-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-  >
-    <svg
-      class="w-6 h-6"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      viewBox="0 0 24 24"
-    >
+  <button id="menu-btn"
+    class="p-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" viewBox="0 0 24 24">
       <path d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   </button>
@@ -43,7 +34,7 @@
 <!-- Sidebar -->
 <aside id="sidebar"
   class="fixed inset-y-0 left-0 z-20 w-64 bg-gray-900 text-white shadow-lg overflow-y-auto transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out pt-2">
-  
+
   <!-- Panel Title -->
   <div class="px-6 py-4 border-b border-gray-700">
     <h2 class="text-2xl font-bold">Admin Panel</h2>
@@ -51,13 +42,11 @@
 
   <!-- Navigation -->
   <nav class="flex flex-col px-4 py-6 space-y-2 text-sm">
-    <a href="admin-dashboard"
-       class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
+    <a href="/Api/admin-dashboard" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
       📊 Dashboard
     </a>
 
-    <a href="admin-users"
-       class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
+    <a href="/Api/admin-users" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
       👤 Users
     </a>
 
@@ -66,39 +55,31 @@
       🏪 Vendors
     </a> -->
 
-    <a href="admin-categories"
-       class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
+    <a href="/Api/admin-categories" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
       📝 Categories
     </a>
 
-    <!-- <a href="admin-categories"
-       class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
-      📂 Categories
-    </a> -->
 
-    <!-- <a href="admin-comments"
-       class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
-      💬 Comments
-    </a> -->
-
-    <a href="admin-messages"
-       class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
+    <a href="/Api/admin-messages" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
       ✉️ Messages
     </a>
 
-    <a href="admin-earning"
-       class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
+    <a href="/Api/admin-earning" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
       💰 Earnings
     </a>
 
-    <a href="admin-withdraw"
-       class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
-      💸 Withdraw
+    <a href="/Api/admin-withdraw" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
+      💸 Withdrawal Requests
     </a>
 
-    <a href="admin-settings"
-       class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
+    <a href="/Api/admin-settings" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
       ⚙️ Settings
+    </a>
+    <a href="/Api/admin-RPM" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
+      💸 RPM Price
+    </a>
+    <a href="/Api/admin-categoryadd" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-800 font-semibold">
+      categoryadd
     </a>
   </nav>
 </aside>

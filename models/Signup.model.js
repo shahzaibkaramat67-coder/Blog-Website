@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import { Schema } from 'mongoose';
+import { type } from 'os';
 // import { types } from 'util';
 
 const SingupSchema = new Schema({
@@ -10,52 +11,43 @@ const SingupSchema = new Schema({
         type: String,
         required: false,
         unique: true,
-        sparse : true,
+        sparse: true,
 
     },
-    // firstName: {
-    //     type: String,
-    //     required: true,
-    //     lowercase: true,
-    //     trim: true,
-    //    validate: {
-    //     validator: v => /^[A-Za-z][A-Za-z0-9]{2,9}$/.test(v),
-    //     message: "Only letters & numbers, 5–10 characters"
-    // }
 
-    // },
+    Email: {
+        type: String,
+        required: function () { return !this.GoogleId },
+        unique: true,
+        lowercase: true,
+        trim: true,
+        validate: {
+            validator: v => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+            message: "Invalid email format"
+        }
+    },
     Username: {
         type: String,
         lowercase: true,
         trim: true,
-        required: function () {
-            return !this.GoogleId;
-        },
-     validate: {
-        validator: v => /^[A-Za-z][A-Za-z0-9]{2,9}$/.test(v),
-        message: "Only letters & numbers, 5–10 characters"
-    }
+        required: function () { return !this.GoogleId; },
+        validate: {
+            validator: v => !v || /^[A-Za-z][A-Za-z0-9]{2,9}$/.test(v),
+            message: "Only letters & numbers, 5–10 characters"
+        }
     },
-   Email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
-    validate: {
-        validator: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-        message: "Invalid email format"
+    password: {
+        type: String,
+        validate: {
+            validator: function (v) {
+                if (!v && !this.GoogleId) return false; // require password if no GoogleId
+                if (!v && this.GoogleId) return true;   // skip validation for OAuth
+                return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,20}$/.test(v);
+            },
+            message: 'Password must be 8–20 chars, include upper, lower, number & special'
+        }
     }
-},
-
- password: {
-    type: String,
-    required: function () { return !this.GoogleId },
-    validate: {
-        validator: v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,20}$/.test(v),
-        message: "Password must be 8–20 chars, include upper, lower, number & special"
-    }
-},
+    ,
 
 
     role: {
@@ -63,6 +55,11 @@ const SingupSchema = new Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    emailVerified: {
+        type: Boolean,
+        default: false
+    },
+
     refreshToken: {
         type: String
     },
@@ -75,13 +72,21 @@ const SingupSchema = new Schema({
         type: Boolean,
         default: false
 
+    },
+    status: {
+        type: String,
+        enum: ["active", "inactive", "banned"],
+        default: "active"
+    },
+    lastLoginAt: {
+        type: Date
     }
 
 }, { timestamps: true });
 
 
 SingupSchema.pre('save', async function (next) {
-
+    if (!this.password) return next() 
     if (!this.isModified('password')) return next()
 
     this.password = await bcrypt.hash(this.password, 10)
@@ -98,7 +103,7 @@ SingupSchema.methods.generateAccessToken = async function () {
     return jwt.sign(
         {
             id: this._id,
-            firstName: this.firstName
+            // firstName: this.firstName
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -111,7 +116,7 @@ SingupSchema.methods.generateRefreshToken = async function () {
     return jwt.sign(
         {
             id: this._id,
-            firstName: this.firstName
+            // firstName: this.firstName,
         },
 
         process.env.REFRESH_TOKEN_SECRET,
@@ -131,7 +136,9 @@ SingupSchema.methods.generateResetPasswordToken = async function () {
         .update(resetToken)
         .digest("hex")
 
-    this.resetTokenExpiry = Date.now() + 10 * 60 * 1000;
+
+    const expiryMinutes = Number(process.env.RESET_PASSWORD_EXPIRY) || 10;
+    this.resetTokenExpiry = Date.now() + expiryMinutes * 60 * 1000;
 
     return resetToken
 
@@ -146,7 +153,9 @@ SingupSchema.methods.generateOtpCode = async function () {
         .update(otp)
         .digest("hex")
 
-    this.otpExpiry = Date.now() + 5 * 60 * 1000;
+    const expiryMinutes = Number(process.env.OTP_EXPIRY_MINUTES) || 5;
+    this.otpExpiry = Date.now() + expiryMinutes * 60 * 1000;
+
 
     return otp
 }

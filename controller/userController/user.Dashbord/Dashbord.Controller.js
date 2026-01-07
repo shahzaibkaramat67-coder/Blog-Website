@@ -10,7 +10,7 @@ const userDashboard = asyncHandler(async (req, res) => {
 
   const profile = await Profile.findOne({ User: req.user._id });
   // all blogs
-  const allPostedArtical = await Articals.countDocuments({username: profile._id});
+  const allPostedArtical = await Articals.countDocuments({ username: profile._id });
 
   console.log("these are all posted artical", allPostedArtical);
 
@@ -21,10 +21,10 @@ const userDashboard = asyncHandler(async (req, res) => {
   const startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
   const endDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999)
   const monthlyCreatedArtical = await Articals.countDocuments(
-    {   
-       username: profile._id,
-       createdAt: { $gte: startDate, $lte: endDate }
-     }
+    {
+      username: profile._id,
+      createdAt: { $gte: startDate, $lte: endDate }
+    }
   )
 
   console.log("these are all monthly posted artical", monthlyCreatedArtical);
@@ -37,16 +37,17 @@ const userDashboard = asyncHandler(async (req, res) => {
   endDay.setHours(23, 59, 59, 999)
 
   const todayArtical = await Articals.countDocuments(
-    { username: profile._id,
-       createdAt: { $gte: startDay, $lte: endDay } 
-      }
-    )
+    {
+      username: profile._id,
+      createdAt: { $gte: startDay, $lte: endDay }
+    }
+  )
   console.log("these are all today posted artical", todayArtical);
 
 
   //    Total like of all blogs
   const likes = await Articals.aggregate([
-    {$match :{username: profile._id}},
+    { $match: { username: profile._id } },
     {
       $project: {
         likeCount: { $size: "$like" }
@@ -67,7 +68,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   const endDateForLikes = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999)
 
   const monthlyLikesOfArtical = await Articals.aggregate([
-     {$match :{username: profile._id}},
+    { $match: { username: profile._id } },
     { $unwind: "$like" },
     {
       $match: {
@@ -94,7 +95,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   dayend.setHours(23, 59, 59, 999)
 
   const dayLikesOfArtical = await Articals.aggregate([
-     {$match :{username: profile._id}},
+    { $match: { username: profile._id } },
     {
       $unwind: "$like"
     },
@@ -116,7 +117,7 @@ const userDashboard = asyncHandler(async (req, res) => {
 
 
 
-  const comments = await Comment.countDocuments({User : req.user._id});
+  const comments = await Comment.countDocuments({ User: req.user._id });
   console.log("all commmensts are", comments);
 
 
@@ -126,10 +127,11 @@ const userDashboard = asyncHandler(async (req, res) => {
 
 
   const monthlyComment = await Comment.countDocuments(
-    {  username: profile._id,
-       createdAt: { $gte: monthlyCommentStart, $lte: monthlyCommentEnd } 
-      }
-    )
+    {
+      username: profile._id,
+      createdAt: { $gte: monthlyCommentStart, $lte: monthlyCommentEnd }
+    }
+  )
   console.log("these are monylt commments ", monthlyComment);
 
   const dayCommetStart = new Date()
@@ -140,12 +142,13 @@ const userDashboard = asyncHandler(async (req, res) => {
   dayCommetEnd.setHours(23, 59, 59, 999)
 
   const dayCommets = await Comment.countDocuments(
-    {  username: profile._id,
-       createdAt: { $gte: dayCommetStart, $lte: dayCommetEnd }
-       
-      }
-    
-    )
+    {
+      username: profile._id,
+      createdAt: { $gte: dayCommetStart, $lte: dayCommetEnd }
+
+    }
+
+  )
   console.log("these are  day comments", dayCommets);
 
 
@@ -157,7 +160,7 @@ const userDashboard = asyncHandler(async (req, res) => {
 
 
   const articalcount = await Articals.aggregate([
-    {$match : {username: profile._id}},
+    { $match: { username: profile._id } },
     { $match: { category: { $in: Categorie } } },
     { $group: { _id: "$category", count: { $sum: 1 } } }
   ])
@@ -172,33 +175,111 @@ const userDashboard = asyncHandler(async (req, res) => {
     }
   })
 
+
+ const dayviewsStart = new Date()
+  dayviewsStart.setHours(0, 0, 0, 0)
+
+
+  const dayviewsEnd = new Date()
+  dayviewsEnd.setHours(23, 59, 59, 999)
+
+  
+  const monthlyViewsStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  const monthlyViewsEnd = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999)
+
+
+const views = await Articals.aggregate([
+  {$match :{User : req.user._id}},
+  {
+    $facet: {
+      totalViews: [
+        { $group: { _id: null, total: { $sum: "$views.total" } } }
+      ],
+      todayViews: [
+        { $match: { createdAt: { $gte: dayviewsStart, $lte: dayviewsEnd } } },
+        { $group: { _id: null, total: { $sum: "$views.total" } } }
+      ],
+      monthViews: [
+        { $match: { createdAt: { $gte: monthlyViewsStart, $lte: monthlyViewsEnd } } },
+        { $group: { _id: null, total: { $sum: "$views.total" } } }
+      ]
+    }
+  }
+]);
+
+const totalViews = views[0].totalViews[0]?.total || 0;
+const todayViews = views[0].todayViews[0]?.total || 0;
+const monthViews = views[0].monthViews[0]?.total || 0;
+
+console.log({ totalViews, todayViews, monthViews });
+
+//   const now = new Date();
+// const todayStr = now.toDateString();
+// const monthStr = `${now.getFullYear()}-${now.getMonth() + 1}`;
+
+// if (!article.views.lastDay || article.views.lastDay.toDateString() !== todayStr) {
+//   article.views.today = 0;
+// }
+
+// if (!article.views.lastMonth || article.views.lastMonth !== monthStr) {
+//   article.views.thisMonth = 0;
+// }
+
+// article.views.total += 1;
+// article.views.today += 1;
+// article.views.thisMonth += 1;
+
+// article.views.lastDay = now;
+// article.views.lastMonth = monthStr;
+
+// await article.save();
+
+  
+
+
   //   console.log("categoryState", categoryState);
 
-  const Artical = await Articals.find().select("views");
+  // const Artical = await Articals.find().select("views");
 
 
 
-  let totalViews = 0;
+  // let totalViews = 0;
 
-  Artical.forEach((artical) => {
-    totalViews += artical.views.length;
-  });
+  // Artical.forEach((artical) => {
+  //   totalViews += artical.views.length;
+  // });
 
-  const startMonthlyViews = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  const endMonthlyViews = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999);
+  // const totalArticalViews = await Articals.aggregate([
+  //   {$match :{username : profile._id}},
+  //   {$unwind : "$views"},
+  //   {
+  //     $group :{
+  //       _id : null, totalViews :{$sum : "$views.view"}
+  //     }
+  //   }
 
-  let monthlyViews = await Articals.aggregate([
-    {$match : {username: profile._id}},
-    { $unwind: "$views" },
-    {
-      $match: {
-        "views.viewdAt": { $gte: startMonthlyViews, $lte: endMonthlyViews }
-      }
-    },
-    { $count: "monthlyViews" }
-  ]);
+  // ])
 
-  monthlyViews = monthlyViews.length > 0 ? monthlyViews[0].monthlyViews : 0;
+  // console.log("dashbord totalArticalViews", totalArticalViews);
+  // const totalViews = totalArticalViews.length  ? totalArticalViews[0].totalViews : 0;
+
+
+
+  // const startMonthlyViews = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  // const endMonthlyViews = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999);
+
+  // let monthlyViews = await Articals.aggregate([
+  //   {$match : {username: profile._id}},
+  //   { $unwind: "$views" },
+  //   {
+  //     $match: {
+  //       "views.viewdAt": { $gte: startMonthlyViews, $lte: endMonthlyViews }
+  //     }
+  //   },
+  //   { $count: "monthlyViews" }
+  // ]);
+
+  // monthlyViews = monthlyViews.length > 0 ? monthlyViews[0].monthlyViews : 0;
 
 
   //    const startMonthDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
@@ -218,30 +299,30 @@ const userDashboard = asyncHandler(async (req, res) => {
 
   //   monthlyViews = monthlyViews.length > 0 ? monthlyViews[0].monthlyViews : 0;
 
-  const startViewDay = new Date()
-  startViewDay.setHours(0, 0, 0, 0);
-  const endViewDay = new Date();
-  endViewDay.setHours(23, 59, 59, 999)
+  // const startViewDay = new Date()
+  // startViewDay.setHours(0, 0, 0, 0);
+  // const endViewDay = new Date();
+  // endViewDay.setHours(23, 59, 59, 999)
 
-  let dailyViews = await Articals.aggregate([
-     {$match : {username: profile._id}},
-    { $unwind: "$views" },
-    {
-      $match: {
-        "views.viewdAt": { $gte: startViewDay, $lte: endViewDay }
-      }
-    },
-    { $count: "dailyViews" }
-  ])
+  // let dailyViews = await Articals.aggregate([
+  //    {$match : {username: profile._id}},
+  //   { $unwind: "$views" },
+  //   {
+  //     $match: {
+  //       "views.viewdAt": { $gte: startViewDay, $lte: endViewDay }
+  //     }
+  //   },
+  //   { $count: "dailyViews" }
+  // ])
 
-  dailyViews = dailyViews.length > 0 ? dailyViews[0].dailyViews : 0;
+  // dailyViews = dailyViews.length > 0 ? dailyViews[0].dailyViews : 0;
 
 
 
   /*****======== Section share Start ==========*****/
 
 
-  const articals = await Articals.find({username: profile._id}).select("shares");
+  const articals = await Articals.find({ username: profile._id }).select("shares");
 
   let totalShareArticals = 0;
   articals.forEach(artical => {
@@ -260,7 +341,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   const endMonthlyShare = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999);
 
   let monthlyShares = await Articals.aggregate([
-     {$match : {username: profile._id}},
+    { $match: { username: profile._id } },
     { $unwind: "$shareHistory" },
     { $match: { "shareHistory.sharedAt": { $gte: startMonthlyShare, $lte: endMonthlyShare } } },
     { $count: "monthlyShareCount" }
@@ -277,7 +358,7 @@ const userDashboard = asyncHandler(async (req, res) => {
   endDayShare.setHours(23, 59, 59, 999);
 
   let dayShares = await Articals.aggregate([
-     {$match : {username: profile._id}},
+    { $match: { username: profile._id } },
     { $unwind: "$shareHistory" },
     { $match: { "shareHistory.sharedAt": { $gte: startDayShare, $lte: endDayShare } } },
     { $count: "dailyShareCount" }
@@ -313,8 +394,8 @@ const userDashboard = asyncHandler(async (req, res) => {
     dayCommets,
     categoryState,
     totalViews,
-    monthlyViews,
-    dailyViews,
+    monthViews,
+    todayViews,
     totalShareArticals,
     monthlyShares,
     dayShares,
@@ -323,62 +404,135 @@ const userDashboard = asyncHandler(async (req, res) => {
 
 })
 
+
 const getDashbordChartData = asyncHandler(async (req, res) => {
   const days = parseInt(req.query.days) || 30;
   const profile = await Profile.findOne({ User: req.user._id });
+
+  if (!profile) {
+    return res.status(404).json({ message: "Profile not found" });
+  }
+
+  // Fetch all articles for this user once
+  const articles = await Articals.find({ username: profile._id }).select(
+    "views like shareHistory"
+  );
+
   const labels = [];
   const viewsArr = [];
   const likesArr = [];
   const sharesArr = [];
 
+  // Loop through each day in the range
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date();
     date.setDate(date.getDate() - i);
 
-    const start = new Date(date);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(date);
-    end.setHours(23, 59, 59, 999);
+    const dayStart = new Date(date);
+    dayStart.setHours(0, 0, 0, 0);
+
+    const dayEnd = new Date(date);
+    dayEnd.setHours(23, 59, 59, 999);
 
     labels.push(`${date.getMonth() + 1}/${date.getDate()}`);
 
-    // Views
-    const dailyV = await Articals.aggregate([
-       {$match : {username: profile._id}},
-      { $unwind: "$views" },
-      { $match: { "views.viewdAt": { $gte: start, $lte: end } } },
-      { $count: "count" }
-    ]);
-    viewsArr.push(dailyV.length > 0 ? dailyV[0].count : 0);
+    // Initialize counters for this day
+    let dayViews = 0;
+    let dayLikes = 0;
+    let dayShares = 0;
 
-    // Likes
-    const dailyL = await Articals.aggregate([
-       {$match : {username: profile._id}},
-      { $unwind: "$like" },
-      { $match: { "like.likedAt": { $gte: start, $lte: end } } },
-      { $count: "count" }
-    ]);
-    likesArr.push(dailyL.length > 0 ? dailyL[0].count : 0);
+    // Count in memory
+    articles.forEach((article) => {
+      if (article.views?.length) {
+        dayViews += article.views.filter(
+          (v) => v.viewdAt >= dayStart && v.viewdAt <= dayEnd
+        ).length;
+      }
 
-    // Shares
-    const dailyS = await Articals.aggregate([
-       {$match : {username: profile._id}},
-      { $unwind: "$shareHistory" },
-      { $match: { "shareHistory.sharedAt": { $gte: start, $lte: end } } },
-      { $count: "count" }
-    ]);
-    sharesArr.push(dailyS.length > 0 ? dailyS[0].count : 0);
+      if (article.like?.length) {
+        dayLikes += article.like.filter(
+          (l) => l.likedAt >= dayStart && l.likedAt <= dayEnd
+        ).length;
+      }
 
-  
+      if (article.shareHistory?.length) {
+        dayShares += article.shareHistory.filter(
+          (s) => s.sharedAt >= dayStart && s.sharedAt <= dayEnd
+        ).length;
+      }
+    });
+
+    viewsArr.push(dayViews);
+    likesArr.push(dayLikes);
+    sharesArr.push(dayShares);
   }
 
-    res.json({
-      labels,
-      views: viewsArr,
-      likes: likesArr,
-      shares: sharesArr
-    });
-})
+  // Send JSON to frontend
+  return res.json({
+    labels,
+    views: viewsArr,
+    likes: likesArr,
+    shares: sharesArr,
+  });
+});
+
+
+// const getDashbordChartData = asyncHandler(async (req, res) => {
+//   const days = parseInt(req.query.days) || 30;
+//   const profile = await Profile.findOne({ User: req.user._id });
+//   const labels = [];
+//   const viewsArr = [];
+//   const likesArr = [];
+//   const sharesArr = [];
+
+//   for (let i = days - 1; i >= 0; i--) {
+//     const date = new Date();
+//     date.setDate(date.getDate() - i);
+
+//     const start = new Date(date);
+//     start.setHours(0, 0, 0, 0);
+//     const end = new Date(date);
+//     end.setHours(23, 59, 59, 999);
+
+//     labels.push(`${date.getMonth() + 1}/${date.getDate()}`);
+
+//     // Views
+//     const dailyV = await Articals.aggregate([
+//        {$match : {username: profile._id}},
+//       { $unwind: "$views" },
+//       { $match: { "views.viewdAt": { $gte: start, $lte: end } } },
+//       { $count: "count" }
+//     ]);
+//     viewsArr.push(dailyV.length > 0 ? dailyV[0].count : 0);
+
+//     // Likes
+//     const dailyL = await Articals.aggregate([
+//        {$match : {username: profile._id}},
+//       { $unwind: "$like" },
+//       { $match: { "like.likedAt": { $gte: start, $lte: end } } },
+//       { $count: "count" }
+//     ]);
+//     likesArr.push(dailyL.length > 0 ? dailyL[0].count : 0);
+
+//     // Shares
+//     const dailyS = await Articals.aggregate([
+//        {$match : {username: profile._id}},
+//       { $unwind: "$shareHistory" },
+//       { $match: { "shareHistory.sharedAt": { $gte: start, $lte: end } } },
+//       { $count: "count" }
+//     ]);
+//     sharesArr.push(dailyS.length > 0 ? dailyS[0].count : 0);
+
+
+//   }
+
+//     res.json({
+//       labels,
+//       views: viewsArr,
+//       likes: likesArr,
+//       shares: sharesArr
+//     });
+// })
 
 
 

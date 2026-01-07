@@ -34,6 +34,7 @@
               <th class="p-3 sm:p-4">Views</th>
               <th class="p-3 sm:p-4">Likes</th>
               <th class="p-3 sm:p-4">🔗 Share</th>
+              <th class="p-3 sm:p-4">🔗Earn</th>
             </tr>
           </thead>
 
@@ -57,7 +58,8 @@
                       📊
                     </button>
                   </td>
-                  <td class="p-3 sm:p-4"><%= post.views.length %></td>
+                  <!-- Artical.views.total -->
+                  <td class="p-3 sm:p-4"><%= post.views.total %></td>
                   <td class="p-3 sm:p-4"><%= post.like.length %></td>
                   <td class="p-3 sm:p-4"><%= post.shareHistory.length %></td>
                 </tr>

@@ -1,10 +1,12 @@
 import { Articals } from "../../../models/ArticalModel.js";
+import { Profile } from "../../../models/profile.model.js";
 import asyncHandler from "../../../utils/asyncHandler.js";
 
 
 // Show all posts in table
 const postInTable = asyncHandler(async (req, res) => {
-  const artical = await Articals.find().sort({ createdAt: -1 });
+  // const profile = await Profile.find({})
+  const artical = await Articals.find({User : req.user._id}).sort({ createdAt: -1 });
 
   return res.render("Dashbord/postsAnalytics", {
     layout: false,

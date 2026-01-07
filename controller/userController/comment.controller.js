@@ -10,6 +10,8 @@ import { Articals } from "../../models/ArticalModel.js";
 // import { title } from "process";
 const getArticalComment = asyncHandler(async (req, res, next) => {
   const artical = await Articals.findById(req.params.id);
+  // console.log("artical id", artical);
+  
   if (!artical) throw new ApiError("Article not found", 404);
 
   const comments = await Comment.find({ articls: artical._id })
@@ -29,6 +31,10 @@ req.comments = comments;
 const commentHendeler = asyncHandler(async (req, res) => {
   const { text, articalId } = req.body;
 
+// console.log("text", text);
+// console.log("articalId", articalId);
+
+
   if (!text) {
     throw new ApiError("Comment text required", 400);
   }
@@ -37,7 +43,7 @@ const commentHendeler = asyncHandler(async (req, res) => {
     throw new ApiError("articalId text required", 400);
   }
 
-  console.log("artical is", articalId);
+  // console.log("artical is", articalId);
 
 
   const profile = await Profile.findOne({ User: req.user._id })
@@ -47,7 +53,7 @@ const commentHendeler = asyncHandler(async (req, res) => {
     throw new ApiError("profile not found", 404);
   }
 
-  console.log("this is profiel", profile);
+  // console.log("this is profiel", profile);
 
 
   const comment = await Comment.create({
@@ -58,8 +64,12 @@ const commentHendeler = asyncHandler(async (req, res) => {
     username: profile.username
   });
 
+  // console.log("comment", comment);
+  
+
  
   res.redirect(`/blog/blog-contant/${articalId}`);
+  // return res.render("blog-contant", articalId)
 
 });
 
@@ -82,7 +92,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
   }
 
-  res.redirect(`/blog/blog-contant/${deleteComment.articls}`)
+  res.redirect(303, `/blog/blog-contant/${deleteComment.articls}`)
   // res.send(`<script>window.location.replace('/blog/blog-contant/${deleteComment.articls}');</script>`);
 
 

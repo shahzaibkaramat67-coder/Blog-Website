@@ -13,6 +13,8 @@ import ApiError from "./utils/ApiError.js";
 import expressEjsLayouts from "express-ejs-layouts";
 import Categorie from "./models/categorie.model.js";
 import flash from "connect-flash"
+import isAdmin from "./middleware/checkUserForAdmin.js";
+import checkUserRole from "./middleware/checkRole.js"
 
 // import .env from './'
 
@@ -24,15 +26,16 @@ app.use(session({
   resave: false,
   saveUninitialized: false, // better for production
   store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URI, // your MongoDB connection string
+    mongoUrl: process.env.MONGODB_URL, //  MongoDB connection 
     collectionName: 'sessions',
-    ttl: 14 * 24 * 60 * 60 // session expiration in seconds (optional)
+    ttl: 7 * 24 * 60 * 60 // session expiration in seconds 
   }),
   cookie: {
     secure: process.env.NODE_ENV === 'production', // only HTTPS in production
     httpOnly: true,
-    maxAge: 14 * 24 * 60 * 60 * 1000 // 14 days
-  }
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 14 days
+  },
+    rolling: true
 }));
 
 app.use(passport.initialize())
@@ -62,61 +65,63 @@ app.use((req, res, next)=>{
 app.use(async (req, res, next) => {
   try {
     const Token = req.cookies?.accessToken;
+    
     if (Token) {
       const decodedToken = jwt.verify(Token, process.env.ACCESS_TOKEN_SECRET);
 
       const user = await User.findById(decodedToken.id).select("-password -refreshToken");
       if (user) {
+           //  Block unverified users from being treated as logged-in
+        if (!user.emailVerified || !user.isValid) {
+          req.user = null;
+          res.locals.currentUser = null;
+          return next();
+        }
         req.user = user;                  //  full user object
         res.locals.currentUser = user;    //  EJS can access `currentUser`
       } else {
-        req.user = null;
-        res.locals.currentUser = null;
+         req.user = null;                       
+         res.locals.currentUser = null;          
+                                                      
       }
     } else {
       req.user = null;
       res.locals.currentUser = null;
     }
+    
   } catch (error) {
-    req.user = null;
-    res.locals.currentUser = null;
-  }
+    req.user = null;                                   
+    res.locals.currentUser = null;                      
+  }                                                       
   next();
 });
 
+// app.use(async (req, res, next) => {
+//   try {
+//     const Token = req.cookies?.accessToken;
+    
+//     if (Token) {
+//       const decodedToken = jwt.verify(Token, process.env.ACCESS_TOKEN_SECRET);
 
-// app.use(async(req, res, next) => {
-//    try {
-//       const Token = req.cookies?.accessToken;
-//       if (Token) {
-//         const decodedToken = jwt.verify(Token, process.env.ACCESS_TOKEN_SECRET);
-
-
-//          const user = await User.findById(decodedToken._id).select("role")
-//          if (user) {
-//             req.user = { role: user.role };
-//             res.locals.currentUser = req.user
-//          } else {
-//             req.user = null
-            
-//             res.locals.currentUser = null
-//          }
-
+//       const user = await User.findById(decodedToken.id).select("-password -refreshToken");
+//       if (user) {
+//         req.user = user;                  //  full user object
+//         res.locals.currentUser = user;    //  EJS can access `currentUser`
 //       } else {
-
-//          throw new ApiError("no Token recive ", 404);
-         
-//          // req.user = null
-//          // res.locals.currentUser = null
+//          req.user = null;                        // res.clearCookie("accessToken");
+//          res.locals.currentUser = null;          // res.clearCookie("accessToken");
+//                                                       // return res.redirect("/login"); 
 //       }
-
-//    } catch (error) {    
-//       req.user = null
-//       res.locals.currentUser = null
-
-//    }
-//    next()
-// })
+//     } else {
+//       req.user = null;
+//       res.locals.currentUser = null;
+//     }
+//   } catch (error) {
+//     req.user = null;                                    // res.clearCookie("accessToken");
+//     res.locals.currentUser = null;                       // res.clearCookie("accessToken");
+//   }                                                       // return res.redirect("/login"); 
+//   next();
+// });
 
 
 app.use(async(req, res, next)=>{
@@ -135,26 +140,14 @@ app.use(express.static('public'))
 
 
 
-
 app.use("/", userRouter)
-// app.use("/api/host/",hostRouter)
+
 
 app.get("/", (req, res) => {
-   res.redirect("/home")
+  res.redirect("/home")
 })
-// app.use("/api/user/", userRouter)
-app.use("/admin",hostRouter)
-
-// app.get("/", (req, res) => {
-//    res.redirect("api/user/home")
-// })
-
-// app.use('/api/categorys', hostRouter)
+app.use("/Api", hostRouter)
 
 
-
-// app.get("/Dashbord", (req, res)=>{
-//    res.redirect("api/host/Dashbord")
-// })
 export default app;
 

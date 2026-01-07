@@ -33,15 +33,13 @@
   <!-- Like & Share -->
   <form action="/blog/blog-contant/like/<%= artical._id%>" method="post"
     class="flex items-center justify-between border-t border-b py-3 mb-6">
-    <button id="like-btn" type="submit" class="flex items-center gap-2  text-blue-600 hover:text-blue-800">
-      <% if (currentUser && artical.like.includes(currentUser._id)) { %>
-        <span id="heart">❤️</span> Unlike
-        <% } else { %>
-          <span id="heart">🤍</span> Like
-          <% } %>
+    <% const liked = currentUser && artical.like.some(l => l.user.toString() === currentUser._id.toString()); %>
 
+<button id="like-btn" type="submit" class="flex items-center gap-2 text-blue-600 hover:text-blue-800">
+  <span id="heart"><%= liked ? "❤️" : "🤍" %></span>
+  <%= liked ? "Unlike" : "Like" %>
+</button>
 
-    </button>
     <div class="flex gap-3">
       <a onclick="openPopup()" href="#" class="text-blue-500 hover:text-blue-700">🔗 Share</a>
     </div>
@@ -54,6 +52,15 @@
 
 
   <script>
+
+  // Remove POST request from browser history
+  if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+  }
+
+
+
+
     window.ARTICAL_ID = "<%= artical._id %>";
     const likebtn = document.querySelector("#like-btn");
 const heart = document.querySelector("#heart");
@@ -61,20 +68,18 @@ const blofId = "<%= artical._id %>";
 
 likebtn.addEventListener("click", async (e) => {
   e.preventDefault();
-
   try {
     const res = await fetch(`/blog/blog-contant/like/${blofId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     });
-
     const data = await res.json();
-
     heart.textContent = data.liked ? '❤️' : '🤍';
   } catch (err) {
     console.error(err);
   }
 });
+
 
 
 
