@@ -22,12 +22,11 @@ import {
   getArticales,
   categoryShareToArtical,
   getSearchAndRandomArticals,
-  getArticalesById,
-  like,
-  viewControl,
-  shareArtical,
-  profile_Image
+ 
 } from '../controller/userController/artical.controller.js'
+import { viewControl } from '../controller/userController/view.Controller.js'
+import { likeArtical } from '../controller/userController/like.Controller.js'
+import { shareArtical, profile_Image } from '../controller/userController/share.Controller.js'
 import userEarning from '../controller/userController/user.Dashbord/Earning.Controller.js'
 import contactValidator from '../middleware/contact.validation.js'
 import { contactController } from '../controller/userController/contact.controller.js'
@@ -37,7 +36,7 @@ import { userDashboard, getDashbordChartData } from "../controller/userControlle
 import { categoryHendler } from '../controller/userController/category.controller.js'
 // import {getTopicBlog} from '../controller/userController/category.controller.js'
 // import {commentHendeler} from '../controller/userController/comment.controller.js'
-import { commentHendeler, getArticalComment, deleteComment } from '../controller/userController/comment.controller.js'
+import {getArticalComment, commentHendeler, deleteComment } from '../controller/userController/comment.controller.js'
 import passport from 'passport'
 import '../auth/google-Strategy.js'
 import upload from '../middleware/multer.middleware.js'
@@ -49,7 +48,7 @@ import { title } from 'process'
 import { postInTable, chart } from "../controller/userController/user.Dashbord/postAnalysist.controller.js"
 import { Profile } from '../models/profile.model.js'
 import isAdmin from '../middleware/checkUserForAdmin.js'
-import withdraw from '../controller/userController/user.Dashbord/withdraw.Controller.js'
+import withdrawController from '../controller/userController/user.Dashbord/withdraw.Controller.js'
 // import { profile } from 'console'
 // import { title } from 'process'
 // import { profile } from 'console'
@@ -71,7 +70,7 @@ router.get('/auth/google/callback',passport.authenticate('google'), googlecontro
 
 
 router.get('/profile', verifijwt, getProfileForUpdate)
-// router.get('/edit-profile',verifijwt, (req, res)=>{res.render('edit-profile', {layout : false, title: 'edit-profile'})})
+router.post('/edit-profile',verifijwt, (req, res)=>{res.render('edit-profile', {layout : false, title: 'edit-profile'})})
 router.post('/profile', verifijwt, upload.single("profile_Image"), profileValivation, createORUpdateProfile)
 // router.get('/profile/postsAnalytics', (req, res) => { res.render('postsAnalytics', {layout : false, title: "postsAnalytics" }) })
 router.get('/profile/Dashbord/postsAnalytics',verifijwt, postInTable)
@@ -80,7 +79,7 @@ router.get('/profile/Dashbord/my-Dashboard', verifijwt, userDashboard)
 router.get('/profile/Dashbord/my-Dashboard/data', verifijwt, getDashbordChartData)
 // router.get('/profile/Dashbord/my-Dashboard', likedBlogs)
 router.get('/profile/Dashbord/Withdraw',verifijwt, (req, res) => { res.render('Dashbord/Withdraw', { layout: false, title: 'Withdraw-Page' }) })
-router.post('/profile/Dashbord/Withdraw/submit',verifijwt, withdraw)
+router.post('/profile/Dashbord/Withdraw/submit',verifijwt, withdrawController)
 // router.get('/profile/Dashbord/postsAnalytics', postInTable);
 
 router.get('/profile/Dashbord/postsAnalytics/:id', chart);
@@ -90,13 +89,19 @@ router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, upload.si
 
 
 //  there are Singup , Login , forgetPassport , Logout logics
-router.get('/signup', (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.redirect("/login");
-  }
+// router.get('/signup', (req, res) => {
+//   if (req.isAuthenticated()) {
+//     return res.redirect("/login");
+//   }
 
-  res.render("signup", { layout: false, title: "Signup" });
-});
+//   res.render("signup", { layout: false, title: "Signup" });
+// });
+ // if (req.user) {
+  //   return res.redirect("/home");
+  // }
+
+router.get('/signup', (req, res) => {res.render("signup", { layout: false, title: "Signup" })});
+
 
 router.post('/submit-singup', validatorForRegistration, submitSingupData)
 router.get('/otp', OTP)
@@ -108,7 +113,7 @@ router.get('/otp', OTP)
 //     return res.status(400).send('Email is required')
 // } else {
 //     res.render('otp', {layout : false, title: "otpPage", Email })
-//   }
+//   }s
 // })
 router.post('/otp-submit', otpVerify)
 router.get("/login", (req, res) => { res.render('login', { layout: false, title: "login", isAdmin: false }) })
@@ -136,35 +141,36 @@ router.get("/blog", getSearchAndRandomArticals)
 // router.post("/blog/blog-contant/:id", getArticalesById)
 
 router.get("/topics/:slug", verifijwt, getArticales)
-router.get(
-  "/blog/blog-contant/:id",
-  verifijwt,
-  viewControl,
-  getArticalesById,
-  getArticalComment,
-  profile_Image,
-  (req, res) => {
-      res.set("Cache-Control", "no-store");
-    res.render("blog-contant", {
-      title: "blog-contant",
-      artical: req.artical,
-      comments: req.comments,
-      profile: req.profile?.profile_Image,
-      username: req.profile?.username,
-    });
-  }
-);
+router.get("/blog/blog-contant/:id",viewControl)
+// router.get(
+//   "/blog/blog-contant/:id",
+//   verifijwt,
+//   viewControl,
+//   getArticalesById,
+//   getArticalComment,
+//   profile_Image,
+//   (req, res) => {
+//       res.set("Cache-Control", "no-store");
+//     res.render("blog-contant", {
+//       title: "blog-contant",
+//       artical: req.artical,
+//       comments: req.comments,
+//       profile: req.profile?.profile_Image,
+//       username: req.profile?.username,
+//     });
+//   }
+// );
 
 
-// router.get("/blog/blog-contant/:id",verifijwt, )
-router.post('/blog/blog-contant/submit-comment', verifijwt, commentHendeler)
-router.post('/blog/blog-contant/delete-comment/:id', verifijwt, deleteComment)
-router.post("/blog/blog-contant/like/:articalId", like)
-router.post("/blog/share/update", shareArtical);
+router.get("/blog/blog-contant/:id/comments",verifijwt, getArticalComment)
+router.post('/blog/blog-contant/submit-comment',verifijwt, commentHendeler)
+router.delete('/blog/blog-contant/delete-comment/:id', verifijwt, deleteComment)
+router.post("/blog/blog-contant/like/:id",verifijwt, likeArtical)
+router.post("/blog/share/update",verifijwt, shareArtical);
 
 
 
-
+//  const blofId = "<%= articalById._id %>";
 
 router.get("/Categorie", categoryHendler)
 router.get("/contact", verifijwt, (req, res) => { res.render("contact", { title: "contact" }) })

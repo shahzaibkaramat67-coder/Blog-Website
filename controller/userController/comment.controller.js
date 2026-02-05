@@ -9,22 +9,27 @@ import User from "../../models/Signup.model.js";
 import { Articals } from "../../models/ArticalModel.js";
 // import { title } from "process";
 const getArticalComment = asyncHandler(async (req, res, next) => {
-  const artical = await Articals.findById(req.params.id);
-  // console.log("artical id", artical);
+  const articalId = req.params.id;
+  console.log("params", articalId);
   
+  const artical = await Articals.findById(articalId);
+  console.log("all comments for specfic artical id", artical);
+  
+  // if (!artical) throw new ApiError("Article not found", 404);
   if (!artical) throw new ApiError("Article not found", 404);
 
   const comments = await Comment.find({ articls: artical._id })
     .sort({ createdAt: -1 })
+    console.log("comments", comments);
     
-req.comments = comments;
+// req.comments = comments;
   // res.render("blog-contant", {
   //   title: "blog-contant",
-  //   artical, // ✅ consistent with EJS
+  //   artical, //  consistent with EJS
   //   comments,
   // });
-
-  next()
+     return res.json({success : true , comments, articalId})
+  // next()
 });
 
 
@@ -35,19 +40,17 @@ const commentHendeler = asyncHandler(async (req, res) => {
 // console.log("articalId", articalId);
 
 
-  if (!text) {
-    throw new ApiError("Comment text required", 400);
+  if (!text || !articalId) {
+    throw new ApiError("something is wrong", 400);
   }
-  console.log("text is", text);
-  if (!articalId) {
-    throw new ApiError("articalId text required", 400);
-  }
+  // console.log("text is", text , articalId);
+
 
   // console.log("artical is", articalId);
 
 
-  const profile = await Profile.findOne({ User: req.user._id })
-    .populate("username", "username profile_Image")
+  const profile = await Profile.findOne({ User: req.user._id }).select("username profile_Image")
+    // .populate("username", "username profile_Image")
 
   if (!profile) {
     throw new ApiError("profile not found", 404);
@@ -56,7 +59,7 @@ const commentHendeler = asyncHandler(async (req, res) => {
   // console.log("this is profiel", profile);
 
 
-  const comment = await Comment.create({
+   const newComments = await Comment.create({
     User: req.user._id,
     articls: articalId,
     Comment: text,
@@ -64,17 +67,24 @@ const commentHendeler = asyncHandler(async (req, res) => {
     username: profile.username
   });
 
-  // console.log("comment", comment);
-  
+  // console.log("comment", newComments);
 
+ return res.json({ success: true, newComments});
+  
+   
  
-  res.redirect(`/blog/blog-contant/${articalId}`);
+  // res.redirect(`/blog/blog-contant/${articalId}`);
   // return res.render("blog-contant", articalId)
 
 });
 
 const deleteComment = asyncHandler(async (req, res) => {
-  const commentId = req.params.id
+  const commentId = req.params.id;
+
+  // console.log("commentId", );
+  console.log("commentId", commentId);
+  console.log("commentId", req.params);
+  
 
   if (!commentId) {
     throw new ApiError("the comment id not found", 404);
@@ -84,6 +94,8 @@ const deleteComment = asyncHandler(async (req, res) => {
 
   const deleteComment = await Comment.findByIdAndDelete(commentId)
   // deleteComment.save()
+  console.log("deleteComment", deleteComment);
+  
 
 
 
@@ -91,8 +103,8 @@ const deleteComment = asyncHandler(async (req, res) => {
     throw new ApiError("the cooment not delete", 201);
 
   }
-
-  res.redirect(303, `/blog/blog-contant/${deleteComment.articls}`)
+  return res.json({success : true, deleteComment})
+  // res.redirect(303, `/blog/blog-contant/${deleteComment.articls}`)
   // res.send(`<script>window.location.replace('/blog/blog-contant/${deleteComment.articls}');</script>`);
 
 

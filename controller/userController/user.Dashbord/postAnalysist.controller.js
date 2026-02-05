@@ -1,85 +1,116 @@
+import { format } from "path";
 import { Articals } from "../../../models/ArticalModel.js";
 import { Profile } from "../../../models/profile.model.js";
 import asyncHandler from "../../../utils/asyncHandler.js";
+import ArticleLike from "../../../models/like.Model.js";
+import { ArticleView } from "../../../models/view.Model.js";
+import { ArticleShare } from "../../../models/share.Model.js";
+import { group, log } from "console";
+import earningCalculate from "../../../helper/earningCalculation.js";
+import mongoose from "mongoose";
+
 
 
 // Show all posts in table
 const postInTable = asyncHandler(async (req, res) => {
+  // const useId = req.user._id 
   // const profile = await Profile.find({})
-  const artical = await Articals.find({User : req.user._id}).sort({ createdAt: -1 });
+  // const articals = await Articals.find({ User: req.user._id }).sort({ createdAt: -1 }).select("title featured_image publish_date views.monetized  estimatedEarning shareHistory like");
+  const articles = await Articals.find({ User: req.user._id })
+        .select("title featured_image publish_date totalLikes totalViews totalShares estimatedEarningMills")
+
+  // console.log("artical", articals);
+
+
+const Analysist = articles.map(article => ({
+  _id: article._id, //  ADD THIS
+  title: article.title,
+  featured_image: article.featured_image,
+  publish_date: article.publish_date,
+  totalLikes: article.totalLikes,
+  totalViews: article.totalViews,
+  totalShares: article.totalShares,
+  estimatedEarningMills: (article.estimatedEarningMills / 1000).toFixed(3)
+}));
+
+
+  // console.log("Analysist", Analysist);
 
   return res.render("Dashbord/postsAnalytics", {
     layout: false,
     title: "postsAnalytics",
-    artical,
+    Analysist: Analysist,
+    // articalTables
   });
+
+
 });
 
-// Return chart data for modal popup
 const chart = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
   const days = parseInt(req.query.days) || 7;
 
-  const article = await Articals.findById(id);
+  const articleId = new mongoose.Types.ObjectId(id);
 
-  if (!article) {
-    return res.status(404).json({ message: "Article not found" });
-  }
+  /* ---------- LIKES ---------- */
+  const likesAgg = await ArticleLike.aggregate([
+    { $match: { article: articleId } },
+    {
+      $group: {
+        _id: {
+          $dateToString: { format: "%Y-%m-%d", date: "$likedAt" }
+        },
+        total: { $sum: 1 }
+      }
+    }
+  ]);
 
-  // Starting date
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days);
+  /* ---------- SHARES ---------- */
+  const sharesAgg = await ArticleShare.aggregate([
+    { $match: { article: articleId } },
+    {
+      $group: {
+        _id: {
+          $dateToString: { format: "%Y-%m-%d", date: "$sharedAt" }
+        },
+        total: { $sum: 1 }
+      }
+    }
+  ]);
 
-  // Prepare arrays
+  /* ---------- VIEWS (MAP BASED) ---------- */
+  const viewDoc = await ArticleView.findOne({
+    article: articleId,
+    User: userId
+  });
+
   const labels = [];
   const views = [];
   const likes = [];
   const shares = [];
 
-  // Loop through each DAY backward
   for (let i = days - 1; i >= 0; i--) {
-    const day = new Date();
-    day.setDate(day.getDate() - i);
+    const date = new Date();
+    date.setDate(date.getDate() - i);
 
-    const dayStart = new Date(day.setHours(0, 0, 0, 0));
-    const dayEnd = new Date(day.setHours(23, 59, 59, 999));
+    const dayKey = date.toISOString().slice(0, 10); // YYYY-MM-DD
+    labels.push(dayKey);
 
-    labels.push(dayStart.toISOString().slice(0, 10)); // yyyy-mm-dd
+    /* ---- VIEWS ---- */
+    const dayView = viewDoc?.daily?.get(dayKey);
+    views.push(dayView?.views || 0);
 
-    views.push(
-      article.views.filter(
-        v => v.viewdAt >= dayStart && v.viewdAt <= dayEnd
-      ).length
-    );
+    /* ---- LIKES ---- */
+    const likeDay = likesAgg.find(l => l._id === dayKey);
+    likes.push(likeDay?.total || 0);
 
-    likes.push(
-      article.like.filter(
-        l => l.likedAt >= dayStart && l.likedAt <= dayEnd
-      ).length
-    );
-
-    shares.push(
-      article.shareHistory.filter(
-        s => s.sharedAt >= dayStart && s.sharedAt <= dayEnd
-      ).length
-    );
+    /* ---- SHARES ---- */
+    const shareDay = sharesAgg.find(s => s._id === dayKey);
+    shares.push(shareDay?.total || 0);
   }
 
-
-
-  //  return res.render("Dashbord/postsAnalytics", {
-  //   layout: false,
-  //   title: "postsAnalytics",
-  //   labels,
-  //   views,
-  //   likes,
-  //   shares,
-  // });
   return res.json({ labels, views, likes, shares });
-
-   
 });
-
-
 
 export { postInTable, chart };

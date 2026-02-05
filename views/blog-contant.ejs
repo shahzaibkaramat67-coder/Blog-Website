@@ -1,87 +1,74 @@
-<div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg mt-8 p-6">
+<div class="max-w-4xl mx-auto mt-8">
 
-  <!-- Title -->
-  <h1 class="text-3xl flex justify-center font-bold mb-2">
-    <%= artical.title %>
-  </h1>
-  <a href="/profile" class="flex  gap-2">
-    <img src="<%= profile %>" alt="profile_image" class="rounded-lg mb-6 h-10 w-10">
-    <h1 class="text-2xl font-bold ">
-      <%= username %>
-    </h1>
-  </a>
+  <% if (articalById) { %>
+    <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
 
-  <p class="text-gray-500 text-sm mb-4">By <span class="font-semibold">
+      <!-- Title -->
+      <h1 class="text-3xl flex justify-center font-bold mb-2">
+        <%= articalById.title %>
+      </h1>
 
-      <% if(artical.username) { %>
-        <%= artical.username.username%>
-          <% } %>
+      <!-- Author -->
+      <a href="/profile" class="flex gap-2 items-center mb-4">
+        <img src="<%= articalById.featured_image %>" alt="profile_image" class="rounded-lg h-10 w-10">
+        <h2 class="text-2xl font-bold">
+          <%= articalById.username?.username || "Unknown" %>
+        </h2>
+      </a>
 
-    </span> |
-    <%= new Date(artical.publish_date).toLocaleDateString("en-US", { year: "numeric" , day: "numeric" , month: "long" })
-      %>
-  </p>
+      <!-- Publish Date -->
+      <p class="text-gray-500 text-sm mb-4">
+        By <span class="font-semibold"><%= articalById.username?.username || "Unknown" %></span> |
+        <%= new Date(articalById.publish_date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) %>
+      </p>
 
-  <!-- Featured Image -->
-  <img src="<%= artical.featured_image  %>" alt="Cybersecurity Shield" class=" rounded-lg mb-6 w-full h-15%">
+      <!-- Featured Image -->
+      <img src="<%= articalById.featured_image %>" alt="Article Image" class="rounded-lg mb-6 w-full h-60 object-cover">
 
-  <!-- Blog Content -->
-  <div class="prose max-w-none mb-6">
-    <%= artical.content %>
-  </div>
+      <!-- Blog Content -->
+      <div class="prose max-w-none mb-6">
+        <%= articalById.content %>
+      </div>
 
-  <!-- Like & Share -->
-  <form action="/blog/blog-contant/like/<%= artical._id%>" method="post"
-    class="flex items-center justify-between border-t border-b py-3 mb-6">
-    <% const liked = currentUser && artical.like.some(l => l.user.toString() === currentUser._id.toString()); %>
+      <!-- Like & Share -->
+      <div class="flex items-center justify-between border-t border-b py-3">
+        <button class="like-btn flex items-center gap-2 text-blue-600 hover:text-blue-800" data-id="<%= articalById._id %>">
+          <span class="heart"><%= liked ? "❤️ Unlike" : "🤍 Like" %></span>
+        </button>
+        <span><%= articalById.totalLikes %> Likes</span>
+        <div class="flex gap-3">
+          <button onclick="openPopup(this)"  data-id="<%= articalById._id%>" href="#" class="text-blue-500 hover:text-blue-700">🔗 Share</button>
+        </div>
+      </div>
 
-<button id="like-btn" type="submit" class="flex items-center gap-2 text-blue-600 hover:text-blue-800">
-  <span id="heart"><%= liked ? "❤️" : "🤍" %></span>
-  <%= liked ? "Unlike" : "Like" %>
-</button>
+      <!-- Comments -->
+      <%- include("../partial/comments.ejs", { articalById: articalById._id, comments }) %>
 
-    <div class="flex gap-3">
-      <a onclick="openPopup()" href="#" class="text-blue-500 hover:text-blue-700">🔗 Share</a>
     </div>
-  </form>
-
-
+  <% } else { %>
+    <p class="text-center text-gray-500 py-6">Article not found.</p>
+  <% } %>
 
 </div>
-<%- include("../partial/comments.ejs")%>
 
+<script>
+  // --- Handle like button ---
+  const likeBtn = document.querySelector(".like-btn");
+  const heart = likeBtn.querySelector(".heart");
 
-  <script>
+  likeBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const articleId = likeBtn.dataset.id;
 
-  // Remove POST request from browser history
-  if (window.history.replaceState) {
-    window.history.replaceState(null, null, window.location.href);
-  }
-
-
-
-
-    window.ARTICAL_ID = "<%= artical._id %>";
-    const likebtn = document.querySelector("#like-btn");
-const heart = document.querySelector("#heart");
-const blofId = "<%= artical._id %>";
-
-likebtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-  try {
-    const res = await fetch(`/blog/blog-contant/like/${blofId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    const data = await res.json();
-    heart.textContent = data.liked ? '❤️' : '🤍';
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-
-
-
-
-  </script>
+    try {
+      const res = await fetch(`/blog/blog-contant/like/${articleId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      });
+      const data = await res.json();
+      heart.textContent = data.liked ? "❤️ Unlike" : "🤍 Like";
+    } catch (err) {
+      console.error(err);
+    }
+  });
+</script>

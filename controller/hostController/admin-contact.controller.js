@@ -31,19 +31,26 @@ return res.render("Admin.Dashbord/message", { layout: false,  adminMessages, tot
 
 
 const readMail = asyncHandler(async (req, res) => {
+//    console.log("req.params.id", req.params.id);
+//    console.log("req.body.id", req.body.id);
+   
 
-
-    const id = req.params.id;   // <-- use req.params.id, not req.param.id
+    const id = req.params.id; // <-- use req.params.id, not req.param.id
+    
+    const mailId = await ContactMessage.findById(id)
+    console.log("mail first", mailId.status);
+    if (mailId.status === 'unread') {
+        mailId.status = "read"
+           await mailId.save({validateBeforeSave : false}) 
+        // console.log("mail with read ", mail);
+    }
+    console.log("mail second", mailId);
+    
     
    
-    const mail = await ContactMessage.findByIdAndUpdate(
-        id,
-        {status : "read"},
-        {new : true}
-    )
+   
     //  const unread = await ContactMessage.countDocuments({ status: "unread" });
     // const read = await ContactMessage.countDocuments({ status: "read" });
-    console.log("mail", mail);
     
    
     return res.redirect(`/admin/admin-messages?show=${id}`);

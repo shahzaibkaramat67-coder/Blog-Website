@@ -1,6 +1,9 @@
-import { Articals } from "../../models/ArticalModel.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import Comment from "../../models/comment.model.js";
+import { Articals } from "../../models/ArticalModel.js";
+import { ArticleView } from "../../models/view.Model.js"
+import ArticleLike from "../../models/like.Model.js";
+import { ArticleShare } from "../../models/share.Model.js"
 
 const dashboardController = asyncHandler(async (req, res) => {
 
@@ -37,36 +40,63 @@ const dashboardController = asyncHandler(async (req, res) => {
 
   const startMonthlyviews = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
   const endMonthlyviews = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999)
+  // const views = await ArticleView.aggregate([
+  //   { $match: { isPublished: true } },
+  //   {
+  //     $group: {
+  //       _id: null,
+  //       totalViews: { $sum: "$total"},
+  //       todayViews: { $sum: `$daily.${dayKey}.views`},
+  //       monthlyViews: { $sum: `$monthly.${monthKey}.views`},
+  //     }
+  //   }
+  // ])
 
 
-  const views = await Articals.aggregate([
-    { $match: { isPublished: true } },
-    {
-      $facet: {
-        totalViews: [
-          { $group: { _id: null, totalViews: { $sum: "$views.total" } } }
-        ],
-        monthlyViews: [
-          { $match: { createdAt: { $gte: startMonthlyviews, $lte: endMonthlyviews } } },
-          { $group: { _id: null, monthlyViews: { $sum: "$views.thisMonth" } } },
-        ],
-        todayViews: [
-          { $match: { createdAt: { $gte: startDayview, $lte: endDayview } } },
-          { $group: { _id: null, todayViews: { $sum: "$views.today" } } }
-        ]
-      }
-    },
+  const views = await ArticleView.find()
+  console.log("views", views);
+
+  const now = new Date();
+  const dayKey = now.toISOString().slice(0, 10)
+  const monthKey = now.toISOString().slice(0, 7)
+
+  // const  allViews = views.reduce((sum, view) => sum + (view?.monetized || 0), 0)
+  // const  dailyViews = views.reduce((sum, view)=> sum + (view?.daily?.get(daykey)?.monetized || 0), 0)
+  // const  totalMonthlyVires = views.reduce((sum, view)=> sum + (view?.monthly?.get(monthKey)?.monetized || 0), 0)
+
+  const allViews = views.reduce((sum, view) => sum + (view?.monetized || 0), 0)
+  const totalMonthlyVires = views.reduce((sum, view) => sum + (view?.monthly?.get(monthKey)?.monetized || 0), 0)
+  const dailyViews = views.reduce((sum, view) => sum + (view?.daily?.get(dayKey)?.monetized || 0), 0)
+  // console.log("totalViews", totalViews);
+  // console.log("monthViews", monthViews);
+  // console.log("todayViews", todayViews);
+
+  //  total: 1,
+  //           monetized: 1,
+  //            earningsMills : perViewEarningMills,
+  //           [`daily.${dayKey}.views`]: 1,
+  //           [`daily.${dayKey}.monetized`]: 1,
+  //           [`daily.${dayKey}.earningsMills`]: perViewEarningMills,
+  //           [`monthly.${monthKey}.views`]: 1,
+  //           [`monthly.${monthKey}.monetized`]: 1,
+  //           [`monthly.${monthKey}.earningsMills`]: perViewEarningMills
 
 
-  ])
 
-  const allViews =  views[0].totalViews[0]?.totalViews || 0;
-  const totalMonthlyVires = views[0].monthlyViews[0]?.monthlyViews || 0;
-  const dailyViews =  views[0].todayViews[0]?.todayViews || 0;
+  // const allViews = views[0]?.totalViews || 0;
+  // const dailyViews = views[0]?.todayViews || 0;
+  // const totalMonthlyVires = views[0]?.monthlyViews || 0;
 
-  console.log("allViews", allViews);
-  console.log("totalMonthlyVires", totalMonthlyVires);
-  console.log("dailyViews", dailyViews);
+  console.log({ allViews, dailyViews, totalMonthlyVires });
+
+
+  // const allViews =  views[0].totalViews[0]?.totalViews || 0;
+  // const totalMonthlyVires = views[0].monthlyViews[0]?.monthlyViews || 0;
+  // const dailyViews =  views[0].todayViews[0]?.todayViews || 0;
+
+  // console.log("allViews", allViews);
+  // console.log("totalMonthlyVires", totalMonthlyVires);
+  // console.log("dailyViews", dailyViews);
 
 
   // allViews,
@@ -136,91 +166,91 @@ const dashboardController = asyncHandler(async (req, res) => {
 
   // like section 
 
-  const Like = await Articals.aggregate([
-    { $group: { _id: null, totalLike: { $sum: { $size: { $ifNull: ["$like", []] } } } } }
-  ])
-
-  const totalLike = Like[0]?.totalLike || 0;
-
   const startMonthlyLike = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   const endMonthlyLike = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999)
-
-  const monthlyLike = await Articals.aggregate([
-    {
-      $project: {
-        like: {
-          $filter: {
-            input: "$like",
-            as: "l",
-            cond: {
-              $and: [
-                { $gte: ["$$l.likedAt", startMonthlyLike] },
-                { $lte: ["$$l.likedAt", endMonthlyLike] }
-              ]
-            }
-          }
-        }
-      }
-    },
-    { $group: { _id: null, totalLike: { $sum: { $size: { $ifNull: ["$like", []] } } } } }
-  ])
-
-  const totalMonthlyLike = monthlyLike[0]?.totalLike || 0;
-
   const startDatLike = new Date();
   startDatLike.setHours(0, 0, 0, 0);
   const endDayLike = new Date();
   endDayLike.setHours(23, 59, 59, 999)
 
-  const dayLIke = await Articals.aggregate([
-    {
-      $project: {
-        like: {
-          $filter: {
-            input: { $ifNull: ["$like", []] },
-            as: "l",
-            cond: {
-              $and: [
-                { $gte: ["$$l.likedAt", startDatLike] },
-                { $lte: ["$$l.likedAt", endDayLike] }
-              ]
-            }
-          }
-        }
-      }
-    },
-    { $group: { _id: null, totalLike: { $sum: { $size: "$like" } } } }
-  ])
 
-  const totalDayLike = dayLIke[0]?.totalLike || 0;
+  const totalLike = await ArticleLike.countDocuments()
+  const totalMonthlyLike = await ArticleLike.countDocuments({ createAt: { $gte: startMonthlyLike, $lte: endMonthlyLike } })
+  const totalDayLike = await ArticleLike.countDocuments({ createAt: { $gte: startDatLike, $lte: endDayLike } })
+  console.log("total like", totalLike);
+  console.log("monthlyLike", totalMonthlyLike);
+  console.log("day like", totalDayLike);
 
-  const share = await Articals.aggregate([
-    { $unwind: "$shareHistory" },
-    { $count: "totalShareCount" }
-  ])
+
+  // const Like = await Articals.aggregate([
+  //   { $group: { _id: null, totalLike: { $sum: { $size: { $ifNull: ["$like", []] } } } } }
+  // ])
+
+  // const totalLike = Like[0]?.totalLike || 0;
+
+
+  // const monthlyLike = await Articals.aggregate([
+  //   {
+  //     $project: {
+  //       like: {
+  //         $filter: {
+  //           input: "$like",
+  //           as: "l",
+  //           cond: {
+  //             $and: [
+  //               { $gte: ["$$l.likedAt", startMonthlyLike] },
+  //               { $lte: ["$$l.likedAt", endMonthlyLike] }
+  //             ]
+  //           }
+  //         }
+  //       }
+  //     }
+  //   },
+  //   { $group: { _id: null, totalLike: { $sum: { $size: { $ifNull: ["$like", []] } } } } }
+  // ])
+
+  // const totalMonthlyLike = monthlyLike[0]?.totalLike || 0;
+
+
+
+  // const dayLIke = await Articals.aggregate([
+  //   {
+  //     $project: {
+  //       like: {
+  //         $filter: {
+  //           input: { $ifNull: ["$like", []] },
+  //           as: "l",
+  //           cond: {
+  //             $and: [
+  //               { $gte: ["$$l.likedAt", startDatLike] },
+  //               { $lte: ["$$l.likedAt", endDayLike] }
+  //             ]
+  //           }
+  //         }
+  //       }
+  //     }
+  //   },
+  //   { $group: { _id: null, totalLike: { $sum: { $size: "$like" } } } }
+  // ])
+
+  // const totalDayLike = dayLIke[0]?.totalLike || 0;
+
+  // const share = await Articals.aggregate([
+  //   { $unwind: "$shareHistory" },
+  //   { $count: "totalShareCount" }
+  // ])
+
+  const totalShareCount = await ArticleShare.countDocuments()
 
   const startMonthlyShare = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   const endMonthlyShare = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999)
 
-
-  const totalShareCount = share[0]?.totalShareCount || 0;
-  console.log("totalShareCount", totalShareCount);
-
-  const monthlyShare = await Articals.aggregate([
-    { $unwind: "$shareHistory" },
+  const monthlyShareTotal = await ArticleShare.countDocuments(
     {
-      $match: {
-        "shareHistory.data": {
-          $gte: startMonthlyShare,
-          $lte: endMonthlyShare
-        }
-      }
-    },
-    { $count: "totalShareCount" }
-  ])
+      createdAt: { $gte: startMonthlyShare, $lte: endMonthlyShare }
+    }
+  )
 
-  const monthlyShareTotal = monthlyShare[0]?.totalShareCount || 0;
-  console.log("monthlyShareTotal", monthlyShareTotal);
 
   const startDatShare = new Date();
   startDatShare.setHours(0, 0, 0, 0);
@@ -228,21 +258,47 @@ const dashboardController = asyncHandler(async (req, res) => {
   const endDayShare = new Date();
   endDayShare.setHours(23, 59, 59, 999);
 
-  const dayShare = await Articals.aggregate([
-    { $unwind: "$shareHistory" },
+  const dayTotalShare = await ArticleShare.countDocuments(
     {
-      $match: {
-        "shareHistory.data": {
-          $gte: startDatShare,
-          $lte: endDayShare
-        }
-      }
-    },
-    { $count: "totalShareCount" }
-  ])
+      createdAt: { $gte: startDatShare, $lte: endDayShare }
+    }
+  )
 
-  const dayTotalShare = dayShare[0]?.totalShareCount || 0;
-  console.log("dayTotalShare", dayTotalShare);
+  // const totalShareCount = share[0]?.totalShareCount || 0;
+  // console.log("totalShareCount", totalShareCount);
+
+  // const monthlyShare = await Articals.aggregate([
+  //   { $unwind: "$shareHistory" },
+  //   {
+  //     $match: {
+  //       "shareHistory.data": {
+  //         $gte: startMonthlyShare,
+  //         $lte: endMonthlyShare
+  //       }
+  //     }
+  //   },
+  //   { $count: "totalShareCount" }
+  // ])
+
+  // const monthlyShareTotal = monthlyShare[0]?.totalShareCount || 0;
+  // console.log("monthlyShareTotal", monthlyShareTotal);
+
+
+  // const dayShare = await Articals.aggregate([
+  //   { $unwind: "$shareHistory" },
+  //   {
+  //     $match: {
+  //       "shareHistory.data": {
+  //         $gte: startDatShare,
+  //         $lte: endDayShare
+  //       }
+  //     }
+  //   },
+  //   { $count: "totalShareCount" }
+  // ])
+
+  // const dayTotalShare = dayShare[0]?.totalShareCount || 0;
+  // console.log("dayTotalShare", dayTotalShare);
 
 
 
@@ -410,6 +466,8 @@ const dashboardController = asyncHandler(async (req, res) => {
 const getChartData = asyncHandler(async (req, res) => {
   const days = parseInt(req.query.days) || 7;
 
+
+
   // SAME graph aggregation logic you already wrote
   // build labels, viewsArr, likeArr, shareArr, articalArr
 
@@ -428,51 +486,82 @@ const getChartData = asyncHandler(async (req, res) => {
   const endDay = new Date()
   endDay.setHours(23, 59, 59, 999)
 
-  const artForGraph = await Articals.aggregate([
-    {
-      $facet: {
-        views: [
-          { $unwind: "$views" },
-          { $match: { "views.viewdAt": { $gte: startday, $lte: endDay } } },
-          {
-            $group: {
-              _id: { $dateToString: { format: "%Y-%m-%d", date: "$views.viewdAt" } },
-              count: { $sum: 1 }
-            }
-          }
-        ],
-        like: [
-          { $unwind: "$like" },
-          { $match: { "like.likedAt": { $gte: startday, $lte: endDay } } },
-          {
-            $group: {
-              _id: { $dateToString: { format: "%Y-%m-%d", date: "$like.likedAt" } },
-              count: { $sum: 1 }
-            }
-          }
-        ],
-        shares: [
-          { $unwind: "$shareHistory" },
-          { $match: { "shareHistory.sharedAt": { $gte: startday, $lte: endDay } } },
-          {
-            $group: {
-              _id: { $dateToString: { format: "%Y-%m-%d", date: "$shareHistory.sharedAt" } },
-              count: { $sum: 1 }
-            }
-          }
-        ],
-        blogs: [
-          { $match: { createdAt: { $gte: startday, $lte: endDay } } },
-          {
-            $group: {
-              _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-              count: { $sum: 1 }
-            }
-          }
-        ]
+  const articalGraph = await Articals.aggregate([
+     {
+      $match: {
+        createdAt: { $gte: startday, $lte: endDay }
       }
+    },
+    {
+     $group: {
+      _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+      count: { $sum: 1 }
     }
-  ]);
+    }
+  ])
+
+  // const artForGraph = await ArticleView.aggregate([
+  //     {
+  //       $match :{
+  //         daily :{}
+  //       }
+  //     }
+  // ])
+
+
+
+
+
+
+
+  // const artForGraph = await Articals.aggregate([
+  //   {
+  //     $facet: {
+  //       views: [
+  //         { $unwind: "$views.history" },
+  //         { $match: { "views.history.viewedAt": { $gte: startday, $lte: endDay } } },
+  //         {
+  //           $group: {
+  //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$views.history.viewedAt" } },
+  //             count: { $sum: 1 }
+  //           }
+  //         }
+  //       ],
+  //       like: [
+  //         { $unwind: "$like" },
+  //         { $match: { "like.likedAt": { $gte: startday, $lte: endDay } } },
+  //         {
+  //           $group: {
+  //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$like.likedAt" } },
+  //             count: { $sum: 1 }
+  //           }
+  //         }
+  //       ],
+  //       shares: [
+  //         { $unwind: "$shareHistory" },
+  //         { $match: { "shareHistory.sharedAt": { $gte: startday, $lte: endDay } } },
+  //         {
+  //           $group: {
+  //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$shareHistory.sharedAt" } },
+  //             count: { $sum: 1 }
+  //           }
+  //         }
+  //       ],
+  //       blogs: [
+  //         { $match: { createdAt: { $gte: startday, $lte: endDay } } },
+  //         {
+  //           $group: {
+  //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+  //             count: { $sum: 1 }
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // ]);
+
+  console.log("artForGraph", artForGraph);
+
   // const comForGraph = await Comment.aggregate([
   //   {$match :{createdAt :{$gte : startday, $lte : endDay}}},
   //   {
@@ -489,10 +578,10 @@ const getChartData = asyncHandler(async (req, res) => {
 
     labels.push(dayStr);
 
-    const viewCount = artForGraph[0]?.views.find(x => x._id === dayStr)?.count || 0;
-    const likeCount = artForGraph[0]?.like.find(x => x._id === dayStr)?.count || 0;
+    const viewCount = aaartForGraph[0]?.views.find(x => x._id === dayStr)?.count || 0;
+    const likeCount = aartForGraph[0]?.like.find(x => x._id === dayStr)?.count || 0;
     const sharesCount = artForGraph[0]?.shares.find(x => x._id === dayStr)?.count || 0;
-    const blogsCount = artForGraph[0]?.blogs.find(x => x._id === dayStr)?.count || 0;
+    const blogsCount = articalGraph[0]?.blogs.find(x => x._id === dayStr)?.count || 0;
     articalArr.push(blogsCount)
     likeArr.push(likeCount)
     viewsArr.push(viewCount)

@@ -18,14 +18,14 @@
       <!-- Withdrawal Amount -->
       <div>
         <label class="block text-sm font-semibold mb-1">Amount (PKR)</label>
-        <input type="number" name="amount" min="100" step="50" required
+        <input type="number" name="amount" min="10" required
           class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter amount" />
       </div>
 
       <!-- Withdrawal Method -->
       <div>
         <label class="block text-sm font-semibold mb-1">Select Withdrawal Method</label>
-        <select name="method" required
+        <select id="method" name="method" required
           class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="">-- Select Method --</option>
           <option value="bank">Bank Transfer (IBAN)</option>
@@ -39,9 +39,9 @@
       <!-- Account Info -->
       <div>
         <label class="block text-sm font-semibold mb-1">Account Details</label>
-        <input type="text" name="accountDetails" required
+        <input type="text" id="accountDetails" name="accountDetails" required
           class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="e.g. IBAN, Phone Number or Payoneer Email" />
+          placeholder="" />
       </div>
 
       <!-- Submit Button -->
@@ -57,14 +57,48 @@
     <div class="mt-6 text-sm text-gray-600">
       <p><strong>Note:</strong></p>
       <ul class="list-disc list-inside">
-        <li>Minimum withdrawal is PKR 100</li>
-        <li>Requests are processed within 2-3 business days</li>
+        <li>Minimum withdrawal is 10$</li>
+        <li>Requests are processed within 3-5 business days</li>
         <li>Make sure your account information is accurate</li>
       </ul>
     </div>
   </div>
 
  
+
+<script>
+
+const methodToWithdraw = document.getElementById("method"); 
+const accountDetails = document.getElementById("accountDetails");
+ 
+methodToWithdraw.addEventListener("change", function (){
+  const method = this.value;
+
+  // ["bank", "easypaisa", "jazzcash", "payoneer", "sadapay"],
+
+  if (method === "easypaisa" || method === "jazzcash") {
+    accountDetails.placeholder = "Enter Mobile Number (03XXXXXXXXX)";
+    accountDetails.type = "tel"
+
+  }
+  else if (method === "payoneer" || method === "sadapay") {
+    accountDetails.placeholder = "Enter registered email address";
+    accountDetails.type = "text"
+
+  }
+  else  {
+    accountDetails.placeholder = "Enter Account Details";
+    accountDetails.type = "text"
+
+  }
+})
+
+
+
+
+
+</script>
+
 
 
 </body>

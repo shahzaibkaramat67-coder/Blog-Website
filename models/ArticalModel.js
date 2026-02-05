@@ -65,68 +65,19 @@ const articalSchema = new mongoose.Schema({
     trim: true,
     maxlength: 160,
   },
-
-  // // optional extra fields
-  // views: [
-  //   {
-  //    view: {
-  //     type: Number,
-  //     default: 0,
-  //     },
-  //    viewdAt: {
-  //     type: Date,
-  //     default: Date.now
-  //     }
-  //   }
-  // ],
-
-  views: {
-    total: { type: Number, default: 0 },        // all-time views
-    today: { type: Number, default: 0 },        // daily views
-    thisMonth: { type: Number, default: 0 },    // monthly views
-    monetized: { type: Number, default: 0 },    // used for earning
-    lastDay: Date,
-    lastMonth: String
+   totalLikes: { type: Number, default: 0 },
+  totalViews: { type: Number, default: 0 },
+  totalShares: { type: Number, default: 0 },
+ 
+  // share: {
+  //   type: Number,
+  //   default: 0
+  // },
+  rpm: {
+    type: Number,
+    required: true
   },
-  rpm :{
-    type : Number,
-    required : true
-  },
-  estimatedEarning :{
-    type : Number,
-    required : true
-  },
-  like: [
-    {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-      likedAt: {
-        type: Date,
-        default: Date.now
-      }
-    }
-  ],
-
-  shares: {
-    messenger: { type: Number, default: 0 },
-    linkedin: { type: Number, default: 0 },
-    snapchat: { type: Number, default: 0 },
-    telegram: { type: Number, default: 0 },
-    whatsapp: { type: Number, default: 0 },
-    twitter: { type: Number, default: 0 },
-    instagram: { type: Number, default: 0 },
-    facebook: { type: Number, default: 0 },
-    google: { type: Number, default: 0 },
-    other: { type: Number, default: 0 },
-  },
-  shareHistory: [
-    {
-      platform: String,
-      sharedAt: { type: Date, default: Date.now }
-    }
-  ],
+  estimatedEarningMills: { type: Number, default: 0 },
 
 
   isPublished: {

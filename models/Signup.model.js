@@ -29,6 +29,7 @@ const SingupSchema = new Schema({
     Username: {
         type: String,
         lowercase: true,
+        unique : true,
         trim: true,
         required: function () { return !this.GoogleId; },
         validate: {
@@ -46,8 +47,19 @@ const SingupSchema = new Schema({
             },
             message: 'Password must be 8–20 chars, include upper, lower, number & special'
         }
-    }
-    ,
+    },
+    balanceMills: {
+        type: Number,
+        default: 0, // 0 mills = $0.000
+        min: 0,
+    },
+
+    // Optional: total earnings (can be calculated or stored)
+    totalEarningsMills: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
 
 
     role: {
@@ -86,7 +98,7 @@ const SingupSchema = new Schema({
 
 
 SingupSchema.pre('save', async function (next) {
-    if (!this.password) return next() 
+    if (!this.password) return next()
     if (!this.isModified('password')) return next()
 
     this.password = await bcrypt.hash(this.password, 10)

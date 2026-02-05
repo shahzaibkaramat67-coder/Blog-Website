@@ -13,11 +13,12 @@
       </div>
     </form>
 
-    <!-- ✅ Sidebar Search Results (Desktop Only) -->
+    <!--  Sidebar Search Results (Desktop Only) -->
     <div class="hidden md:block rounded-lg p-5 text-gray-500 shadow-lg overflow-y-auto max-h-[600px]">
       <% if (SideAllArtical && SideAllArtical.length> 0) { %>
         <% SideAllArtical.forEach(Artical=> { %>
-          <a href="/blog/blog-contant/<%= Artical._id %>" class="flex cursor-pointer items-center shadow mb-3 gap-4 hover:bg-gray-50 p-2 rounded-lg transition">
+          <a href="/blog/blog-contant/<%= Artical._id %>"
+            class="flex cursor-pointer items-center shadow mb-3 gap-4 hover:bg-gray-50 p-2 rounded-lg transition">
             <img src="<%= Artical.featured_image %>" alt="app" class="w-12 h-12 rounded-full object-cover">
             <div>
               <h1 class="font-bold text-sm md:text-base">
@@ -36,12 +37,12 @@
     </div>
   </div>
 
-  <!-- ✅ Blog Posts Section (Scrollable) -->
+  <!--  Blog Posts Section (Scrollable) -->
   <div class="flex-1 relative">
 
     <!-- Scrollable container -->
     <div class="overflow-y-auto max-h-[80vh] pr-2">
-      <!-- ✅ Mobile: Search results -->
+      <!--  Mobile: Search results -->
       <div class="<%= (searchQuery && SideAllArtical.length > 0) ? 'block md:hidden' : 'hidden' %>">
         <% if (SideAllArtical && SideAllArtical.length> 0) { %>
           <% SideAllArtical.forEach(Artical=> { %>
@@ -76,7 +77,7 @@
                 <% } %>
       </div>
 
-      <!-- ✅ Desktop or normal blog posts -->
+      <!--  Desktop or normal blog posts -->
       <div class="<%= (searchQuery && SideAllArtical.length > 0) ? 'hidden md:block' : 'block' %>">
         <% if (allArtical && allArtical.length> 0) { %>
           <% allArtical.forEach(Artical=> { %>
@@ -102,24 +103,27 @@
                   <div class="flex items-center cursor-pointer gap-1">
                     <img src="/assets/icons/thumbs-up-regular-full.svg" class="w-5 h-5">
                     <span>
-                      <%= Artical.like.length %>
+                      <%= Artical.totalLikes %>
                     </span>
                   </div>
                   <div class="flex items-center gap-1">
                     <img src="/assets/icons/eye-regular-full.svg" class="w-5 h-5">
                     <span>
-                      <%= Artical.views.total%>
+                      <%= Artical.totalViews%>
                     </span>
                   </div>
                   <div class="flex items-center cursor-pointer gap-1">
                     <img src="/assets/icons/share-nodes-solid-full.svg" class="w-5 h-5">
-                    <span> <%= Artical.shareHistory.length%></span>
+                    <span>
+                      <%= Artical.totalShares%>
+                    </span>
                   </div>
                 </div>
 
                 <div class="flex justify-end mt-3">
                   <a href="/blog/blog-contant/<%= Artical._id %>"
-                    class="bg-teal-500 px-4 py-2 sm:px-6 sm:py-3 text-white font-bold uppercase rounded-lg hover:bg-teal-600 transition">
+                    class="read-more-btn  bg-teal-500 px-4 py-2 sm:px-6 sm:py-3 text-white font-bold uppercase rounded-lg hover:bg-teal-600 transition"
+                      data-id="<%= Artical._id %>">
                     Read More
                   </a>
                 </div>
@@ -133,49 +137,63 @@
 
       <!-- Pagination -->
       <div class="flex justify-center mt-10 space-x-2 flex-wrap">
-  <!-- Previous Page -->
-  <% if (currentPage > 1) { %>
-  <a 
-  href="<%= topicSlug 
+        <!-- Previous Page -->
+        <% if (currentPage> 1) { %>
+          <a href="<%= topicSlug 
     ? '/topics/' + topicSlug + '?page=' + (currentPage - 1)
     : '/blog/?page=' + (currentPage - 1) + (searchQuery ? '&Search=' + encodeURIComponent(searchQuery) : '') %>"
-  class="cursor-pointer px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
->
-Previous
-</a>
+            class="cursor-pointer px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+            Previous
+          </a>
 
-  <% } %>
+          <% } %>
 
-  <!-- Page Numbers -->
-  <% for (let i = 1; i <= totalPages; i++) { %>
-    <a href="<%= (typeof topicSlug !== 'undefined' && topicSlug) 
+            <!-- Page Numbers -->
+            <% for (let i=1; i <=totalPages; i++) { %>
+              <a href="<%= (typeof topicSlug !== 'undefined' && topicSlug) 
       ? '/topics/' + topicSlug + '?page=' + i 
       : '/blog/?page=' + i + (searchQuery ? '&Search=' + encodeURIComponent(searchQuery) : '') %>
-"
-       class="w-8 h-8 flex items-center justify-center rounded-lg
+" class="w-8 h-8 flex items-center justify-center rounded-lg
               <%= i === currentPage ? 'bg-teal-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' %>
               transition font-semibold shadow-md">
-      <%= i %>
-    </a>
-  <% } %>
+                <%= i %>
+              </a>
+              <% } %>
 
-  <!-- Next Page -->
-  <% if (currentPage < totalPages) { %>
-  <a href="<%= topicSlug 
+                <!-- Next Page -->
+                <% if (currentPage < totalPages) { %>
+                  <a href="<%= topicSlug 
     ? '/topics/' + topicSlug + '?page=' + (currentPage + 1)
     : '/blog/?page=' + (currentPage + 1) + (searchQuery ? '&Search=' + encodeURIComponent(searchQuery) : '') %>"
-  class="cursor-pointer px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
->
-  Next
-</a>
+                    class="cursor-pointer px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                    Next
+                  </a>
 
 
-  <% } %>
+                  <% } %>
 
-</div>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- <script>
+
+document.querySelectorAll(".read-more-btn").forEach(btn => {
+      btn.addEventListener("click",async (e)=>{
+e.preventDefault();
+ const id = btn.dataset.id;
+
+try {
+   const res = await fetch(`/blog/blog-conent/${id}/view`, {
+    method : "post"
+   })
+} catch (error) {
+  console.error(error);
+}
+      })
+});
 
 
+
+</script> -->

@@ -34,13 +34,13 @@
               <th class="p-3 sm:p-4">Views</th>
               <th class="p-3 sm:p-4">Likes</th>
               <th class="p-3 sm:p-4">🔗 Share</th>
-              <th class="p-3 sm:p-4">🔗Earn</th>
+              <th class="p-3 sm:p-4">$ Earn</th>
             </tr>
           </thead>
 
           <tbody class="text-gray-700">
-            <% if (artical.length) { %>
-              <% artical.forEach(post => { %>
+            <% if (Analysist.length) { %>
+              <% Analysist.forEach(post => { %>
                 <tr class="border-t hover:bg-gray-50 transition">
                   <td class="p-3 sm:p-4">
                     <img src="<%= post.featured_image %>" alt="Main Picture"
@@ -59,9 +59,10 @@
                     </button>
                   </td>
                   <!-- Artical.views.total -->
-                  <td class="p-3 sm:p-4"><%= post.views.total %></td>
-                  <td class="p-3 sm:p-4"><%= post.like.length %></td>
-                  <td class="p-3 sm:p-4"><%= post.shareHistory.length %></td>
+                  <td class="p-3 sm:p-4"><%= post.totalViews %></td>
+                  <td class="p-3 sm:p-4"><%= post.totalLikes %></td>
+                  <td class="p-3 sm:p-4"><%= post.totalShares %></td>
+                  <td class="p-3 sm:p-4">$<%= post.estimatedEarningMills %></td>
                 </tr>
               <% }); %>
             <% } else { %>

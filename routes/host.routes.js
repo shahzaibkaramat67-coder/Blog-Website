@@ -7,7 +7,8 @@ import {dashboardController, getChartData } from '../controller/hostController/A
 import {adminLogin} from "../controller/hostController/admin-login.controller.js"
 import RPMController from '../controller/hostController/RPM.Controller.js'
 import {getAddCaategoryPage, groutRpm, addCategory} from '../controller/hostController/addToCategory.Controller.js'
-// import verifijwt from '../middleware/AdminVerifi.js'
+import {withdrawRequestList, action} from "../controller/hostController/withdrawRequest.Controller.js"
+import verifijwt from '../middleware/AdminVerifi.js'
 // import isAdmin from '../middleware/checkUserForAdmin.js'
 // import checkUserRole from '../middleware/checkRole.js'
 // import checkUserRole from "../middleware/checkRole.js"
@@ -29,9 +30,10 @@ router.get('/admin-earning', (req, res)=>{res.render('Admin.Dashbord/earning', {
 router.get('/admin-categories', articalCategories)
 // router.get('/admin-articles',  (req, res)=>{res.render('Admin.Dashbord/artical', {layout : false, title : 'user', page: "user"})})
 router.get('/admin-messages', AdminMessages)
-router.get('/admin-messages/message/:id', readMail)
+router.post('/admin-messages/message/:id', readMail)
 router.get('/admin-settings',  (req, res)=>{res.render('Admin.Dashbord/setting', {layout : false, title : 'setting', page: "setting"})})
-router.get('/admin-withdraw', (req, res)=>{res.render('Admin.Dashbord/Withdraw', {layout : false, title : 'Withdraw', page: "Withdraw"})})
+router.get('/admin-withdraw', withdrawRequestList)
+router.post('/admin-withdraw/withdraw/:id', action)
 router.get('/admin-RPM', (req, res)=>{res.render('Admin.Dashbord/RPM', {layout : false, title : 'price', page: "RPM Price"})})
 router.post('/admin-RPM/submit', RPMController)
 router.get('/admin-categoryadd',groutRpm,getAddCaategoryPage)

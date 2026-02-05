@@ -11,10 +11,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "��#\u0000 \u0000B\u0000l\u0000o\u0000g\u0000-\u0000W\u0000e\u0000b\u0000s\u0000i\u0000t\u0000e\u0000\r\u0000 \u0000#\u0000 \u0000B\u0000l\u0000o\u0000g\u0000-\u0000W\u0000e\u0000b\u0000s\u0000i\u0000t\u0000e\u0000\r\u0000 \u0000",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.7.0",
+    "compression": "^1.8.1",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.7",
@@ -22,15 +23,31 @@
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-ejs-layouts": "^2.5.1",
+    "express-rate-limit": "^8.2.1",
     "express-session": "^1.18.2",
     "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0",
     "ms": "^2.1.3",
     "multer": "^2.0.2",
+    "node-cron": "^4.2.1",
     "nodemailer": "^7.0.5",
     "nodemon": "^3.1.10",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0"
-  }
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MShahzaibkaramat/Blog-Website.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MShahzaibkaramat/Blog-Website/issues"
+  },
+  "homepage": "https://github.com/MShahzaibkaramat/Blog-Website#readme"
 }

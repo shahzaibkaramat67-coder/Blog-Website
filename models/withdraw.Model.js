@@ -6,14 +6,12 @@ const withdrawSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
 
     amount: {
       type: Number,
       required: true,
-      min: 100,
-      max: 500000,
+      min: 10,
     },
 
     method: {
@@ -85,7 +83,7 @@ const withdrawSchema = new mongoose.Schema(
 );
 
 // Indexes for performance & security
-withdrawSchema.index({ user: 1, status: 1 });
-withdrawSchema.index({ createdAt: -1 });
-
-export default mongoose.model("Withdraw", withdrawSchema);
+// withdrawSchema.index({ user: 1, status: 1 });
+// withdrawSchema.index({ createdAt: -1 });
+const withdraw = mongoose.model("Withdraw", withdrawSchema);
+export default withdraw

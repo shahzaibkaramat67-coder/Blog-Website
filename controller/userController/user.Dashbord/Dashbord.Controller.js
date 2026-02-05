@@ -3,6 +3,11 @@ import asyncHandler from "../../../utils/asyncHandler.js";
 // import { like } from "../artical.controller.js";
 import Comment from "../../../models/comment.model.js";
 import { Profile } from "../../../models/profile.model.js";
+import ArticleLike from "../../../models/like.Model.js";
+import { ArticleView } from "../../../models/view.Model.js";
+import { ArticleShare } from "../../../models/share.Model.js";
+import User from "../../../models/Signup.model.js";
+// import { useId } from "react";
 // import Categorie from "../../../models/categorie.model.js";
 
 
@@ -46,44 +51,25 @@ const userDashboard = asyncHandler(async (req, res) => {
 
 
   //    Total like of all blogs
-  const likes = await Articals.aggregate([
-    { $match: { username: profile._id } },
-    {
-      $project: {
-        likeCount: { $size: "$like" }
-      }
-    },
-    {
-      $group: {
-        _id: null,
-        totalLikeCount: { $sum: "$likeCount" }
-      }
-    }
-  ])
-  const allLikes = likes.length > 0 ? likes[0].totalLikeCount : 0;
+  const allLikes = await ArticleLike.find({User : req.user._id}).countDocuments();
+  
+  console.log("allLikes", allLikes);
+  
 
 
   //    Monthly like of blogs 
   const startDataForLikes = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   const endDateForLikes = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999)
 
-  const monthlyLikesOfArtical = await Articals.aggregate([
-    { $match: { username: profile._id } },
-    { $unwind: "$like" },
-    {
-      $match: {
-        "like.likedAt": {
-          $gte: startDataForLikes, $lte: endDateForLikes
-        }
-      }
-    },
-    {
-      $count: "monthlyLikes"
-    }
-  ])
-  const monthlyLikes = monthlyLikesOfArtical.length > 0 ? monthlyLikesOfArtical[0].monthlyLikes : 0;
+  const monthlyLikes = await ArticleLike.countDocuments(
+    {User : req.user._id},
+    {likedAt : {$gte : startDataForLikes, $lte : endDateForLikes}}
+)
+  // console.log("monthlyLikesOfArtical", monthlyLikesOfArtical);
+  // 
+  // const monthlyLikes = monthlyLikesOfArtical.length > 0 ? monthlyLikesOfArtical[0].monthlyLikes : 0;
 
-  console.log("this is monthly likes", monthlyLikes);
+  // console.log("this is monthly likes", monthlyLikes);
   // console.log("this is monthly likes", monthlyLikes);
 
 
@@ -94,24 +80,13 @@ const userDashboard = asyncHandler(async (req, res) => {
   const dayend = new Date()
   dayend.setHours(23, 59, 59, 999)
 
-  const dayLikesOfArtical = await Articals.aggregate([
-    { $match: { username: profile._id } },
-    {
-      $unwind: "$like"
-    },
-    {
-      $match: {
-        "like.likedAt": {
-          $gte: dayStart, $lte: dayend
-        }
-      }
-    },
-    {
-      $count: "toDayTotalLikes"
-    }
-  ])
+  const dayLikes = await ArticleLike.countDocuments(
+    {User : req.user._id},
+    {likedAt :{$gte : dayStart, $lte : dayend}}
+  )
 
-  const dayLikes = dayLikesOfArtical.length > 0 ? dayLikesOfArtical[0].toDayTotalLikes : 0;
+  console.log("dayLikes", dayLikes);
+  
 
   console.log("this is day likes", dayLikes);
 
@@ -128,7 +103,7 @@ const userDashboard = asyncHandler(async (req, res) => {
 
   const monthlyComment = await Comment.countDocuments(
     {
-      username: profile._id,
+      User : req.user._id,
       createdAt: { $gte: monthlyCommentStart, $lte: monthlyCommentEnd }
     }
   )
@@ -143,7 +118,7 @@ const userDashboard = asyncHandler(async (req, res) => {
 
   const dayCommets = await Comment.countDocuments(
     {
-      username: profile._id,
+      User : req.user._id,
       createdAt: { $gte: dayCommetStart, $lte: dayCommetEnd }
 
     }
@@ -176,42 +151,74 @@ const userDashboard = asyncHandler(async (req, res) => {
   })
 
 
- const dayviewsStart = new Date()
-  dayviewsStart.setHours(0, 0, 0, 0)
+//  const dayviewsStart = new Date()
+//   dayviewsStart.setHours(0, 0, 0, 0)
 
 
-  const dayviewsEnd = new Date()
-  dayviewsEnd.setHours(23, 59, 59, 999)
+  // const dayviewsEnd = new Date()
+  // dayviewsEnd.setHours(23, 59, 59, 999)
 
   
-  const monthlyViewsStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-  const monthlyViewsEnd = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999)
+  // const monthlyViewsStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  // const monthlyViewsEnd = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999)
 
 
-const views = await Articals.aggregate([
-  {$match :{User : req.user._id}},
-  {
-    $facet: {
-      totalViews: [
-        { $group: { _id: null, total: { $sum: "$views.total" } } }
-      ],
-      todayViews: [
-        { $match: { createdAt: { $gte: dayviewsStart, $lte: dayviewsEnd } } },
-        { $group: { _id: null, total: { $sum: "$views.total" } } }
-      ],
-      monthViews: [
-        { $match: { createdAt: { $gte: monthlyViewsStart, $lte: monthlyViewsEnd } } },
-        { $group: { _id: null, total: { $sum: "$views.total" } } }
-      ]
-    }
-  }
-]);
 
-const totalViews = views[0].totalViews[0]?.total || 0;
-const todayViews = views[0].todayViews[0]?.total || 0;
-const monthViews = views[0].monthViews[0]?.total || 0;
 
-console.log({ totalViews, todayViews, monthViews });
+// const views = await ArticleView.aggregate([
+//   {$match :{User :  req.user._id}},
+//   {
+//     $group:{
+//       _id : null,
+//       totalViews: {$sum : "$monetized"},
+//       monthViews: {$sum : {$ifNull:[`${month} $monthly.${monthKey}.views`]}},
+//       todayViews:  {$sum : "$daily.monetized"}
+//     } 
+//     //  [`daily.${dayKey}.views`]: 1,
+//     //       [`monthly.${monthKey}.views`]: 1
+//   }
+// ]);
+// console.log("thsi is allviews ",views);
+
+
+// const viewDoc = await ArticleView.findOne({ article: articleId });
+
+// const totalViews = viewDoc?.monthly?.total || 0;
+
+// console.log("Total Views:", totalViews);
+
+
+const now = new Date();
+
+const dayKey = now.toISOString().slice(0, 10);   // "2026-01-20"
+const monthKey = dayKey.slice(0, 7);             // "2026-01"
+
+
+// const month = new Date().toDateString().split(0, 7)
+
+const views = await ArticleView.find({User : req.user._id})
+
+console.log("view", views);
+
+// console.log("totalViews monetized", views[0].monetized);
+// console.log("totalViews total", views[0].total);
+// console.log("monthViews", monthViews);
+// console.log("todayViews", todayViews);
+
+const totalViews = views.reduce((sum, view) => sum +(view?.monetized || 0), 0)
+const monthViews = views.reduce((sum, view)=> sum +(view?.monthly?.get(monthKey)?.monetized || 0), 0)
+const todayViews = views.reduce((sum, view) => sum +(view?.daily?.get(dayKey)?.monetized || 0), 0)
+console.log("totalViews", totalViews);
+console.log("monthViews", monthViews);
+console.log("todayViews", todayViews);
+// const totalViews = views[0]?.monetized || 0;
+// const monthViews = views[0]?.monthly?.get(monthKey)?.monetized || 0;
+// const todayViews = views[0]?.daily?.get(dayKey)?.monetized || 0;
+
+
+
+// console.log({ totalViews, todayViews, monthViews });
+
 
 //   const now = new Date();
 // const todayStr = now.toDateString();
@@ -404,70 +411,65 @@ console.log({ totalViews, todayViews, monthViews });
 
 })
 
-
 const getDashbordChartData = asyncHandler(async (req, res) => {
   const days = parseInt(req.query.days) || 30;
-  const profile = await Profile.findOne({ User: req.user._id });
+  const userId = req.user._id
 
-  if (!profile) {
-    return res.status(404).json({ message: "Profile not found" });
-  }
-
-  // Fetch all articles for this user once
-  const articles = await Articals.find({ username: profile._id }).select(
-    "views like shareHistory"
-  );
+  // Fetch all articles once
+  // .select("views.daily like shareHistory");
+  // console.log("articles",articles);
+  const viewsArticles = await ArticleView.find({ User: userId })
+  const likedArticals = await ArticleLike.find({user : userId})
+  const shareArticals = await ArticleShare.find({user : userId})
+  // console.log("viewsArticles", viewsArticles);
+  // console.log("likedArtical", likedArticals);
+  // console.log("shareArtical", shareArticals);
+  
+    
 
   const labels = [];
   const viewsArr = [];
   const likesArr = [];
   const sharesArr = [];
 
-  // Loop through each day in the range
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date();
     date.setDate(date.getDate() - i);
-
+  const dayKey = date.toISOString().slice(0, 10); // ✅ DEFINE HERE
     const dayStart = new Date(date);
     dayStart.setHours(0, 0, 0, 0);
 
     const dayEnd = new Date(date);
     dayEnd.setHours(23, 59, 59, 999);
 
-    labels.push(`${date.getMonth() + 1}/${date.getDate()}`);
+    labels.push(date.toISOString().slice(0, 10)); // MM-DD
 
-    // Initialize counters for this day
     let dayViews = 0;
     let dayLikes = 0;
     let dayShares = 0;
+    // console.log("dayViews", dayViews);
+    // console.log("dayLikes", dayLikes);
+    // console.log("dayViews", dayViews);
+    
 
-    // Count in memory
-    articles.forEach((article) => {
-      if (article.views?.length) {
-        dayViews += article.views.filter(
-          (v) => v.viewdAt >= dayStart && v.viewdAt <= dayEnd
-        ).length;
-      }
-
-      if (article.like?.length) {
-        dayLikes += article.like.filter(
-          (l) => l.likedAt >= dayStart && l.likedAt <= dayEnd
-        ).length;
-      }
-
-      if (article.shareHistory?.length) {
-        dayShares += article.shareHistory.filter(
-          (s) => s.sharedAt >= dayStart && s.sharedAt <= dayEnd
-        ).length;
-      }
-    });
+   viewsArticles?.forEach(articalView =>{
+      dayViews += articalView.daily?.get(dayKey)?.monetized || 0 
+   })
+    likedArticals.forEach(like =>{
+      const likeDate =  like.likedAt.toISOString().slice(0, 10)
+      if (likeDate === dayKey)  dayLikes +=1
+    })
+    
+    shareArticals.forEach(shareArtical =>{
+       const shareDate = shareArtical.sharedAt.toISOString().slice(0, 10)
+       if (shareDate === dayKey) dayShares +=1
+    })
 
     viewsArr.push(dayViews);
     likesArr.push(dayLikes);
     sharesArr.push(dayShares);
   }
 
-  // Send JSON to frontend
   return res.json({
     labels,
     views: viewsArr,
@@ -475,7 +477,6 @@ const getDashbordChartData = asyncHandler(async (req, res) => {
     shares: sharesArr,
   });
 });
-
 
 // const getDashbordChartData = asyncHandler(async (req, res) => {
 //   const days = parseInt(req.query.days) || 30;

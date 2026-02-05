@@ -45,12 +45,12 @@ const submitSingupData = asyncHandler(async (req, res) => {
 
     if ([Username, Email, password].some((field => !field))) {
         req.flash("error", "All fields are required!");
-        return res.redirect("/singup");
+        return res.redirect("/signup");
     }
 
     if (password !== confirmPassword) {
         req.flash("error", "Password should be matched");
-        return res.redirect("/singup");
+        return res.redirect("/signup");
     }
 
 
@@ -58,13 +58,13 @@ const submitSingupData = asyncHandler(async (req, res) => {
 
     if (!reasult.isEmpty()) {
         reasult.array().forEach(err => req.flash("error", err.msg))
-        return res.redirect("/singup");
+        return res.redirect("/signup");
     }
 
     const userExisted = await User.findOne({ Email });
     if (userExisted) {
         req.flash("error", "User already exists with that Email");
-        return res.redirect("/singup");
+        return res.redirect("/signup");
     }
 
 
@@ -96,7 +96,7 @@ const submitSingupData = asyncHandler(async (req, res) => {
 
     }
     req.session.Email = userSingup.Email;
-    // req.flash("success", "Signup successful! OTP sent to your email.");
+    req.flash("success", "Signup successful! OTP sent to your email.");
     return res.redirect('/otp');
 
 

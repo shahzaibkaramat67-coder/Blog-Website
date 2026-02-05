@@ -1,7 +1,9 @@
+// import { data } from "autoprefixer";
 
 let share
-
-const openPopup = () => {
+let CURRENT_ARTICLE_ID
+const openPopup = (id) => {
+  CURRENT_ARTICLE_ID  = id.dataset.id;
   const currentUrl = window.location.href;
   const shareText = "Check out this article!";
 
@@ -26,15 +28,12 @@ const openPopup = () => {
         <div class="w-full gap-3 flex justify-center items-center">
           <input id="text"  class="border border-gray-900 p-2 w-80" readonly type="text" value="">
            <input type="hidden" id="hiddenArticleId">
-
-
           <img  onclick="copyText()"  src="/assets/icons/paste-regular-full.svg" alt="copy"
             class="w-9 h-9 p-2 rounded-xl cursor-pointer border border-gray-900">
         </div>
         <div class="flex justify-center items-center gap-3">
           <div class="w-full gap-2 bg-white mt-6 shadow rounded-xl w-[600px] p-2">
             <div class="w-full flex gap-3 p-1 mb-2">
-         
 
                <a   onclick="updateShare('messenger')" href="fb-messenger://share/?link=${currentUrl}"><img src="/assets/icons/facebook-messenger-brands-solid-full.svg" alt="messinger"class="w-12 h-12"></a>
               <a onclick="updateShare('linkedin')" href="https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}"><img src="/assets/icons/linkedin-brands-solid-full.svg" alt="linksdin" class="w-12 h-12"></a>
@@ -62,13 +61,15 @@ const openPopup = () => {
      </div>
       `
   document.body.appendChild(share);
-  document.querySelector("#hiddenArticleId").value = ARTICAL_ID;
   shareUrl();
-
-
-
+  
+  
+  
 }
-const ARTICAL_ID = window.ARTICAL_ID;
+// let ARTICAL_ID;
+// const text = document.querySelector("#hiddenArticleId");
+// window.ARTICAL_ID = text.value 
+// const ARTICAL_ID = window.ARTICAL_ID;
 
 const toggleMoreIcons = () => {
   const extra = document.querySelector("#extraIcons")
@@ -96,7 +97,9 @@ const xmarkdown = () => {
 
 
 const shareUrl = () => {
-  const text = document.querySelector("#text")
+  const text = document.querySelector("#text");
+  console.log(text);
+  
   text.value = window.location.href
 }
 
@@ -122,14 +125,23 @@ const copyText = () => {
   }
 }
 function updateShare(platform) {
-  const articalId = document.querySelector("#hiddenArticleId").value;
+  // const articalId = document.querySelector("#hiddenArticleId").value;
+ 
+    
+    
+    const articalId = CURRENT_ARTICLE_ID
+    console.log("articalId", articalId);
 
-  console.log("Sending to backend ->", { platform, articalId });
+
+  if (!platform || !articalId) return null;
+
+  // console.log("Sending to backend ->", {  });
 
   fetch("/blog/share/update", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ platform, articalId }),
+    keepalive: true,
   })
     .then((res) => res.json())
     .then((data) => console.log("Share updated:", data))

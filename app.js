@@ -2,8 +2,11 @@ import dotenv from "dotenv";
 dotenv.config({ path: './.env' })
 import app from './index.js'
 import { dbConnnection } from "./db/userSingup.js";
+
 // import  BLOG_DATA  from './controller/host.controller';
 const port = process.env.PORT || 3001;
+
+// import "./utils/Cron.js";
 
 dbConnnection()
     .then(() => {

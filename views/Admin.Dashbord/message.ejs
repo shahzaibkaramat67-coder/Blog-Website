@@ -52,7 +52,7 @@
                         <% adminMessages.forEach(message => { %>
                             <tr class="border-b">
                                 <td colspan="4" class="p-0">
-<a href="/admin/admin-messages/message/<%= message._id %>"
+<a href="/Api/admin-messages/message/<%= message._id %>"
    class="block w-full px-4 py-3 hover:bg-blue-50 cursor-pointer <%= message.status === 'unread' ? 'font-semibold' : '' %>"
   onclick="event.preventDefault(); 
          markAsRead('<%= message._id %>');
@@ -63,7 +63,7 @@
              `<%- message.message.replace(/`/g, '\\`') %>`,
              '<%= message.createdAt.toLocaleString('en-PK', { day:'2-digit', month:'short', year:'numeric' }) %>',
              this
-         );"
+         )";
 >
   <div class="grid grid-cols-4 gap-4">
       <div><%= message.name %></div>
@@ -95,9 +95,7 @@
    <script>
     let lastClickedRow = null;
 
-    function markAsRead(id) {
-        fetch(`/admin/admin-messages/message/${id}`);
-    }
+
 
     function showPopup(name, email, subject, messageText, date, rowElement) {
         lastClickedRow = rowElement;
@@ -132,6 +130,18 @@
         document.getElementById("messagePopup").innerHTML = "";
         lastClickedRow = null;
     }
+
+       function markAsRead(id) {
+    fetch(`/Api/admin-messages/message/${id}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(res => res.json())
+    .then(data => console.log("Marked as read:", data))
+    .catch(err => console.error("Fetch error:", err));
+}
 </script>
 
 </body>

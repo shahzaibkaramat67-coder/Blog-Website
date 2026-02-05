@@ -81,6 +81,8 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
 
 
 const getProfileForUpdate = asyncHandler(async (req, res) => {
+   const useId = req.user._id
+   const user = await User.findOne({})
    const profile = await Profile.findOne({ User: req.user._id })
    if (req.query.edit === "true") {
       return res.render("edit-profile", { layout: false, title: "Edit Profile", profile });
