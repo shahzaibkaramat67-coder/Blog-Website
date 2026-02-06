@@ -486,106 +486,57 @@ const getChartData = asyncHandler(async (req, res) => {
   const endDay = new Date()
   endDay.setHours(23, 59, 59, 999)
 
-  const articalGraph = await Articals.aggregate([
-     {
-      $match: {
-        createdAt: { $gte: startday, $lte: endDay }
-      }
-    },
-    {
-     $group: {
-      _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-      count: { $sum: 1 }
-    }
-    }
-  ])
+  const articalGraph = await Articals.find()
+  const viewForGraph = await ArticleView.find()
+  const likeGraph = await ArticleLike.find()
+  const shareGraph = await ArticleShare.find()
 
-  // const artForGraph = await ArticleView.aggregate([
-  //     {
-  //       $match :{
-  //         daily :{}
-  //       }
-  //     }
-  // ])
+ 
 
-
-
-
-
-
-
-  // const artForGraph = await Articals.aggregate([
-  //   {
-  //     $facet: {
-  //       views: [
-  //         { $unwind: "$views.history" },
-  //         { $match: { "views.history.viewedAt": { $gte: startday, $lte: endDay } } },
-  //         {
-  //           $group: {
-  //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$views.history.viewedAt" } },
-  //             count: { $sum: 1 }
-  //           }
-  //         }
-  //       ],
-  //       like: [
-  //         { $unwind: "$like" },
-  //         { $match: { "like.likedAt": { $gte: startday, $lte: endDay } } },
-  //         {
-  //           $group: {
-  //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$like.likedAt" } },
-  //             count: { $sum: 1 }
-  //           }
-  //         }
-  //       ],
-  //       shares: [
-  //         { $unwind: "$shareHistory" },
-  //         { $match: { "shareHistory.sharedAt": { $gte: startday, $lte: endDay } } },
-  //         {
-  //           $group: {
-  //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$shareHistory.sharedAt" } },
-  //             count: { $sum: 1 }
-  //           }
-  //         }
-  //       ],
-  //       blogs: [
-  //         { $match: { createdAt: { $gte: startday, $lte: endDay } } },
-  //         {
-  //           $group: {
-  //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-  //             count: { $sum: 1 }
-  //           }
-  //         }
-  //       ]
-  //     }
-  //   }
-  // ]);
-
-  console.log("artForGraph", artForGraph);
-
-  // const comForGraph = await Comment.aggregate([
-  //   {$match :{createdAt :{$gte : startday, $lte : endDay}}},
-  //   {
-  //     $group :{
-  //       _id:{$dateToString :{format : "%Y-%m-%d", data : "$createdAt"}}
-  //     }
-  //   }
-  // ])
 
   for (let i = 0; i < days; i++) {
-    const date = new Date(startday);
+    let date = new Date(startday);
     date.setDate(startday.getDate() + i); // read startday only
     const dayStr = date.toISOString().split("T")[0]; // YYYY-MM-DD format for aggregation
 
+    // const now = new Date()
+    // const dayKey = now.toISOString().slice(0, 10)
+
     labels.push(dayStr);
 
-    const viewCount = aaartForGraph[0]?.views.find(x => x._id === dayStr)?.count || 0;
-    const likeCount = aartForGraph[0]?.like.find(x => x._id === dayStr)?.count || 0;
-    const sharesCount = artForGraph[0]?.shares.find(x => x._id === dayStr)?.count || 0;
-    const blogsCount = articalGraph[0]?.blogs.find(x => x._id === dayStr)?.count || 0;
+     let blogsCount = 0;
+    let likeCount = 0;
+    let sharesCount = 0;
+    let viewCount = 0;
+
+
+   articalGraph.forEach(article =>{
+    // const createArtile = article.createdAt.toISOString().slice(0, 10)
+    if (article.createdAt.toISOString().slice(0, 10) === dayStr)  blogsCount+=1
+   })
+
+   
+
+   likeGraph.forEach(like =>{
+    // const likeAt = like?.likedAt.toISOString().slice(0, 10)
+    if ( like?.likedAt.toISOString().slice(0, 10) === dayStr)  likeCount +=1;
+   })
+
+   shareGraph.forEach(share =>{
+    // const sharedAt = share?.sharedAt.toISOString().slice(0, 10)
+    if (share?.sharedAt.toISOString().slice(0, 10) === dayStr)  sharesCount +=1;
+   })
+   viewForGraph.forEach(view =>{
+
+    viewCount += view?.daily?.get(dayStr)?.monetized || 0;
+
+   })
+    
+    
     articalArr.push(blogsCount)
     likeArr.push(likeCount)
-    viewsArr.push(viewCount)
     shareArr.push(sharesCount)
+    viewsArr.push(viewCount)
     // commentArr.push(blogsCount)
   }
 

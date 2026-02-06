@@ -8,6 +8,7 @@ import {adminLogin} from "../controller/hostController/admin-login.controller.js
 import RPMController from '../controller/hostController/RPM.Controller.js'
 import {getAddCaategoryPage, groutRpm, addCategory} from '../controller/hostController/addToCategory.Controller.js'
 import {withdrawRequestList, action} from "../controller/hostController/withdrawRequest.Controller.js"
+import {adminEarning} from "../controller/hostController/earning.Controller.js"
 import verifijwt from '../middleware/AdminVerifi.js'
 // import isAdmin from '../middleware/checkUserForAdmin.js'
 // import checkUserRole from '../middleware/checkRole.js'
@@ -26,7 +27,7 @@ router.get('/admin-dashboard/chart-data', getChartData)
 // /admin-dashboard/chart-data?days
 router.get('/admin-users', userInfo)
 router.get('/admin-users/Chart-data', userGraph)
-router.get('/admin-earning', (req, res)=>{res.render('Admin.Dashbord/earning', {layout : false, title : 'earning', page: "earning"})})
+router.get('/admin-earning',adminEarning)
 router.get('/admin-categories', articalCategories)
 // router.get('/admin-articles',  (req, res)=>{res.render('Admin.Dashbord/artical', {layout : false, title : 'user', page: "user"})})
 router.get('/admin-messages', AdminMessages)
