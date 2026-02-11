@@ -17,6 +17,19 @@ import { format } from "path";
 const articalUpload = asyncHandler(async (req, res) => {
 
   const { title, tags, short_description, content, publish_date, meta_title, meta_description, category } = req.body;
+
+  const profileCategories = await Profile.findOne({User : req.user._id}).select("category")
+
+  if (!profileCategories) {
+     req.flash("error", "something went is wrong")
+        return res.redirect("/");
+  }
+
+  if (!profileCategories.category.includes(category)) {
+    req.flash("error", "The Category You have enter is not match to you selected Categories")
+        return res.redirect("/");
+  }
+
   console.log("category", category);
 
   const imageUrl = await uploadOnCloudinary(req.file?.path)

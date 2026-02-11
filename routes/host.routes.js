@@ -9,6 +9,7 @@ import RPMController from '../controller/hostController/RPM.Controller.js'
 import {getAddCaategoryPage, groutRpm, addCategory} from '../controller/hostController/addToCategory.Controller.js'
 import {withdrawRequestList, action} from "../controller/hostController/withdrawRequest.Controller.js"
 import {adminEarning} from "../controller/hostController/earning.Controller.js"
+import updateAnnouncements from '../controller/hostController/updateAnnouncements.Controller.js'
 import verifijwt from '../middleware/AdminVerifi.js'
 // import isAdmin from '../middleware/checkUserForAdmin.js'
 // import checkUserRole from '../middleware/checkRole.js'
@@ -39,6 +40,8 @@ router.get('/admin-RPM', (req, res)=>{res.render('Admin.Dashbord/RPM', {layout :
 router.post('/admin-RPM/submit', RPMController)
 router.get('/admin-categoryadd',groutRpm,getAddCaategoryPage)
 router.post('/admin-categoryadd/submit',groutRpm,addCategory)
+router.get('/admin-Announcements',(req, res)=>{res.render('Admin.Dashbord/Announcements', {layout : false, title : 'Announcements', page: "Announcements"})})
+router.post('/admin-Announcements/update',updateAnnouncements)
 // router.get('/admin-withdraw',verifijwt, isAdmin, (req, res)=>{res.render('Admin.Dashbord/Withdraw', {layout : false, title : 'Withdraw', page: "Withdraw"})})
 
 

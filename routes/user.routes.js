@@ -49,6 +49,7 @@ import { postInTable, chart } from "../controller/userController/user.Dashbord/p
 import { Profile } from '../models/profile.model.js'
 import isAdmin from '../middleware/checkUserForAdmin.js'
 import withdrawController from '../controller/userController/user.Dashbord/withdraw.Controller.js'
+import {updateController} from "../controller/userController/update.controller.js"
 // import { profile } from 'console'
 // import { title } from 'process'
 // import { profile } from 'console'
@@ -179,7 +180,34 @@ router.post("/contact/contact-form-submit", verifijwt, contactValidator, contact
 
 
 
+// footers routes
+      // Legel Routes 
+router.get("/cookies", (req, res)=>{res.render("footer/Legal/CookiePolicy", {title : "CookiePolicy"})})
+router.get("/privacy", (req, res)=>{res.render("footer/Legal/PrivacyPolicy", {title : "Privacy"})})
+router.get("/terms", (req, res)=>{res.render("footer/Legal/Terms&Conditions", {title : "Terms & Condition"})})
+      
+// Support Routes 
 
+router.get("/help", (req, res)=>{res.render("footer/Support/help", {title : "help"})})
+router.get("/help/getting-started", (req, res)=>{res.render("footer/Support/help/gettingStart", {title : "getting-started"})})
+router.get("/help/publishing", (req, res)=>{res.render("footer/Support/help/Publish&Content", {title : "Publish & Content"})})
+router.get("/help/payments", (req, res)=>{res.render("footer/Support/help/payments", {title : "payments"})})
+router.get("/faq", (req, res)=>{res.render("footer/Support/faq", {title : "FAQ"})})
+// router.get("/contact", (req, res)=>{res.render("footer/Support/contact", {title : "contact"})})
+
+// For Creator Routes 
+router.get("/Dashbord", (req, res)=>{res.render("footer/ForCreator/ArticalPAge", {title : "ArticalPAge"})})
+router.get("/Artical", (req, res)=>{res.render("footer/ForCreator/Dahbord", {title : "Dahbord"})})
+router.get("/EarningPage", (req, res)=>{res.render("footer/ForCreator/Earnings", {title : "Earnings"})})
+router.get("/Withdraw", (req, res)=>{res.render("footer/ForCreator/WithdrawFunds", {title : "WithdrawFunds"})})
+
+// For Platform Routes 
+router.get("/blogs", (req, res)=>{res.render("footer/Platform/blogInfo", {title : "blogs"})})
+router.get("/categories", (req, res)=>{res.render("footer/Platform/category", {title : "category"})})
+// router.get("/trending", (req, res)=>{res.render("footer/Platform/Earnings", {title : "Earnings"})})
+router.get("/authors", (req, res)=>{res.render("footer/Platform/Author", {title : "Trending"})})
+router.get("/trending", (req, res)=>{res.render("footer/Platform/Trending", {title : "Trending"})})
+router.get("/updates", updateController)
 
 
 

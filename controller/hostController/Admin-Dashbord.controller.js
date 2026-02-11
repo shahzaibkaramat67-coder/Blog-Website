@@ -175,8 +175,8 @@ const dashboardController = asyncHandler(async (req, res) => {
 
 
   const totalLike = await ArticleLike.countDocuments()
-  const totalMonthlyLike = await ArticleLike.countDocuments({ createAt: { $gte: startMonthlyLike, $lte: endMonthlyLike } })
-  const totalDayLike = await ArticleLike.countDocuments({ createAt: { $gte: startDatLike, $lte: endDayLike } })
+  const totalMonthlyLike = await ArticleLike.countDocuments({ createdAt: { $gte: startMonthlyLike, $lte: endMonthlyLike } })
+  const totalDayLike = await ArticleLike.countDocuments({ createdAt: { $gte: startDatLike, $lte: endDayLike } })
   console.log("total like", totalLike);
   console.log("monthlyLike", totalMonthlyLike);
   console.log("day like", totalDayLike);
@@ -497,7 +497,7 @@ const getChartData = asyncHandler(async (req, res) => {
   for (let i = 0; i < days; i++) {
     let date = new Date(startday);
     date.setDate(startday.getDate() + i); // read startday only
-    const dayStr = date.toISOString().split("T")[0]; // YYYY-MM-DD format for aggregation
+    const dayStr = date.toISOString().slice(0, 10) // YYYY-MM-DD format for aggregation
 
     // const now = new Date()
     // const dayKey = now.toISOString().slice(0, 10)
@@ -509,10 +509,16 @@ const getChartData = asyncHandler(async (req, res) => {
     let sharesCount = 0;
     let viewCount = 0;
 
+    console.log("blogsCount", blogsCount);
+    console.log("likeCount", likeCount);
+    console.log("sharesCount", sharesCount);
+    console.log("viewCount", viewCount);
+    
 
-   articalGraph.forEach(article =>{
+
+   articalGraph?.forEach(article =>{
     // const createArtile = article.createdAt.toISOString().slice(0, 10)
-    if (article.createdAt.toISOString().slice(0, 10) === dayStr)  blogsCount+=1
+    if (article?.createdAt.toISOString().slice(0, 10) === dayStr)  blogsCount +=1
    })
 
    
@@ -526,10 +532,10 @@ const getChartData = asyncHandler(async (req, res) => {
     // const sharedAt = share?.sharedAt.toISOString().slice(0, 10)
     if (share?.sharedAt.toISOString().slice(0, 10) === dayStr)  sharesCount +=1;
    })
-   viewForGraph.forEach(view =>{
 
+
+   viewForGraph?.forEach(view =>{
     viewCount += view?.daily?.get(dayStr)?.monetized || 0;
-
    })
     
     

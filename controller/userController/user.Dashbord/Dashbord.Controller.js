@@ -13,6 +13,11 @@ import User from "../../../models/Signup.model.js";
 
 const userDashboard = asyncHandler(async (req, res) => {
 
+  const userId = req.user._id
+
+  console.log("tvdyt3vyue che cue e e   userId", userId);
+  
+
   const profile = await Profile.findOne({ User: req.user._id });
   // all blogs
   const allPostedArtical = await Articals.countDocuments({ username: profile._id });
@@ -51,7 +56,9 @@ const userDashboard = asyncHandler(async (req, res) => {
 
 
   //    Total like of all blogs
-  const allLikes = await ArticleLike.find({User : req.user._id}).countDocuments();
+  const allLikes = await ArticleLike.countDocuments(
+    {user : userId}
+  );
   
   console.log("allLikes", allLikes);
   
@@ -61,29 +68,21 @@ const userDashboard = asyncHandler(async (req, res) => {
   const startDataForLikes = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   const endDateForLikes = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999)
 
-  const monthlyLikes = await ArticleLike.countDocuments(
-    {User : req.user._id},
-    {likedAt : {$gte : startDataForLikes, $lte : endDateForLikes}}
-)
-  // console.log("monthlyLikesOfArtical", monthlyLikesOfArtical);
-  // 
-  // const monthlyLikes = monthlyLikesOfArtical.length > 0 ? monthlyLikesOfArtical[0].monthlyLikes : 0;
-
-  // console.log("this is monthly likes", monthlyLikes);
-  // console.log("this is monthly likes", monthlyLikes);
-
-
-  // day like for blog 
+  const monthlyLikes = await ArticleLike.countDocuments({
+       user : userId,
+    createdAt : {$gte : startDataForLikes, $lte : endDateForLikes}
+  })
+ 
 
   const dayStart = new Date()
   dayStart.setHours(0, 0, 0, 0)
   const dayend = new Date()
   dayend.setHours(23, 59, 59, 999)
 
-  const dayLikes = await ArticleLike.countDocuments(
-    {User : req.user._id},
-    {likedAt :{$gte : dayStart, $lte : dayend}}
-  )
+  const dayLikes = await ArticleLike.countDocuments({
+     user : userId,
+    createdAt :{$gte : dayStart, $lte : dayend}
+  })
 
   console.log("dayLikes", dayLikes);
   

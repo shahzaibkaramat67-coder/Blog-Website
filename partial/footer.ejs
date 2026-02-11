@@ -1,4 +1,110 @@
-<footer class="bg-white mt-4">
+<footer class="bg-gray-50 border-t border-gray-200 mt-12">
+  <div class="max-w-screen-xl mx-auto px-4 py-14">
+
+    <!-- Top Section -->
+    <div class="grid grid-cols-1 gap-10 md:grid-cols-4 lg:grid-cols-6">
+
+      <!-- Brand -->
+      <div class="lg:col-span-2">
+        <h2 class="text-2xl font-bold text-gray-900">
+          Blog<span class="text-teal-600">Hub</span>
+        </h2>
+        <p class="mt-4 text-sm text-gray-600 leading-relaxed">
+          A multi-vendor blogging platform where creators publish content, earn revenue, and grow their audience.
+        </p>
+
+        <!-- Social -->
+        <div class="mt-6 flex gap-4">
+          <a href="#" class="text-gray-500 hover:text-teal-600 transition">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="text-gray-500 hover:text-teal-600 transition">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-gray-500 hover:text-teal-600 transition">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Platform Links -->
+      <div>
+        <p class="font-semibold text-gray-900">Platform</p>
+        <ul class="mt-5 space-y-3 text-sm">
+          <li><a href="/blogs" class="text-gray-600 hover:text-teal-600">Explore Blogs</a></li>
+          <li><a href="/categories" class="text-gray-600 hover:text-teal-600">Categories</a></li>
+          <li><a href="/trending" class="text-gray-600 hover:text-teal-600">Trending</a></li>
+          <li><a href="/authors" class="text-gray-600 hover:text-teal-600">Top Authors</a></li>
+          <li><a href="/updates" class="text-gray-600 hover:text-teal-600">Updates</a></li>
+        </ul>
+      </div>
+
+      <!-- Creator Links -->
+      <div>
+        <p class="font-semibold text-gray-900">For Creators</p>
+        <ul class="mt-5 space-y-3 text-sm">
+          <li><a href="/Dashbord" class="text-gray-600 hover:text-teal-600">Dashboard</a></li>
+          <li><a href="/Artical" class="text-gray-600 hover:text-teal-600">Write Article</a></li>
+          <li><a href="/EarningPage" class="text-gray-600 hover:text-teal-600">Earnings</a></li>
+          <li><a href="/Withdraw" class="text-gray-600 hover:text-teal-600">Withdraw Funds</a></li>
+        </ul>
+      </div>
+
+      <!-- Support Links -->
+      <div>
+        <p class="font-semibold text-gray-900">Support</p>
+        <ul class="mt-5 space-y-3 text-sm">
+          <li><a href="/help" class="text-gray-600 hover:text-teal-600">Help Center</a></li>
+          <li><a href="/faq" class="text-gray-600 hover:text-teal-600">FAQs</a></li>
+          <li><a href="/contact" class="text-gray-600 hover:text-teal-600">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal Links -->
+      <div>
+        <p class="font-semibold text-gray-900">Legal</p>
+        <ul class="mt-5 space-y-3 text-sm">
+          <li><a href="/terms" class="text-gray-600 hover:text-teal-600">Terms & Conditions</a></li>
+          <li><a href="/privacy" class="text-gray-600 hover:text-teal-600">Privacy Policy</a></li>
+          <li><a href="/cookies" class="text-gray-600 hover:text-teal-600">Cookie Policy</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Newsletter Section -->
+    <div class="mt-12 border-t border-gray-200 pt-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <p class="text-sm text-gray-600">
+          Subscribe to get updates from your favorite authors
+        </p>
+
+        <form class="flex w-full md:w-auto gap-3">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            class="w-full md:w-64 rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-teal-500 focus:ring-teal-500"
+          />
+          <button
+            class="rounded-md bg-teal-600 px-5 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition">
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bottom Section -->
+    <div class="mt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500">
+      <p>© <%= new Date().getFullYear() %> BlogHub. All rights reserved.</p>
+      <p class="mt-2 sm:mt-0">Built for creators ❤️</p>
+    </div>
+
+  </div>
+</footer>
+
+
+
+<!-- <footer class="bg-white mt-4">
   <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
     <div class="lg:flex lg:items-start lg:gap-8">
       <div class="text-teal-600">
@@ -220,4 +326,4 @@
       </div>
     </div>
   </div>
-</footer>
+</footer> -->

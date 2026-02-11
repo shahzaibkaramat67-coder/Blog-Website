@@ -24,14 +24,15 @@ const viewControl = asyncHandler(async (req, res) => {
   if (!article) throw new ApiError("Article not found", 404);
   const rpmRate = Number(article?.rpm) || 0;
   const perViewEarningMills = earningCalculate(1, rpmRate); // DB-safe integer
-// const perViewEarning = (perViewEarningMills / 1000).toFixed(3); // string for UI
+  // const perViewEarning = (perViewEarningMills / 1000).toFixed(3); // string for UI
 
+  console.log("perViewEarningMills", perViewEarningMills);
 
   // 1️ Find existing view document for this user + article
   let viewDoc = await ArticleView.findOne({ article: id, User: userId });
   // let viewDoc = await ArticleView.findOne({ article: id, User: userId });
-          console.log("viewDoc", viewDoc);
-          
+  console.log("viewDoc", viewDoc);
+
   if (!viewDoc) {
     // First time viewing this article → create new document & count view
     viewDoc = new ArticleView({
@@ -39,7 +40,7 @@ const viewControl = asyncHandler(async (req, res) => {
       User: userId,
       total: 1,
       monetized: 1,
-      earningsMills : perViewEarningMills,
+      earningsMills: perViewEarningMills,
       daily: { [dayKey]: { views: 1, monetized: 1, earningsMills: perViewEarningMills } },
       monthly: { [monthKey]: { views: 1, monetized: 1, earningsMills: perViewEarningMills } },
       lastDay: dayKey,
@@ -55,11 +56,18 @@ const viewControl = asyncHandler(async (req, res) => {
       { $inc: { totalViews: 1, estimatedEarningMills: perViewEarningMills } },
       { new: true }
     );
-    await User.findByIdAndUpdate(
-      id,
-      { $inc :{totalEarningsMills : perViewEarningMills} },
-      {$inc :{balanceMills : perViewEarningMills}}
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $inc: {
+          totalEarningsMills: perViewEarningMills,
+          balanceMills: perViewEarningMills
+        }
+      },
+      { new: true }
     )
+    console.log("updatedUser", updatedUser);
+
   } else {
     // Already viewed before → check 1-hour cooldown
     if (!viewDoc.lastViewedAt || now - viewDoc.lastViewedAt >= ONE_HOUR) {
@@ -68,7 +76,7 @@ const viewControl = asyncHandler(async (req, res) => {
         $inc: {
           total: 1,
           monetized: 1,
-           earningsMills : perViewEarningMills,
+          earningsMills: perViewEarningMills,
           [`daily.${dayKey}.views`]: 1,
           [`daily.${dayKey}.monetized`]: 1,
           [`daily.${dayKey}.earningsMills`]: perViewEarningMills,
@@ -89,11 +97,18 @@ const viewControl = asyncHandler(async (req, res) => {
         { $inc: { totalViews: 1, estimatedEarningMills: perViewEarningMills } },
         { new: true }
       );
-      await User.findByIdAndUpdate(
-       id,
-       { $inc :{totalEarningsMills : perViewEarningMills} },
-       {$inc :{balanceMills : perViewEarningMills}}
-     )
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+          $inc: {
+            totalEarningsMills: perViewEarningMills,
+            balanceMills: perViewEarningMills
+          }
+        },
+        { new: true }
+      )
+      console.log("updatedUser", updatedUser);
+
     }
 
     // else → viewed within last hour → do nothing (view not counted)

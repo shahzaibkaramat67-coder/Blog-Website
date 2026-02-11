@@ -89,9 +89,15 @@ const userGraph = asyncHandler(async (req, res) => {
 
 
   const labelsArr = [];
+  
+ 
+  
   const activeUserArr = [];
+ 
   const userArr = [];
-  const TodayLoginUserArr = [];
+  
+   const TodayLoginUserArr = [];
+ 
 
   const startDay = new Date();
   startDay.setDate(startDay.getDate() - (days - 1))
@@ -145,8 +151,12 @@ const userGraph = asyncHandler(async (req, res) => {
     labelsArr.push(labels)
 
     const userActive = activeUser[0].dailyUsers.find(u => u._id === labels)?.count || 0;
+  
+    
     const totalUser = activeUser[0].status.find(u => u._id === labels)?.count || 0;
+
     const LoginUser = activeUser[0].lastLoginAt.find(u => u._id === labels)?.count || 0;
+
 
     activeUserArr.push(userActive);
     userArr.push(totalUser);
