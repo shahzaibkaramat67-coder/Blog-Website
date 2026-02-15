@@ -10,6 +10,11 @@ const updateSchema = new mongoose.Schema({
     type: String, 
     required: true 
 },
+  status :{
+   type : String,
+   enum :["read", "unread"],
+   default : "unread"
+  },
   category: { 
     type: String, 
     default: "announcement",

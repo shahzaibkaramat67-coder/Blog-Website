@@ -13,10 +13,27 @@ import { RPMGroup } from "../../models/RPMGroup.model.js";
 import earningCalculate from "../../helper/earningCalculation.js";
 import { fail } from "assert";
 import { format } from "path";
+import openai from "../../helper/openaiClient.js";
 
 const articalUpload = asyncHandler(async (req, res) => {
 
   const { title, tags, short_description, content, publish_date, meta_title, meta_description, category } = req.body;
+
+  if (!content) {
+    throw new Error("the content be must greater then 100", 400);
+    
+    //  req.flash("error", "the conetnt length must be greater then 100")
+    //     return res.redirect("/");
+  }
+
+  // Call OpenAI Moderation API
+
+  // const moderationResponse  = await openai.moderations.create({
+  //   module : "omni-moderation-latest",
+  //   input : content
+  // }) 
+
+  // const result = moderationResponse.results[0]
 
   const profileCategories = await Profile.findOne({User : req.user._id}).select("category")
 

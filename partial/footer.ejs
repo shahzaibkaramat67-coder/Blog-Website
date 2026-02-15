@@ -35,7 +35,8 @@
           <li><a href="/categories" class="text-gray-600 hover:text-teal-600">Categories</a></li>
           <li><a href="/trending" class="text-gray-600 hover:text-teal-600">Trending</a></li>
           <li><a href="/authors" class="text-gray-600 hover:text-teal-600">Top Authors</a></li>
-          <li><a href="/updates" class="text-gray-600 hover:text-teal-600">Updates</a></li>
+          <!-- <span>uyvuyvuevyuevuy</span><li><a href="/updates" class="text-gray-600 hover:text-teal-600">Updates</a></li> -->
+           <li><span class="bg-red-800 text-white rounded-lg px-2"><%=  countUpdate? countUpdate : 0%></span> <samp><a id="viewUpdate" href="/updates" class="text-gray-600 hover:text-teal-600">updates</a></samp></li>
         </ul>
       </div>
 
@@ -101,6 +102,19 @@
 
   </div>
 </footer>
+
+
+<script>
+const view = document.getElementById("viewUpdate");
+
+view.addEventListener("click", async() => {
+  const api = await fetch("/updates/view", {
+        method: "POST"
+    });
+  const countUpdate = api.json()
+});
+</script>
+
 
 
 

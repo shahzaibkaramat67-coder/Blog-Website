@@ -18,6 +18,7 @@ import checkUserRole from "./middleware/checkRole.js"
 // import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
+import update from "./models/Announcment.Model.js";
 // import connectRedis from "connect-redis";
 // import Redis from "ioredis";
 
@@ -163,6 +164,18 @@ app.use(async(req, res, next)=>{
       } catch (error) {
          res.locals.category = []
    }
+   next()
+})
+
+app.use(async(req, res, next)=>{
+  
+    try {
+      const countUpdate = await update.find({status : "unread"}).countDocuments()
+     res.locals.countUpdate = countUpdate;
+    } catch (error) {
+      res.locals.countUpdate = 0
+    }
+   
    next()
 })
 

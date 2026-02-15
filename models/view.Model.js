@@ -20,7 +20,7 @@ const articleViewSchema = new mongoose.Schema(
     User :{
        type : mongoose.Schema.Types.ObjectId,
        ref : "User",
-       required: true,
+       default: null,
     },
      total: { type: Number, default: 0 },        // total views
     monetized: { type: Number, default: 0 },   // total monetized views

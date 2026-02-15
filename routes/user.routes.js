@@ -49,7 +49,8 @@ import { postInTable, chart } from "../controller/userController/user.Dashbord/p
 import { Profile } from '../models/profile.model.js'
 import isAdmin from '../middleware/checkUserForAdmin.js'
 import withdrawController from '../controller/userController/user.Dashbord/withdraw.Controller.js'
-import {updateController} from "../controller/userController/update.controller.js"
+import {updateController, updateView} from "../controller/userController/update.controller.js"
+import { moderationMiddleware } from '../middleware/moderationMiddleware.js'
 // import { profile } from 'console'
 // import { title } from 'process'
 // import { profile } from 'console'
@@ -86,10 +87,10 @@ router.post('/profile/Dashbord/Withdraw/submit',verifijwt, withdrawController)
 router.get('/profile/Dashbord/postsAnalytics/:id', chart);
 
 router.get('/profile/Dashbord/craete-Artical',verifijwt, categoryShareToArtical)
-router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, upload.single("featured_image"), articalValidation, articalUpload)
+router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, articalValidation,upload.single("featured_image"),moderationMiddleware, articalUpload)
 
 
-//  there are Singup , Login , forgetPassport , Logout logics
+//  there are Singup , Login , forgetPassport , Logout logicss
 // router.get('/signup', (req, res) => {
 //   if (req.isAuthenticated()) {
 //     return res.redirect("/login");
@@ -207,7 +208,8 @@ router.get("/categories", (req, res)=>{res.render("footer/Platform/category", {t
 // router.get("/trending", (req, res)=>{res.render("footer/Platform/Earnings", {title : "Earnings"})})
 router.get("/authors", (req, res)=>{res.render("footer/Platform/Author", {title : "Trending"})})
 router.get("/trending", (req, res)=>{res.render("footer/Platform/Trending", {title : "Trending"})})
-router.get("/updates", updateController)
+router.get("/updates",updateView,  updateController)
+// router.get("/updates/view", )
 
 
 

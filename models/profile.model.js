@@ -80,7 +80,7 @@ const profileSchema = new mongoose.Schema({
     default: []
   },
 
-}, {timeseries: true})
+}, {timestamps: true})
 
 export const Profile = mongoose.model('Profile', profileSchema)
 

@@ -1,129 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
-  
-<%-include('../../partial/sidebar.ejs')%>
 
-  <div class="w-full max-w-2xl mx-auto p-6  rounded-lg shadow bg-white mt-2">
-    <h1 class="text-3xl text-center text-5xl capitalize  font-bold mt-2 mb-4">Create New Blog Post</h1>
+  <%-include('../../partial/sidebar.ejs')%>
 
-    <form action="/profile/Dashbord/craete-Artical/upload-blog" method="POST" enctype="multipart/form-data"
-      class="space-y-6">
+    <div class="w-full max-w-2xl mx-auto p-6  rounded-lg shadow bg-white mt-2">
+      <h1 class="text-3xl text-center text-5xl capitalize  font-bold mt-2 mb-4">Create New Blog Post</h1>
 
-      <!-- Blog Title -->
-      <div>
-        <label class="block text-gray-700 font-semibold">Blog Title</label>
-        <input type="text" name="title"
-          class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
-          placeholder="Enter blog title">
-      </div>
+      <form id="Upload" action="/profile/Dashbord/craete-Artical/upload-blog" method="POST"
+        enctype="multipart/form-data" class="space-y-6">
 
-      <!-- Featured Image -->
-      <div>
-        <label class="block text-gray-700 font-semibold">Featured Image</label>
-        <input type="file" name="featured_image" class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-white"
-          required>
-      </div>
+        <!-- Blog Title -->
+        <div>
+          <label class="block text-gray-700 font-semibold">Blog Title</label>
+          <input type="text" name="title"
+            class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+            placeholder="Enter blog title">
+        </div>
 
-      <!-- Tags -->
-      <div>
-        <label class="block text-gray-700 font-semibold">Tags (comma separated)</label>
-        <input type="text" name="tags" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-          placeholder="e.g. hacking, app security, tips">
-      </div>
+        <!-- Featured Image -->
+        <div>
+          <label class="block text-gray-700 font-semibold">Featured Image</label>
+          <input type="file" name="featured_image" class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-white"
+            required>
+        </div>
 
-      <!-- Short Description -->
-      <div>
-        <label class="block text-gray-700 font-semibold">Short Description</label>
-        <textarea name="short_description" rows="3" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-          placeholder="Write a short preview of your blog"></textarea>
-      </div>
+        <!-- Tags -->
+        <div>
+          <label class="block text-gray-700 font-semibold">Tags (comma separated)</label>
+          <input type="text" name="tags" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+            placeholder="e.g. hacking, app security, tips">
+        </div>
 
-      <!-- Full Content -->
-      <div>
-        <label class="block text-gray-700 font-semibold">Full Content</label>
-        <textarea name="content" rows="8" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-          placeholder="Write the complete blog here"></textarea>
-      </div>
+        <!-- Short Description -->
+        <div>
+          <label class="block text-gray-700 font-semibold">Short Description</label>
+          <textarea name="short_description" rows="3" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+            placeholder="Write a short preview of your blog"></textarea>
+        </div>
 
-
-
-      <!-- Publish Date -->
-      <div>
-        <label class="block text-gray-700 font-semibold">Publish Date</label>
-        <input type="date" name="publish_date" class="w-full mt-1 p-3 border border-gray-300 rounded-lg">
-      </div>
-
-      <!-- Author Name -->
-      <div>
-        <label class="block text-gray-700 font-semibold">Category</label>
-        <select name="category" id="category"
-          class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="" disabled selected>Choose Category</option>
-          <% if (category && category.length) { %>
-            <% category.forEach(cat=> { %>
-              <option value="<%= cat %>">
-                <%= cat %>
-              </option>
-              <% }) %>
-                <% } else { %>
-                  <option disabled>No categories available</option>
-                  <% } %>
-        </select>
-
-      </div>
-
-      <!-- SEO Meta Title -->
-      <div>
-        <label class="block text-gray-700 font-semibold">SEO Meta Title</label>
-        <input type="text" name="meta_title" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-          placeholder="Enter meta title for search engines">
-      </div>
-
-      <!-- SEO Meta Description -->
-      <div>
-        <label class="block text-gray-700 font-semibold">SEO Meta Description</label>
-        <textarea name="meta_description" rows="2" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
-          placeholder="Enter meta description for search engines"></textarea>
-      </div>
-
-      <!-- Submit Button -->
-      <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
-        Upload Blog Post
-      </button>
-
-    </form>
-  </div>
+        <!-- Full Content -->
+        <div>
+          <label class="block text-gray-700 font-semibold">Full Content</label>
+          <textarea name="content" rows="8" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+            placeholder="Write the complete blog here"></textarea>
+        </div>
 
 
 
+        <!-- Publish Date -->
+        <div>
+          <label class="block text-gray-700 font-semibold">Publish Date</label>
+          <input type="date" name="publish_date" class="w-full mt-1 p-3 border border-gray-300 rounded-lg">
+        </div>
+
+        <!-- Author Name -->
+        <div>
+          <label class="block text-gray-700 font-semibold">Category</label>
+          <select name="category" id="category"
+            class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="" disabled selected>Choose Category</option>
+            <% if (category && category.length) { %>
+              <% category.forEach(cat=> { %>
+                <option value="<%= cat %>">
+                  <%= cat %>
+                </option>
+                <% }) %>
+                  <% } else { %>
+                    <option disabled>No categories available</option>
+                    <% } %>
+          </select>
+
+        </div>
+
+        <!-- SEO Meta Title -->
+        <div>
+          <label class="block text-gray-700 font-semibold">SEO Meta Title</label>
+          <input type="text" name="meta_title" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+            placeholder="Enter meta title for search engines">
+        </div>
+
+        <!-- SEO Meta Description -->
+        <div>
+          <label class="block text-gray-700 font-semibold">SEO Meta Description</label>
+          <textarea name="meta_description" rows="2" class="w-full mt-1 p-3 border border-gray-300 rounded-lg"
+            placeholder="Enter meta description for search engines"></textarea>
+        </div>
+
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-300 rounded-full h-3 mt-3 relative overflow-hidden">
+          <div id="progressBar" class="bg-red-600 h-3 w-0 absolute left-0 top-0 transition-all duration-200"></div>
+          <span id="progressText" class="absolute right-2 top-0 text-white text-xs font-bold">0%</span>
+        </div>
+
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
+          Upload Blog Post
+        </button>
+
+      </form>
+    </div>
 
 
 
 
-  <!-- 
-  <script>
-    const Api = `http://localhost:3002/api/user/profile/Dashbord/craete-Artical/upload-blog`
-    fetch(Api)
-      .then(Response => {
-        if (!Response.ok) {
-          throw new Error("the response is not okay", 400);
 
+
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const form = document.getElementById("Upload");
+      const bar = document.getElementById("progressBar")
+      const text = document.getElementById("progressText")
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault()
+
+
+        const formData = new FormData(form);
+
+        try {
+
+        const response =  await axios.post("http://localhost:3002/profile/Dashbord/craete-Artical/upload-blog", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+            onUploadProgress: (ProgressEvent) => {
+              const percent = Math.round(
+                (ProgressEvent.loaded * 100) / ProgressEvent.total
+              )
+
+              bar.style.width = percent + "%"
+              text.innerText = percent + "%"
+
+            }
+          })
+        if (response.data.success) {
+           alert("Blog uploaded successfully ");
+           bar.style.width = "0%";
+           text.innerText = "0%";
+           form.reset()
+          }else{
+          alert( response.data.success || "Blog uploaded failed ");
         }
-        return Response.json()
-      }).then(data => {
-        console.log(`the artical upload data is here ${data}`);
 
-      }).catch(error => console.error(error))
+         
+        } catch (error) {
+          alert("Blog uploaded failed ");
+           bar.style.width = "0%";
+           text.innerText = "0%";
+        }
 
 
-  </script> -->
+
+
+      })
+
+
+
+      //   const form = document.getElementById("Upload");
+
+      //   uploadArtical.addEventListener("submit", (e)=>{
+      //     e.preventDefault();
+
+      // const api = fetch("http://localhost:3002/profile/Dashbord/craete-Artical/upload-blog", {
+      //       method : "post",
+      //       enctype : "multipart/form-data"
+      //      })
+      // const data = api.json()
+      // if (data) {
+      //   alert("the blog uploaded successfully")
+      // }
+
+      //   })
+    </script>
 
 </body>
+
 </html>
