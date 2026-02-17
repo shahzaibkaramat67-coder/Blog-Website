@@ -4,8 +4,10 @@ import delay from "delay"; // npm install delay
 
 const moderationMiddleware = asyncHandler(async (req, res, next) => {
 
+  const { title, short_description, content } = req.body
+
   try {
-    const textToCheck = ` ${req.body.title || ""} ${req.body.short_description || ""} ${req.body.content || ""}`;
+    const textToCheck = `${title} ${short_description} ${content} `;
 
     if (!textToCheck.trim()) {
       return res.status(400).json({

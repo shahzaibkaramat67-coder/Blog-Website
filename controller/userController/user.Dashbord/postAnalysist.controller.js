@@ -16,7 +16,7 @@ const postInTable = asyncHandler(async (req, res) => {
   // const useId = req.user._id 
   // const profile = await Profile.find({})
   // const articals = await Articals.find({ User: req.user._id }).sort({ createdAt: -1 }).select("title featured_image publish_date views.monetized  estimatedEarning shareHistory like");
-  const articles = await Articals.find({ User: req.user._id })
+  const articles = await Articals.find({ User: req.user._id }).sort({createdAt : -1})
         .select("title featured_image publish_date totalLikes totalViews totalShares estimatedEarningMills")
 
   // console.log("artical", articals);

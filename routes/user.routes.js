@@ -51,6 +51,7 @@ import isAdmin from '../middleware/checkUserForAdmin.js'
 import withdrawController from '../controller/userController/user.Dashbord/withdraw.Controller.js'
 import {updateController, updateView} from "../controller/userController/update.controller.js"
 import { moderationMiddleware } from '../middleware/moderationMiddleware.js'
+import { deleteArticle, updateArticle } from '../controller/userController/user.Dashbord/delete&Update.Controller.js'
 // import { profile } from 'console'
 // import { title } from 'process'
 // import { profile } from 'console'
@@ -76,6 +77,8 @@ router.post('/edit-profile',verifijwt, (req, res)=>{res.render('edit-profile', {
 router.post('/profile', verifijwt, upload.single("profile_Image"), profileValivation, createORUpdateProfile)
 // router.get('/profile/postsAnalytics', (req, res) => { res.render('postsAnalytics', {layout : false, title: "postsAnalytics" }) })
 router.get('/profile/Dashbord/postsAnalytics',verifijwt, postInTable)
+router.get('/profile/Dashbord/postsAnalytics/update/:id', updateArticle)
+router.delete('/profile/Dashbord/postsAnalytics/delete/:id', deleteArticle)
 router.get('/profile/Dashbord/EarningPage',verifijwt,userEarning)
 router.get('/profile/Dashbord/my-Dashboard', verifijwt, userDashboard)
 router.get('/profile/Dashbord/my-Dashboard/data', verifijwt, getDashbordChartData)

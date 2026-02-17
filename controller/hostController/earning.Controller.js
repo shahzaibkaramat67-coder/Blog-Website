@@ -145,6 +145,37 @@ console.log("balance", balance);
 })
 
 
+const earmingHraph = asyncHandler(async(req, res)=>{
+
+  const days = parseInt(req.query.days) || 7;
+
+  console.log("days", days);
+  
+
+  const now = new Date()
+  const dayKey = now.toISOString().slice(0, 10)
+  const monthkey = now.toISOString().slice(0, 7)
+
+   const earning = await User.aggregate([
+    {
+      $group:{
+        _id : {
+          $toStringDate :{format : "%Y-%m-%d", date : "$dayKey"},
+          count :{$sum : totalEarningsMills}
+        }
+      }
+    }
+   ])
+
+   console.log("earning", earning);
+   
+
+
+
+})
+
+
 export {
-    adminEarning
+    adminEarning,
+    earmingHraph
 }

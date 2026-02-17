@@ -50,21 +50,83 @@
             <section class="bg-white p-6 rounded-xl shadow mb-8">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-bold">Earnings Trend</h2>
-                    <select class="border border-gray-300 px-3 py-2 rounded">
-                        <option>Last 7 Days</option>
-                        <option>Last 15 Days</option>
-                        <option>Last 1 Month</option>
-                        <option>Last 3 Months</option>
+                    <select id="selectRange" class="border border-gray-300 px-3 py-2 rounded">
+                        <option value="7">Last 7 Days</option>
+                        <option value="15">Last 15 Days</option>
+                        <option value="30">Last 1 Month</option>
+                        <option value="90">Last 3 Months</option>
                     </select>
                 </div>
-                <div class="bg-gray-50 h-64 flex items-center justify-center rounded text-gray-400">
-                    Chart Placeholder
+                <div id="Chart" class="bg-gray-50 h-90 flex items-center justify-center rounded">
+                  <canvas id="chartTrend" width="600" height="400"></canvas>
+
                 </div>
             </section>
 
         
 
         </main>
+
+
+
+        <script>
+
+        let chart
+        const chartCtx = document.getElementById("chartTrend").getContext("2d")
+        function renderChart(chart) {
+            if (chart) chart.distroy();
+           
+            chart = new Chart(chartCtx, {
+                type : "line",
+                data : {
+                    labels : data.labels,
+                    dataset :[
+                        {
+                            labels : "Earning",
+                            data : data.earning,
+                            borderWidth : 2,
+                            tension : 0.4
+                        }
+                    ]
+                },
+                options :{
+                    responsive : true,
+                    maintainAspectRatio : false,
+                    Plugin :{
+                        legend : {position : "top"}
+                    },
+                    scales: {
+                y: { beginAtZero: true }
+            }
+                }
+        
+
+            })
+        }
+
+        async function loadChart(days = 7) {
+
+            const res = await fetch(`/Api/admin-earning/chart-data?days=${days}`)
+            console.log("res", res);
+
+            if (!res.ok) {
+                console.error("Failed to fetch chart data");
+        return; 
+                
+            }
+
+            const data = await res.json()
+            renderChart(data)
+        }
+        loadChart()
+
+  document.getElementById("selectRange").addEventListener("change", ()=>{
+    loadChart(this.value)
+  })
+
+
+        </script>
+
 
 </body>
 
