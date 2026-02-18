@@ -68,64 +68,59 @@
         </main>
 
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <script>
+  <script>
 
-        let chart
-        const chartCtx = document.getElementById("chartTrend").getContext("2d")
-        function renderChart(chart) {
-            if (chart) chart.distroy();
-           
-            chart = new Chart(chartCtx, {
-                type : "line",
-                data : {
-                    labels : data.labels,
-                    dataset :[
-                        {
-                            labels : "Earning",
-                            data : data.earning,
-                            borderWidth : 2,
-                            tension : 0.4
-                        }
-                    ]
-                },
-                options :{
-                    responsive : true,
-                    maintainAspectRatio : false,
-                    Plugin :{
-                        legend : {position : "top"}
-                    },
-                    scales: {
+let chart;   // store chart instance
+
+const chartCtx = document.getElementById("chartTrend").getContext("2d");
+
+function renderChart(data) {
+
+    // destroy old chart
+    if (chart) chart.destroy();
+
+    chart = new Chart(chartCtx, {
+        type: "line",
+        data: {
+            labels: data.data.map(d => d.day),
+            datasets: [
+                {
+                    label: "Earning",
+                    data: data.data.map(d => d.totalEarning),
+                    borderWidth: 2,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: "top" }
+            },
+            scales: {
                 y: { beginAtZero: true }
             }
-                }
-        
-
-            })
         }
+    });
+}
 
-        async function loadChart(days = 7) {
+async function loadChart(days = 7) {
+    const res = await fetch(`/Api/admin-earning/chart-data?days=${days}`);
+    const data = await res.json();
+    renderChart(data);
+}
 
-            const res = await fetch(`/Api/admin-earning/chart-data?days=${days}`)
-            console.log("res", res);
+loadChart();
 
-            if (!res.ok) {
-                console.error("Failed to fetch chart data");
-        return; 
-                
-            }
+document.getElementById("selectRange").addEventListener("change", function () {
+    loadChart(this.value);
+});
 
-            const data = await res.json()
-            renderChart(data)
-        }
-        loadChart()
+</script>
 
-  document.getElementById("selectRange").addEventListener("change", ()=>{
-    loadChart(this.value)
-  })
-
-
-        </script>
 
 
 </body>

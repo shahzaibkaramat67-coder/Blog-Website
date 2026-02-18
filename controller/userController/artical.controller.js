@@ -28,12 +28,8 @@ const articalUpload = asyncHandler(async (req, res) => {
 
   // Call OpenAI Moderation API
 
-  // const moderationResponse  = await openai.moderations.create({
-  //   module : "omni-moderation-latest",
-  //   input : content
-  // }) 
-
-  // const result = moderationResponse.results[0]
+ 
+  
 
   const profileCategories = await Profile.findOne({User : req.user._id}).select("category")
 
@@ -88,7 +84,13 @@ const articalUpload = asyncHandler(async (req, res) => {
   //  const artical
 
 
+//  const moderationResponse  = await openai.moderations.create({
+//     model : "omni-moderation-latest",
+//     input : content
+//   }) 
 
+//   const result = moderationResponse.results[0]
+//   console.log("result", result);
 
 
   const createArtical = await Articals.create({

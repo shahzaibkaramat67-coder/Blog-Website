@@ -1,7 +1,7 @@
 import User from "../../models/Signup.model.js";
 import { ArticleView } from "../../models/view.Model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
-
+import ApiResponse from "../../utils/ApiResponse.js"
 
 const adminEarning = asyncHandler(async (req, res) => {
     const now = new Date()
@@ -145,34 +145,54 @@ console.log("balance", balance);
 })
 
 
-const earmingHraph = asyncHandler(async(req, res)=>{
+const earmingHraph = asyncHandler(async (req, res) => {
 
   const days = parseInt(req.query.days) || 7;
 
-  console.log("days", days);
-  
+  const now = new Date();
+  const dateForGraph = [];
 
-  const now = new Date()
-  const dayKey = now.toISOString().slice(0, 10)
-  const monthkey = now.toISOString().slice(0, 7)
+  //  Build last N days
+  for (let i = days - 1; i >= 0; i--) {
+    const newDate = new Date(now);
+    newDate.setDate(now.getDate() - i);
+    dateForGraph.push(newDate.toISOString().slice(0, 10));
+  }
 
-   const earning = await User.aggregate([
+  //  Single aggregation
+  const earning = await ArticleView.aggregate([
+    { $project: { daily: 1, _id: 0 } },
+    { $project: { dayArray: { $objectToArray: "$daily" } } },
+    { $unwind: "$dayArray" },
+    { $match: { "dayArray.k": { $in: dateForGraph } } },
     {
-      $group:{
-        _id : {
-          $toStringDate :{format : "%Y-%m-%d", date : "$dayKey"},
-          count :{$sum : totalEarningsMills}
-        }
+      $group: {
+        _id: "$dayArray.k",
+        totalEarning: { $sum: "$dayArray.v.earningsMills" }
       }
-    }
-   ])
+    },
+    { $sort: { _id: 1 } }
+  ]);
 
-   console.log("earning", earning);
-   
+  //  Fill missing days
+  const graph = dateForGraph.map(day => {
+    const found = earning.find(e => e._id === day);
+    return {
+      day,
+      totalEarning: found ? found.totalEarning : 0
+    };
+  });
 
+  console.log("graph", graph);
 
+  res.status(200).json({
+    success: true,
+    data: graph
+  });
 
-})
+  
+  
+});
 
 
 export {

@@ -90,7 +90,7 @@ router.post('/profile/Dashbord/Withdraw/submit',verifijwt, withdrawController)
 router.get('/profile/Dashbord/postsAnalytics/:id', chart);
 
 router.get('/profile/Dashbord/craete-Artical',verifijwt, categoryShareToArtical)
-router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, articalValidation,upload.single("featured_image"),moderationMiddleware, articalUpload)
+router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, articalValidation,upload.single("featured_image"), articalUpload)
 
 
 //  there are Singup , Login , forgetPassport , Logout logicss

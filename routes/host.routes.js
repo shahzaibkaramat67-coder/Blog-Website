@@ -5,7 +5,7 @@ import {articalCategories} from "../controller/hostController/Categories.control
 import {userInfo, userGraph} from "../controller/hostController/user.controller.js"
 import {dashboardController, getChartData } from '../controller/hostController/Admin-Dashbord.controller.js'
 import {adminLogin} from "../controller/hostController/admin-login.controller.js"
-import RPMController from '../controller/hostController/RPM.Controller.js'
+import {RPMController, showRpm} from '../controller/hostController/RPM.Controller.js'
 import {getAddCaategoryPage, groutRpm, addCategory} from '../controller/hostController/addToCategory.Controller.js'
 import {withdrawRequestList, action} from "../controller/hostController/withdrawRequest.Controller.js"
 import {adminEarning, earmingHraph} from "../controller/hostController/earning.Controller.js"
@@ -37,7 +37,7 @@ router.post('/admin-messages/message/:id', readMail)
 router.get('/admin-settings',  (req, res)=>{res.render('Admin.Dashbord/setting', {layout : false, title : 'setting', page: "setting"})})
 router.get('/admin-withdraw', withdrawRequestList)
 router.post('/admin-withdraw/withdraw/:id', action)
-router.get('/admin-RPM', (req, res)=>{res.render('Admin.Dashbord/RPM', {layout : false, title : 'price', page: "RPM Price"})})
+router.get('/admin-RPM',showRpm )
 router.post('/admin-RPM/submit', RPMController)
 router.get('/admin-categoryadd',groutRpm,getAddCaategoryPage)
 router.post('/admin-categoryadd/submit',groutRpm,addCategory)
