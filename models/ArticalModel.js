@@ -84,6 +84,11 @@ const articalSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  // moderation: {
+  //   status: { type: String, enum: ["pending", "clean", "flagged", "failed"], default: "pending" },
+  //   flagged: { type: Boolean, default: false },
+  //   details: { type: mongoose.Schema.Types.Mixed }
+  // },
 
 }, { timestamps: true })
 

@@ -13,9 +13,11 @@ import { RPMGroup } from "../../models/RPMGroup.model.js";
 import earningCalculate from "../../helper/earningCalculation.js";
 import { fail } from "assert";
 import { format } from "path";
-import openai from "../../helper/openaiClient.js";
+import vettlyApi from "../../helper/openaiClient.js";
 
 const articalUpload = asyncHandler(async (req, res) => {
+
+    console.log("ARTICLE UPLOAD HIT", new Date().toISOString());
 
   const { title, tags, short_description, content, publish_date, meta_title, meta_description, category } = req.body;
 
@@ -84,13 +86,17 @@ const articalUpload = asyncHandler(async (req, res) => {
   //  const artical
 
 
-//  const moderationResponse  = await openai.moderations.create({
-//     model : "omni-moderation-latest",
-//     input : content
-//   }) 
+ // ===== OPENAI MODERATION HERE =====
+// const moderationResponse = await openai.moderations.create({
+//   model: "omni-moderation-latest",
+//   input: content
+// });
 
-//   const result = moderationResponse.results[0]
-//   console.log("result", result);
+// const result = moderationResponse.results[0];
+
+// if (result.flagged) {
+//   return res.status(400).json({ message: "Content contains harmful data" });
+// }
 
 
   const createArtical = await Articals.create({
@@ -126,7 +132,11 @@ const articalUpload = asyncHandler(async (req, res) => {
 
   }
 
-  res.redirect('/blog')
+  // moderation is performed synchronously via middleware/openai client
+
+  // res.redirect('/blog')
+  return res.json({ success: true, message: "Blog uploaded successfully" });
+
   // return res
   //   .status(201)
   //   .json(new ApiResponse(200, createArtical, "the Artical is create successfully"))
@@ -171,8 +181,8 @@ const getArticales = asyncHandler(async (req, res) => {
     currentPage: page,
     searchQuery: Topic || "",
     totalPages,
-    SideAllArtical: [], // ✅ Prevent undefined error
-    topicSlug, // ✅ Define for pagination URLs
+    SideAllArtical: [], //  Prevent undefined error
+    topicSlug, //  Define for pagination URLs
   });
 });
 

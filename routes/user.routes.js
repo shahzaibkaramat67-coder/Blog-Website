@@ -40,6 +40,7 @@ import {getArticalComment, commentHendeler, deleteComment } from '../controller/
 import passport from 'passport'
 import '../auth/google-Strategy.js'
 import upload from '../middleware/multer.middleware.js'
+import { moderationMiddleware } from '../middleware/moderationMiddleware.js'
 import updatePasswordValidation from '../middleware/updatePassword.js'
 // import sendOtpMail from '../controller/userController/otp.controller.js'
 // import { getProfileUserDarta } from '../controller/userController/profile.controller.js'
@@ -50,7 +51,6 @@ import { Profile } from '../models/profile.model.js'
 import isAdmin from '../middleware/checkUserForAdmin.js'
 import withdrawController from '../controller/userController/user.Dashbord/withdraw.Controller.js'
 import {updateController, updateView} from "../controller/userController/update.controller.js"
-import { moderationMiddleware } from '../middleware/moderationMiddleware.js'
 import { deleteArticle, updateArticle } from '../controller/userController/user.Dashbord/delete&Update.Controller.js'
 // import { profile } from 'console'
 // import { title } from 'process'
@@ -90,7 +90,7 @@ router.post('/profile/Dashbord/Withdraw/submit',verifijwt, withdrawController)
 router.get('/profile/Dashbord/postsAnalytics/:id', chart);
 
 router.get('/profile/Dashbord/craete-Artical',verifijwt, categoryShareToArtical)
-router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, articalValidation,upload.single("featured_image"), articalUpload)
+router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, articalValidation, upload.single("featured_image"),moderationMiddleware, articalUpload)
 
 
 //  there are Singup , Login , forgetPassport , Logout logicss
