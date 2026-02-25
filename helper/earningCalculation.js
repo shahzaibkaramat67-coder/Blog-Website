@@ -7,4 +7,22 @@ const earningCalculate = (views, rpm) => {
   return earningMills; // still safe for DB & calculations
 };
 
-export default earningCalculate;
+
+const DollerTomile = (ammount)=>{
+    const miles = 1000;
+    const amountInmile = ammount * miles;
+     return amountInmile;
+}
+const milesToDoller = (ammount)=>{
+    const miles = 1000;
+    const amountInmile = ammount / miles;
+     return amountInmile;
+}
+
+
+
+export  {
+  earningCalculate,
+  DollerTomile,
+  milesToDoller
+};

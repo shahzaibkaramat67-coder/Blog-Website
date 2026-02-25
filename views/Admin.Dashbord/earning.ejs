@@ -24,25 +24,25 @@
                 <!-- Total Earnings -->
                 <div class="bg-white p-5 rounded-lg shadow hover:shadow-md transition">
                     <h3 class="text-lg font-semibold mb-3">💰 Total Earnings</h3>
-                    <p class="text-2xl font-bold"><%= total%></p>
+                    <p class="text-2xl font-bold">$<%= total%></p>
                 </div>
 
                 <!-- This Month -->
                 <div class="bg-white p-5 rounded-lg shadow hover:shadow-md transition">
                     <h3 class="text-lg font-semibold mb-3">📅 This Month</h3>
-                    <p class="text-2xl font-bold"><%= month%></p>
+                    <p class="text-2xl font-bold">$<%= month%></p>
                 </div>
 
                 <!-- Today -->
                 <div class="bg-white p-5 rounded-lg shadow hover:shadow-md transition">
                     <h3 class="text-lg font-semibold mb-3">📈 Today</h3>
-                    <p class="text-2xl font-bold"><%= day%></p>
+                    <p class="text-2xl font-bold">$<%= day%></p>
                 </div>
 
                 <!-- Pending Withdrawals -->
                 <div class="bg-white p-5 rounded-lg shadow hover:shadow-md transition">
                     <h3 class="text-lg font-semibold mb-3">⏳ Pending Withdrawals</h3>
-                    <p class="text-2xl font-bold"><%= balance%></p>
+                    <p class="text-2xl font-bold">$<%= balance%></p>
                 </div>
             </div>
 
@@ -108,7 +108,7 @@ function renderChart(data) {
 }
 
 async function loadChart(days = 7) {
-    const res = await fetch(`/Api/admin-earning/chart-data?days=${days}`);
+    const res = await fetch(`/api/admin-earning/chart-data?days=${days}`);
     const data = await res.json();
     renderChart(data);
 }

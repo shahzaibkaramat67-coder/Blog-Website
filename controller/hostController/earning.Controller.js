@@ -2,6 +2,8 @@ import User from "../../models/Signup.model.js";
 import { ArticleView } from "../../models/view.Model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import ApiResponse from "../../utils/ApiResponse.js"
+import withdraw from "../../models/withdraw.Model.js";
+import { milesToDoller } from "../../helper/earningCalculation.js";
 
 const adminEarning = asyncHandler(async (req, res) => {
     const now = new Date()
@@ -19,9 +21,10 @@ const totalEarning = await User.aggregate([
 ])
 
 
-
-
 console.log("totalEarning", totalEarning);
+
+
+
 const Earning = await ArticleView.aggregate([
   {
     $project: {
@@ -77,15 +80,36 @@ const Earning = await ArticleView.aggregate([
 
 
 
-console.log("Earning", Earning);
+// console.log("Earning", Earning);
 
 const total =  ((totalEarning[0]?.totalEarningsMills || 0) /1000).toFixed(3)
 const month = ((Earning[0]?.monthlyEarn || 0)/1000).toFixed(3)
 const day = ((Earning[0]?.dailyEarn || 0)/1000).toFixed(3)
-const balance = ((totalEarning[0]?.balanceMills || 0)/1000).toFixed(3)
-console.log("total", total);
-console.log("month", month);
-console.log("day", day);
+// const balance = ((totalEarning[0]?.balanceMills || 0)/1000).toFixed(3)
+// console.log("total", total);
+// console.log("month", month);
+// console.log("day", day);
+
+
+const panddingWithdrawals = await withdraw.aggregate([
+  {
+    $match: { status: "pending" } // filter only pending withdrawals
+  },
+  {
+    $group: {
+      _id: null,
+      totalPending: { $sum: "$amount" } // sum the "amount" field
+    }
+  }
+]);
+
+
+console.log("Total pending panddingWithdrawals:", panddingWithdrawals);
+// Optional: get the total value
+const balance = milesToDoller(panddingWithdrawals[0]?.totalPending || 0).toFixed(2);
+
+console.log("Total pending withdrawals:", balance);
+
 console.log("balance", balance);
 
 

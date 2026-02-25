@@ -24,6 +24,7 @@ import {
   getSearchAndRandomArticals,
  
 } from '../controller/userController/artical.controller.js'
+import {getHistoryPage} from "../controller/userController/user.Dashbord/history.Controller.js"
 import { viewControl } from '../controller/userController/view.Controller.js'
 import { likeArtical } from '../controller/userController/like.Controller.js'
 import { shareArtical, profile_Image } from '../controller/userController/share.Controller.js'
@@ -46,12 +47,13 @@ import updatePasswordValidation from '../middleware/updatePassword.js'
 // import { getProfileUserDarta } from '../controller/userController/profile.controller.js'
 // import verifiOtp from "../middleware/otp.varification.js"
 import { title } from 'process'
-import { postInTable, chart } from "../controller/userController/user.Dashbord/postAnalysist.controller.js"
+import { postInTable, chart, loadArticle } from "../controller/userController/user.Dashbord/postAnalysist.controller.js"
 import { Profile } from '../models/profile.model.js'
 import isAdmin from '../middleware/checkUserForAdmin.js'
 import withdrawController from '../controller/userController/user.Dashbord/withdraw.Controller.js'
 import {updateController, updateView} from "../controller/userController/update.controller.js"
 import { deleteArticle, updateArticle } from '../controller/userController/user.Dashbord/delete&Update.Controller.js'
+import {ArticleList, articleListByApi} from '../controller/userController/ArticleList.controller.js'
 // import { profile } from 'console'
 // import { title } from 'process'
 // import { profile } from 'console'
@@ -75,8 +77,10 @@ router.get('/auth/google/callback',passport.authenticate('google'), googlecontro
 router.get('/profile', verifijwt, getProfileForUpdate)
 router.post('/edit-profile',verifijwt, (req, res)=>{res.render('edit-profile', {layout : false, title: 'edit-profile'})})
 router.post('/profile', verifijwt, upload.single("profile_Image"), profileValivation, createORUpdateProfile)
-// router.get('/profile/postsAnalytics', (req, res) => { res.render('postsAnalytics', {layout : false, title: "postsAnalytics" }) })
+router.get('/profile/:cat', ArticleList)
+router.get('/profile/list/:category', articleListByApi)
 router.get('/profile/Dashbord/postsAnalytics',verifijwt, postInTable)
+router.get('/profile/Dashbord/postsAnalytics/page/:page',verifijwt, loadArticle)
 router.get('/profile/Dashbord/postsAnalytics/update/:id', updateArticle)
 router.delete('/profile/Dashbord/postsAnalytics/delete/:id', deleteArticle)
 router.get('/profile/Dashbord/EarningPage',verifijwt,userEarning)
@@ -91,6 +95,7 @@ router.get('/profile/Dashbord/postsAnalytics/:id', chart);
 
 router.get('/profile/Dashbord/craete-Artical',verifijwt, categoryShareToArtical)
 router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, articalValidation, upload.single("featured_image"),moderationMiddleware, articalUpload)
+router.get('/profile/Dashbord/history',verifijwt, getHistoryPage)
 
 
 //  there are Singup , Login , forgetPassport , Logout logicss

@@ -6,7 +6,7 @@ import ArticleLike from "../../../models/like.Model.js";
 import { ArticleView } from "../../../models/view.Model.js";
 import { ArticleShare } from "../../../models/share.Model.js";
 import { group, log } from "console";
-import earningCalculate from "../../../helper/earningCalculation.js";
+import {earningCalculate} from "../../../helper/earningCalculation.js";
 import mongoose from "mongoose";
 
 
@@ -18,6 +18,8 @@ const postInTable = asyncHandler(async (req, res) => {
   // const articals = await Articals.find({ User: req.user._id }).sort({ createdAt: -1 }).select("title featured_image publish_date views.monetized  estimatedEarning shareHistory like");
   const articles = await Articals.find({ User: req.user._id }).sort({createdAt : -1})
         .select("title featured_image publish_date totalLikes totalViews totalShares estimatedEarningMills")
+        .limit(5)
+       
 
   // console.log("artical", articals);
 
@@ -45,6 +47,29 @@ const Analysist = articles.map(article => ({
 
 
 });
+
+
+const loadArticle = asyncHandler(async(req, res)=>{
+
+  console.log("this is for see more");
+  
+
+  const Page = parseInt(req.params.page) || 2;
+  const userId = req.user._id;
+  const limit  = 5
+
+  const articals = await Articals.find({User : userId})
+     .sort({createdAt : -1})
+     .skip((Page - 1) * limit)
+     .limit(limit)
+     .lean()
+
+    //  console.log("articals", articals);
+     
+
+res.json(articals)
+
+})
 
 const chart = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -113,4 +138,8 @@ const chart = asyncHandler(async (req, res) => {
   return res.json({ labels, views, likes, shares });
 });
 
-export { postInTable, chart };
+export { 
+  postInTable, 
+  chart, 
+  loadArticle
+};

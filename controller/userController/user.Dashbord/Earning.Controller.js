@@ -1,7 +1,8 @@
 import { Articals } from "../../../models/ArticalModel.js";
 import asyncHandler from "../../../utils/asyncHandler.js";
-import earningCalculate from "../../../helper/earningCalculation.js";
+import {earningCalculate} from "../../../helper/earningCalculation.js";
 import { ArticleView } from "../../../models/view.Model.js";
+import { milesToDoller } from "../../../helper/earningCalculation.js";
 import withdraw from "../../../models/withdraw.Model.js";
 import User from "../../../models/Signup.model.js";
 
@@ -33,8 +34,23 @@ const views = await ArticleView.find({User : req.user._id})
  
 
 //  const  withdrawList = await withdraw.find({User : req.user._id}).populate("user", "usernam")
-const withdrawalRequest = await withdraw.find({user : req.user._id}).populate("user", "Username")
- console.log("withdrawList", withdrawalRequest);
+const withdrawalRequest = await withdraw
+  .find({ user: req.user._id })
+  .select("amount status createdAt user")   // only needed fields
+  .populate("user", "Username")
+  .lean();
+console.log("withdrawList", withdrawalRequest);
+
+  const result = withdrawalRequest.map(w => ({
+  status: w.status,
+  amount: milesToDoller(w.amount),
+  createdAt: w.createdAt,
+  username: w.user?.Username || "Unknown"
+}));
+// console.log("withdraw result", result);
+
+
+ console.log("result", result);
  
       
 
@@ -47,7 +63,7 @@ const withdrawalRequest = await withdraw.find({user : req.user._id}).populate("u
         month,
         today,
         available,
-        withdrawalRequest,
+        withdrawalRequest : result,
     })
     
 })

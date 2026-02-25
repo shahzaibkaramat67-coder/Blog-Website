@@ -323,7 +323,8 @@ const googlecontroller = asyncHandler(async (req, res) => {
 
     const profile = await Profile.findOne({ User: req.user._id })
     if (profile) {
-        return res.render("profile", { title: "profile", profile });
+        return res.render("home", { title: "home" });
+        // return res.render("profile", { title: "profile", profile });
     } else {
         return res.render("edit-profile", { layout: false, title: "edit-profile", profile });
     }

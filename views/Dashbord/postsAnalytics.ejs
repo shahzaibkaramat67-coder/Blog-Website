@@ -24,7 +24,8 @@
       </div>
 
       <!-- Table -->
-      <div class="overflow-x-auto">
+
+      <div class="overflow-x-auto  overflow-y-auto max-h-[80vh]">
         <table class="w-full table-auto border-collapse text-sm sm:text-base">
           <thead>
             <tr class="bg-gray-200 text-left uppercase text-gray-600">
@@ -38,11 +39,10 @@
               <th class="p-3 sm:p-4">$ Earn</th>
             </tr>
           </thead>
-
-          <tbody  class="text-gray-700">
+          <tbody id="articleContainer" class="text-gray-700">
             <% if (Analysist.length) { %>
               <% Analysist.forEach(post=> { %>
-                <tr  data-id="<%= post._id %>" class="rows border-t hover:bg-gray-50 transition cursor-pointer">
+                <tr data-id="<%= post._id %>" class="rows border-t hover:bg-gray-50 transition cursor-pointer">
                   <td class="p-3 sm:p-4">
                     <img src="<%= post.featured_image %>" alt="Main Picture"
                       class="w-16 sm:w-20 h-12 sm:h-14 object-cover rounded">
@@ -56,11 +56,8 @@
                   </td>
                   <td class="p-3 sm:p-4 text-center">
                     <button onclick="openChartModal('<%= post._id %>')"
-                      class="bg-blue-100 hover:bg-blue-200 p-2 rounded-full text-xl transition-all">
-                      📊
-                    </button>
+                      class="bg-blue-100 hover:bg-blue-200 p-2 rounded-full text-xl transition-all">📊</button>
                   </td>
-                  <!-- Artical.views.total -->
                   <td class="p-3 sm:p-4">
                     <%= post.totalViews %>
                   </td>
@@ -72,36 +69,22 @@
                   </td>
                   <td class="p-3 sm:p-4">$<%= post.estimatedEarningMills %>
                   </td>
-                  <td class="p-3 sm:p-4">
-                    <div class="menu-container">
-                      <button class="menu-btn" onclick="toggleMenu('<%= post._id %>')">
-                        <svg width="20" height="20" viewBox="0 0 24 24">
-                          <circle cx="12" cy="5" r="2" />
-                          <circle cx="12" cy="12" r="2" />
-                          <circle cx="12" cy="19" r="2" />
-                        </svg>
-                      </button>
-
-                      <div id="menu-<%= post._id %>" class="menu-dropdown hidden">
-                        <a href="/post/edit/<%= post._id %>">✏️ Update</a>
-
-                        <form action="/post/delete/<%= post._id %>?_method=DELETE" method="POST">
-                          <button type="submit">🗑 Delete</button>
-                        </form>
-                      </div>
-                    </div>
-
-
-                  </td>
                 </tr>
-                <% }); %>
+                <% }) %>
                   <% } else { %>
                     <tr>
-                      <td colspan="7" class="p-4 text-center text-gray-500">No posts available.</td>
+                      <td colspan="8" class="p-4 text-center text-gray-500">No posts available.</td>
                     </tr>
                     <% } %>
           </tbody>
         </table>
+      </div>
+
+
+      <div class="text-center mt-6">
+        <button id="loadMoreBtn" class="bg-gray-100 px-4 py-2 rounded shadow hover:bg-gray-200 transition">
+          ⬇ Load More
+        </button>
       </div>
     </div>
   </main>
@@ -200,38 +183,93 @@
     }
 
 
-  const rows = document.querySelectorAll(".rows")
+    const rows = document.querySelectorAll(".rows")
 
-   rows.forEach(row => {
-    const id = row.dataset.id
-     row.addEventListener("mousedown",async function(e){
-      if (e.button === 0) {
-        try {
-        window.location.href = `/profile/Dashbord/postsAnalytics/update/${id}`;
+    rows.forEach(row => {
+      const id = row.dataset.id
+      row.addEventListener("mousedown", async function (e) {
+        if (e.button === 0) {
+          try {
+            window.location.href = `/profile/Dashbord/postsAnalytics/update/${id}`;
 
-          console.log("click update");
-          
-        } catch (error) {
-          console.error(error)
+            console.log("click update");
+
+          } catch (error) {
+            console.error(error)
+          }
         }
-      }
-      if(e.button === 2){
+        if (e.button === 2) {
           if (!confirm("Are you sure you want to delete this article?")) return;
-        try {
-          const res = fetch(`/profile/Dashbord/postsAnalytics/delete/${id}`, {
-            method : "delete"
-          })
-          window.location.reload(); 
-          console.log("click delete");
-        } catch (error) {
-          console.error(error)
-          
-        } 
-      }
-    })
-   });
+          try {
+            const res = fetch(`/profile/Dashbord/postsAnalytics/delete/${id}`, {
+              method: "delete"
+            })
+            window.location.reload();
+            console.log("click delete");
+          } catch (error) {
+            console.error(error)
 
-   rows.addEventListener("contextmanu", e => e.preventDefault())
+          }
+        }
+      })
+    });
+
+
+//  correct
+rows.forEach(row => {
+  row.addEventListener("contextmenu", e => e.preventDefault());
+});
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+  const loadMoreBtn = document.getElementById("loadMoreBtn");
+  const articleContainer = document.getElementById("articleContainer");
+  let page = 2;
+
+  async function loadArticle() {
+    console.log("frontend: loadArticle called, page=", page);
+    const res = await fetch(`/profile/Dashbord/postsAnalytics/page/${page}`);
+    console.log("frontend: fetch sent");
+    const articalLoad = await res.json();
+    console.log("backend response:", articalLoad);
+
+    if (!articalLoad || articalLoad.length === 0) {
+      loadMoreBtn.style.display = "none";
+      return;
+    }
+
+    articalLoad.forEach(post => {
+      const tr = document.createElement("tr");
+      tr.dataset.id = post._id;
+      tr.className = "rows border-t hover:bg-gray-50 transition cursor-pointer";
+      tr.innerHTML = `
+        <td class="p-3 sm:p-4">
+          <img src="${post.featured_image}" class="w-16 sm:w-20 h-12 sm:h-14 object-cover rounded">
+        </td>
+        <td class="p-3 sm:p-4 font-semibold truncate max-w-[150px] sm:max-w-none">${post.title}</td>
+        <td class="p-3 sm:p-4">${new Date(post.publish_date).toLocaleDateString()}</td>
+        <td class="p-3 sm:p-4 text-center">
+          <button onclick="openChartModal('${post._id}')" class="bg-blue-100 hover:bg-blue-200 p-2 rounded-full text-xl transition-all">📊</button>
+        </td>
+        <td class="p-3 sm:p-4">${post.totalViews}</td>
+        <td class="p-3 sm:p-4">${post.totalLikes}</td>
+        <td class="p-3 sm:p-4">${post.totalShares}</td>
+        <td class="p-3 sm:p-4">$${post.estimatedEarningMills}</td>
+      `;
+      articleContainer.appendChild(tr);
+    });
+
+    page++;
+  }
+
+  loadMoreBtn.addEventListener("click", loadArticle);
+});
+
+
+
+
+
+
   </script>
 
 

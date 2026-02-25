@@ -4,10 +4,11 @@ import ApiError from "../../utils/ApiError.js";
 import ArticleLike from "../../models/like.Model.js";
 import Comment from "../../models/comment.model.js";
 import { ArticleView } from "../../models/view.Model.js";
-import earningCalculate from "../../helper/earningCalculation.js"
+import { earningCalculate } from "../../helper/earningCalculation.js"
 import User from "../../models/Signup.model.js";
 
 const ONE_HOUR = 60 * 60 * 1000; // 1 hour cooldown
+const HISTORY_LIMIT = 50;
 
 const viewControl = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -113,6 +114,18 @@ const viewControl = asyncHandler(async (req, res) => {
 
     // else → viewed within last hour → do nothing (view not counted)
   }
+
+   if(userId){
+     await User.findByIdAndUpdate(userId,{$pull:{history :{article : id}}})
+     await User.findByIdAndUpdate(userId, {$push :{history :{$each : [{article : id, createAt : now}], $position : 0}}})
+     await User.updateOne(
+      {_id : userId},
+      {
+        $push :{history :{$each :[], $slice : HISTORY_LIMIT }}
+      }
+     )
+
+   }
 
   // 2️ Fetch like status, comments, and article data for rendering
   const liked = userId ? await ArticleLike.exists({ article: id, user: userId }) : false;

@@ -192,7 +192,7 @@ app.use(express.static('public'))
 
 
 // app.use("/", userRateLimit)
-app.use("/Api",adminRateLimit, hostRouter)
+app.use("/api",adminRateLimit, hostRouter)
 
 
 app.use("/",userRateLimit, userRouter)

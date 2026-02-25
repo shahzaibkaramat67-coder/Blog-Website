@@ -124,7 +124,7 @@ selectRange.addEventListener("change",(e)=>{
 
 
  async function dataLoad(days = 7) {
-     const res  =await fetch(`/Api/admin-users/Chart-data?days=${days}`)
+     const res  =await fetch(`/api/admin-users/Chart-data?days=${days}`)
      console.log(res);
      
      if (!res.ok) {

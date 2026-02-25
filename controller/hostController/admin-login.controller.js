@@ -25,13 +25,13 @@ const adminLogin = asyncHandler(async (req, res) => {
   
   if (!identifier || !password) {
     req.flash("error", "Both username/email and password are required.");
-    return res.redirect("/Api/login");
+    return res.redirect("/api/login");
   }
 
   const reasult = validationResult(req)
   if (!reasult.isEmpty()) {
     reasult.array().forEach((err) => res.flash("error", err.msg))
-    return res.redirect("/Api/login");
+    return res.redirect("/api/login");
   }
 
   const normalizeIdentifier = identifier.trim().toLowerCase()
@@ -41,7 +41,7 @@ const adminLogin = asyncHandler(async (req, res) => {
 
   if (!existedUser) {
     req.flash("error", "invalid input data")
-    return res.redirect("/Api/login");
+    return res.redirect("/api/login");
   }
 
   const isCorrectPassword = await existedUser.isCorrectPassword(password)
@@ -49,12 +49,12 @@ const adminLogin = asyncHandler(async (req, res) => {
   
   if (!isCorrectPassword) {
     req.flash("error", "password must be matched")
-    return res.redirect("/Api/login");
+    return res.redirect("/api/login");
   }
 
   if (existedUser.role !== "admin") {
     req.flash("error", "Access denied. Admin only.");
-   return res.redirect("/Api/login");
+   return res.redirect("/api/login");
 
   }
 
@@ -73,7 +73,7 @@ const adminLogin = asyncHandler(async (req, res) => {
 //   res.cookie("accessToken", accessToken, accessTokenOption)
   res.cookie("refreshToken", refreshToken, refreshTokenOption)
 
-return res.redirect("/Api/admin-dashboard");
+return res.redirect("/api/admin-dashboard");
 
 
 

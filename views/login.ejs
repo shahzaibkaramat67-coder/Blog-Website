@@ -14,7 +14,7 @@
         <h1><%= isAdmin ? "Admin Panel Login" : "User Login" %></h1>
       </div>
       <div class="form_Handler">
-        <form action="<%= isAdmin ? '/Api/submit-login' : '/submit-login' %>" method="POST">
+        <form action="<%= isAdmin ? '/api/submit-login' : '/submit-login' %>" method="POST">
           <div class="form_data">
             <label for="identifier">Username or Email</label>
             <input type="text" id="identifier" name="identifier" required>

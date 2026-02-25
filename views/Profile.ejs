@@ -1,4 +1,4 @@
-<div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg mt-10 p-8">
+<section class="max-w-4xl mx-auto bg-white shadow-md rounded-lg mt-10 p-8">
   <div class="flex items-center space-x-6">
     <img class="h-24 w-24 rounded-full object-cover" src=<%=profile.profile_Image%>
     alt="Profile picture" />
@@ -13,7 +13,7 @@
   </div>
 
   <div class="my-4">
-    <div  class="text-lg font-semibold text-gray-700 mb-2">
+    <div class="text-lg font-semibold text-gray-700 mb-2">
       <h1>Introduction</h1>
     </div>
     <div class="p-2">
@@ -23,13 +23,13 @@
     </div>
   </div>
 
-  
+
   <div>
     <h2 class="text-lg font-semibold text-gray-700 mb-2">Categories</h2>
     <div class="grid grid-cols-2 gap-3 text-gray-700">
       <% profile.category.forEach(cat=> {%>
         <a class="bg-gray-100 px-4 py-2 rounded-lg text-sm text-center shadow-sm hover:bg-gray-200 transition"
-          href="/profile/postsAnalytics">
+          href="/profile/<%= cat%>">
           <%= cat%>
         </a>
         <% }); %>
@@ -102,48 +102,7 @@
         class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Dashbord</a>
     </div>
   </div>
-  </div>
-
-
-
-
-
-
-
-
-
-
-  <!-- 
-
-
-    <script>
-      console.log("script starting");
-      
-
-      const Api = `http://localhost:3002/api/user/profile/edit-profile/profile-save`;
-      // http://localhost:3002/api/user/profile/edit-profile/profile-save
-      // http://localhost:3002/api/user/profile/edit-profile/profile-save
-
-      fetch(Api)
-        .then(Response => {
-          if (!Response.ok) {
-            throw new Error("Api profile data not found", 404);
-          }
-          return Response.json()
-        }).then(data => {
-         console.log(data);
-         
-
-        }).catch(error => console.error(error))
-
-
-    </script> -->
-
-
-
-  </body>
-
-  </html>
+</section>
 
 
 
@@ -160,190 +119,6 @@
 
 
 
+</body>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <!-- 
- <li class="relative group">
-                <a class="text-gray-500 transition hover:text-gray-700 dark:text-white dark:hover:text-white" href="#">
-                  Blogs
-                </a>
-
-                Dropdown Content
-                <div class="absolute mt-3 w-[850px] bg-white shadow-lg border rounded-lg p-4 grid grid-cols-5 gap-4 
-                    opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 z-50">
-
-                  Niche Box with Checkbox
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                  <div class=" p-3 text-center text-sm  cursor-pointer">
-                    <input type="checkbox" name="niches" value="Cybersecurity" class="mb-2">
-                    <span>Cybersecurity</span>
-                  </div>
-                </div>
-              </li> -->
+</html>

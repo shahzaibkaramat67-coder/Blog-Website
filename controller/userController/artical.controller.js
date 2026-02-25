@@ -10,7 +10,7 @@ import { url } from "inspector";
 // import Category from "../../models/categorie.model.js";
 import Category from "../../models/categorie.model.js";
 import { RPMGroup } from "../../models/RPMGroup.model.js";
-import earningCalculate from "../../helper/earningCalculation.js";
+// import {earningCalculate} from "../../helper/earningCalculation.js";
 import { fail } from "assert";
 import { format } from "path";
 import vettlyApi from "../../helper/openaiClient.js";

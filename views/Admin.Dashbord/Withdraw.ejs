@@ -72,15 +72,15 @@
                       <% withdrawList.forEach(withdraw => { %>
                         
                          <tr class="border-b">
-                            <td class="py-2 px-2"><%= withdraw.user.Username%></td>
-                            <td class="py-2 px-2"><%= withdraw.user.Email%></td>
-                            <td class="py-2 px-2"><span class="text-yellow-600 font-semibold"><%= withdraw.amount%></span></td>
+                            <td class="py-2 px-2"><%= withdraw.username%></td>
+                            <td class="py-2 px-2"><%= withdraw.email%></td>
+                            <td class="py-2 px-2"><span class="text-yellow-600 font-semibold">$<%= withdraw.amount%></span></td>
                             <td class="py-2 px-2"><%= withdraw.status%></td>
                             <td class="py-2 px-2"><%= withdraw.createdAt.toDateString()%></td>
                             <td class="py-2 px-2"><%= withdraw.method%></td>
                             <td class="py-2 px-2">
-                                <button data-id="<%= withdraw._id%>" data-action="Approve" class="withdraw-btn px-2 py-1 bg-green-600 text-white rounded text-sm">Approve</button>
-                                <button data-id="<%= withdraw._id%>" data-action="Decline" class="withdraw-btn px-2 py-1 bg-red-600 text-white rounded text-sm">Decline</button>
+                                <button data-id="<%= withdraw._id%>" data-action="approve" class="withdraw-btn px-2 py-1 bg-green-600 text-white rounded text-sm">Approve</button>
+                                <button data-id="<%= withdraw._id%>" data-action="decline" class="withdraw-btn px-2 py-1 bg-red-600 text-white rounded text-sm">Decline</button>
                             </td>
                         </tr>
 
@@ -101,13 +101,16 @@ document.addEventListener("click", async (e) => {
   const requestId = e.target.dataset.id;
   const action = e.target.dataset.action;
 
+  console.log(requestId);
+  console.log(action);
+  
+
   if (!confirm(`Are you sure you want to ${action} this withdrawal?`)) return;
 
   try {
-    const response = await fetch(`/Api/admin-withdraw/withdraw/${requestId}`, {
+    const response = await fetch(`/api/admin-withdraw/withdraw/${requestId}/${action}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action })
+      credentials: "include"
     });
 
     const data = await response.json();

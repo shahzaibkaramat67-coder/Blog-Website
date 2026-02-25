@@ -14,7 +14,7 @@
   <h1 class="text-4xl font-bold text-gray-900 mb-8 text-center">Post a New Update</h1>
 
   <!-- Update Form -->
-  <form id="updateForm" action="/Api/admin-Announcements/update" method="post" class="bg-white p-6 rounded-xl shadow space-y-4">
+  <form id="updateForm" action="/api/admin-Announcements/update" method="post" class="bg-white p-6 rounded-xl shadow space-y-4">
 
     <!-- Title -->
     <div>
@@ -91,7 +91,7 @@
               const discrib = textarea.value.trim()
         if (!textName || !discrib || !Categories) alert("All Fields are required")
 
-        const res = await fetch("/Api/admin-Announcements/update", {
+        const res = await fetch("/api/admin-Announcements/update", {
             method : "post",
             headers :{'content-type': 'application/json'},
             body : JSON.stringify({textName, discrib, Categories})

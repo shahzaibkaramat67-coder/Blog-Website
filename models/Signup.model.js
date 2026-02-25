@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import { Schema } from 'mongoose';
-import { type } from 'os';
+
 // import { types } from 'util';
 
 const SingupSchema = new Schema({
@@ -60,6 +60,17 @@ const SingupSchema = new Schema({
         default: 0,
         min: 0,
     },
+
+    history :[{
+        article :{
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "Artical"
+        },
+        createAt :{
+            type : Date,
+            default : Date.now
+        }
+    }],
 
 
     role: {

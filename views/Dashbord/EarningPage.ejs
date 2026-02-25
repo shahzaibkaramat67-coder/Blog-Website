@@ -30,7 +30,7 @@
       </div>
       <div class="p-6 bg-red-500 text-white rounded-lg shadow">
         <h2 class="text-xl font-semibold">Available Balance</h2>
-        <p class="mt-2 text-3xl"><%= available%></p>
+        <p class="mt-2 text-3xl">$<%= available%></p>
         <span>Pending</span>
       </div>
     </div>
@@ -54,9 +54,9 @@
               <% withdrawalRequest.forEach(w => {%>
                 
                 <tr class="border-t">
-                 <td class="p-3"><%= w.user.Username%></td>
+                 <td class="p-3"><%= w.username%></td>
               <td class="p-3"><%= w.createdAt.toDateString()%></td>
-              <td class="p-3 text-green-600 font-semibold"><%= w.amount%></td>
+              <td class="p-3 text-green-600 font-semibold">$<%= w.amount%></td>
               <td class="p-3 font-semibold <%= w.status === 'pending' ? 'text-red-500' : 'text-green-700' %> "><%= w.status%></td>
               
               </tr>
