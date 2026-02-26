@@ -16,19 +16,19 @@
     <p class="text-gray-600 text-center mb-6">Enter the 6-digit code sent to your email</p>
 
     <form class="otpForm" action="/otp-submit" method="post" class="space-y-6">
-      <div class="flex justify-between gap-2">
+      <div class="flex justify-between gap-3">
+        <input type="text" maxlength="1" autofocus
+          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
         <input type="text" maxlength="1"
-          class="otp-digit w-12 h-12 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl" />
+          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
         <input type="text" maxlength="1"
-          class="otp-digit w-12 h-12 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl" />
+          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
         <input type="text" maxlength="1"
-          class="otp-digit w-12 h-12 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl" />
+          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
         <input type="text" maxlength="1"
-          class="otp-digit w-12 h-12 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl" />
+          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
         <input type="text" maxlength="1"
-          class="otp-digit w-12 h-12 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl" />
-        <input type="text" maxlength="1"
-          class="otp-digit w-12 h-12 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl" />
+          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
       </div>
 
       <input type="hidden" name="otp" id="otpInput">
@@ -74,7 +74,15 @@
       })
 
       input.addEventListener("paste", (e) => {
+        // Allow pasting full code: distribute pasted digits across inputs
         e.preventDefault();
+        const paste = (e.clipboardData || window.clipboardData).getData('text') || '';
+        const digits = paste.replace(/\D/g, '').slice(0, otpdigit.length).split('');
+        digits.forEach((ch, i) => {
+          otpdigit[i].value = ch;
+        });
+        const nextIndex = Math.min(digits.length, otpdigit.length) - 1;
+        if (nextIndex >= 0 && nextIndex < otpdigit.length) otpdigit[nextIndex].focus();
       });
     });
 

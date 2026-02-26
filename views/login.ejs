@@ -4,39 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
-   <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/all.css">
 </head>
 <body>
-  <section>
-    <div class="section-page">
-      <div class="Signup">
-        <h1><%= isAdmin ? "Admin Panel Login" : "User Login" %></h1>
-      </div>
-      <div class="form_Handler">
-        <form action="<%= isAdmin ? '/api/submit-login' : '/submit-login' %>" method="POST">
-          <div class="form_data">
-            <label for="identifier">Username or Email</label>
-            <input type="text" id="identifier" name="identifier" required>
+  <%- include("../partial/Flash_response.ejs") %>
+  <section class="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div class="w-full max-w-md p-6">
+      <div class="bg-white shadow rounded-lg p-6">
+        <h1 class="text-2xl font-semibold text-center mb-4"><%= isAdmin ? "Admin Panel Login" : "User Login" %></h1>
+        <form action="<%= isAdmin ? '/api/submit-login' : '/submit-login' %>" method="POST" class="space-y-4">
+          <div>
+            <label for="identifier" class="block text-sm font-medium text-gray-700">Username or Email</label>
+            <input type="text" id="identifier" name="identifier" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
           </div>
-          <div class="form_data">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+          <div class="relative">
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="password" name="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+            <span class="absolute right-3 top-10">
+              <img src="/assets/icons/eye-slash-solid-full.svg" class="toggle-password cursor-pointer" alt="" >
+            </span>
           </div>
-          <div class="form_data">
-            <button type="submit">Submit</button>
+          <div>
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md font-medium">Sign in</button>
           </div>
 
           <% if (!isAdmin) { %>
-          <div>
-            <p>Don't have an account? <a href="/signup">Sign Up</a></p>
-            <p>Forgot password? <a href="/forgetPassword">Reset</a></p>
+          <div class="text-sm text-center text-gray-600">
+            <p>Don't have an account? <a href="/signup" class="text-indigo-600 hover:underline">Sign Up</a></p>
+            <p>Forgot password? <a href="/forgetPassword" class="text-indigo-600 hover:underline">Reset</a></p>
           </div>
           <% } %>
         </form>
       </div>
     </div>
   </section>
+
+
+
+  <script>
+const toggle = document.querySelector(".toggle-password");
+const password = document.getElementById("password");
+
+toggle.addEventListener("click", () => {
+
+    if (password.type === "password") {
+        password.type = "text";
+        toggle.src = "/assets/icons/eye-solid-full.svg";   // open eye
+    } 
+    else {
+        password.type = "password";
+        toggle.src = "/assets/icons/eye-slash-solid-full.svg"; // closed eye
+    }
+
+});
+</script>
+
+
 </body>
 </html>
 

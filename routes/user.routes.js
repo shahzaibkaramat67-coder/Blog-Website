@@ -83,8 +83,8 @@ router.get('/profile/list/:category', articleListByApi)
 router.use("/profile/Dashbord", dashboardLayout);
 router.get('/profile/Dashbord/postsAnalytics',verifijwt, postInTable)
 router.get('/profile/Dashbord/postsAnalytics/page/:page',verifijwt, loadArticle)
-router.get('/profile/Dashbord/postsAnalytics/update/:id', updateArticle)
-router.delete('/profile/Dashbord/postsAnalytics/delete/:id', deleteArticle)
+router.get('/profile/Dashbord/postsAnalytics/update/:id',verifijwt, updateArticle)
+router.delete('/profile/Dashbord/postsAnalytics/delete/:id',verifijwt, deleteArticle)
 router.get('/profile/Dashbord/EarningPage',verifijwt,userEarning)
 router.get('/profile/Dashbord/my-Dashboard', verifijwt, userDashboard)
 router.get('/profile/Dashbord/my-Dashboard/data', verifijwt, getDashbordChartData)
@@ -93,7 +93,7 @@ router.get('/profile/Dashbord/Withdraw',verifijwt, (req, res) => { res.render('D
 router.post('/profile/Dashbord/Withdraw/submit',verifijwt, withdrawController)
 // router.get('/profile/Dashbord/postsAnalytics', postInTable);
 
-router.get('/profile/Dashbord/postsAnalytics/:id', chart);
+router.get('/profile/Dashbord/postsAnalytics/:id',verifijwt, chart);
 
 router.get('/profile/Dashbord/craete-Artical',verifijwt, categoryShareToArtical)
 router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, articalValidation, upload.single("featured_image"),moderationMiddleware, articalUpload)
@@ -145,7 +145,7 @@ router.post("/submit-updatePassword", updatePasswordValidation, updatePassword)
 // router.get("/home",(req, res) => {res.render("home", { title: "home" })})
 
 
-router.get("/home", verifijwt, (req, res) => { res.render("home", { title: "home" }) })
+router.get("/home", (req, res) => { res.render("home", { title: "home" }) })
 // router.get("/Profile", (req, res) => { res.render("Profile", { title: "Profile"}) })
 router.get("/about", verifijwt, (req, res) => { res.render("about", { title: "about" }) })
 

@@ -1,17 +1,54 @@
-<% if (error && error.length > 0) { %>
-<div class="flash-popup flash-popup-error bg-red-500 text-white p-3 rounded mb-3 fixed top-5 right-5 z-50">
-    <%= error[0] %>
-</div>
-<% } %>
+<% /* Popup flash messages (non-blocking). Renders multiple messages stacked. */ %>
+<% if ((error && error.length > 0) || (success && success.length > 0)) { %>
+    <div id="flash-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 items-end">
+        <% if (error && error.length > 0) { %>
+            <% error.forEach(function(msg, idx){ %>
+                <div class="flash-popup flash-error transform transition duration-300 ease-out translate-y-0 opacity-100 max-w-sm w-full bg-red-600 text-white p-3 rounded shadow-lg ring-1 ring-red-700/30" role="alert" aria-live="assertive">
+                    <div class="flex items-start gap-3">
+                        <div class="flex-1 text-sm"><%= msg %></div>
+                        <button class="flash-close text-white opacity-90 hover:opacity-100 text-lg leading-none">&times;</button>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
 
-<% if (success && success.length > 0) { %>
-<div class="flash-popup flash-popup-success bg-green-500 text-white p-3 rounded mb-3 fixed top-5 right-5 z-50">
-    <%= success[0] %>
-</div>
-<% } %>
+        <% if (success && success.length > 0) { %>
+            <% success.forEach(function(msg, idx){ %>
+                <div class="flash-popup flash-success transform transition duration-300 ease-out translate-y-0 opacity-100 max-w-sm w-full bg-emerald-600 text-white p-3 rounded shadow-lg ring-1 ring-emerald-700/30" role="status" aria-live="polite">
+                    <div class="flex items-start gap-3">
+                        <div class="flex-1 text-sm"><%= msg %></div>
+                        <button class="flash-close text-white opacity-90 hover:opacity-100 text-lg leading-none">&times;</button>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+    <script>
+        (function(){
+            const container = document.getElementById('flash-container');
+            if (!container) return;
+            // Auto-dismiss after timeout per message
+            const timeouts = [];
+            container.querySelectorAll('.flash-popup').forEach((el, i) => {
+                // staggered timeout so they don't disappear all at once
+                const t = setTimeout(() => hide(el), 3500 + i * 300);
+                timeouts.push(t);
+            });
 
-<script>
-setTimeout(() => {
-    document.querySelectorAll('.flash-popup').forEach(el => el.remove());
-}, 3000);
-</script>
+            function hide(el){
+                el.classList.add('opacity-0','-translate-y-2');
+                setTimeout(()=> el.remove(), 300);
+            }
+
+            container.addEventListener('click', function(e){
+                if (e.target.closest('.flash-close')){
+                    const item = e.target.closest('.flash-popup');
+                    if (item) hide(item);
+                }
+            });
+
+            // Remove timeouts when navigating away
+            window.addEventListener('beforeunload', ()=> timeouts.forEach(t=>clearTimeout(t)));
+        })();
+    </script>
+<% } %>
