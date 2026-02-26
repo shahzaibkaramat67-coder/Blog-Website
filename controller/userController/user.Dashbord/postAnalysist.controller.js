@@ -39,7 +39,7 @@ const Analysist = articles.map(article => ({
   // console.log("Analysist", Analysist);
 
   return res.render("Dashbord/postsAnalytics", {
-    layout: false,
+   
     title: "postsAnalytics",
     Analysist: Analysist,
     // articalTables

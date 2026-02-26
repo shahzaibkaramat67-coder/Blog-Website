@@ -214,7 +214,7 @@ const categoryShareToArtical = asyncHandler(async (req, res) => {
 
 
   return res.render("Dashbord/Artical", {
-    layout: false,
+    // layout: false,
     title: "Artical",
     articalUpdate : {},
     category: profile ? profile.category : []

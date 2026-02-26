@@ -387,7 +387,7 @@ console.log("todayViews", todayViews);
 
 
   res.render("Dashbord/my-Dashboard.ejs", {
-    layout: false,
+  
     title: 'Dashboard',
     allPostedArtical,
     monthlyCreatedArtical,

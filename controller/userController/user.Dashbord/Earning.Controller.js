@@ -58,7 +58,7 @@ console.log("withdrawList", withdrawalRequest);
     
 
     return res.render("Dashbord/EarningPage", {
-        layout : false,
+       title : "EarningPage",
         total,
         month,
         today,

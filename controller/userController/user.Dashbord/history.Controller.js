@@ -37,7 +37,7 @@ const getHistoryPage = asyncHandler(async(req, res)=>{
   
 
      res.render("Dashbord/history", {
-        layout : false,
+      
         title : "history",
         allArtical
      })

@@ -15,7 +15,7 @@ const updateArticle = asyncHandler(async(req, res)=>{
   
   console.log("articalUpdate", articalUpdate);
   
-res.render("Dashbord/Artical", { title: "Article Update",layout : false, articalUpdate });
+res.render("Dashbord/Artical", { title: "Article Update", articalUpdate });
 
     
 
@@ -31,7 +31,7 @@ const deleteArticle = asyncHandler(async(req, res)=>{
   
   const Analysist = await Articals.find({ User: req.user._id }).sort({ createdAt: -1 });
 
-  res.render("Dashbord/postsAnalytics", {layout : false, title : "postsAnalytics", Analysist})
+  res.render("Dashbord/postsAnalytics", { title : "postsAnalytics", Analysist})
 // res.redirect('/profile/Dashbord/postsAnalytics');
 
     

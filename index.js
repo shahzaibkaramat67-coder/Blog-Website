@@ -80,6 +80,8 @@ const adminRateLimit = rateLimit({
 app.set("view engine", "ejs");
 app.use(expressEjsLayouts)
 app.set("layout", "layout")
+// app.set("layout", "Dashbord/layout")
+
 
 app.use(cookieParser())
 app.use((req, res,next)=>{
