@@ -1,6 +1,7 @@
 import { populate } from "dotenv";
 import User from "../../../models/Signup.model.js";
 import asyncHandler from "../../../utils/asyncHandler.js";
+import { Articals } from "../../../models/ArticalModel.js";
 
 const getHistoryPage = asyncHandler(async(req, res)=>{
     const userId = req.user._id
@@ -8,7 +9,11 @@ const getHistoryPage = asyncHandler(async(req, res)=>{
   const user = await User.findById(userId)
     .populate({
       path: "history.article",
-      select: "title featured_image short_description username totalLikes totalViews totalShares"
+      select: "title featured_image short_description username totalLikes totalViews totalShares",
+      populate :{
+          path : "username",
+        select : "username"
+      }
     })
     .lean();
 
@@ -21,7 +26,7 @@ const getHistoryPage = asyncHandler(async(req, res)=>{
     title: h.article?.title,
     featured_image: h.article?.featured_image,
     short_description: h.article?.short_description,
-    username: h.article?.username,
+    username: h.article?.username.username,
     totalLikes: h.article?.totalLikes,
     totalViews: h.article?.totalViews,
     totalShares: h.article?.totalShares,
@@ -38,6 +43,20 @@ const getHistoryPage = asyncHandler(async(req, res)=>{
      })
 })
 
+
+
+// const articeLimitList = asyncHandler(async(req, res) =>{
+// console.log("theis is page is for limit");
+
+// const page = parseInt(req.params.page) || 2;
+// const userId = req.user._id
+// console.log("theis is page is for limit", page);
+
+
+
+// })
+
 export {
-    getHistoryPage
+    getHistoryPage,
+    // articeLimitList
 }

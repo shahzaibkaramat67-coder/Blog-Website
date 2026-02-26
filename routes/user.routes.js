@@ -96,6 +96,7 @@ router.get('/profile/Dashbord/postsAnalytics/:id', chart);
 router.get('/profile/Dashbord/craete-Artical',verifijwt, categoryShareToArtical)
 router.post('/profile/Dashbord/craete-Artical/upload-blog', verifijwt, articalValidation, upload.single("featured_image"),moderationMiddleware, articalUpload)
 router.get('/profile/Dashbord/history',verifijwt, getHistoryPage)
+// router.get('/profile/Dashbord/history/page/:id',verifijwt, articeLimitList)
 
 
 //  there are Singup , Login , forgetPassport , Logout logicss

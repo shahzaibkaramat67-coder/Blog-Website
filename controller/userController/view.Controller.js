@@ -8,7 +8,7 @@ import { earningCalculate } from "../../helper/earningCalculation.js"
 import User from "../../models/Signup.model.js";
 
 const ONE_HOUR = 60 * 60 * 1000; // 1 hour cooldown
-const HISTORY_LIMIT = 50;
+const HISTORY_LIMIT = 5;
 
 const viewControl = asyncHandler(async (req, res) => {
   const { id } = req.params;
