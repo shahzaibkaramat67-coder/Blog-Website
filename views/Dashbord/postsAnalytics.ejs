@@ -1,4 +1,4 @@
-  <main class="flex-1 md:ml-50 p-4 sm:p-6">
+  <main class="flex-1 md:ml-[20%]  p-4 sm:p-6">
     <div class="max-w-7xl bg-white p-4 sm:p-6 rounded-lg shadow-lg mx-auto">
       <div class="flex items-center justify-center mb-6 sm:mb-8 text-center">
         <h1 class="font-bold text-2xl sm:text-3xl md:text-4xl">Your New Posts Are Here</h1>
@@ -91,6 +91,9 @@
     </div>
   </div>
 
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script>
     let modalChart = null;
     let currentPostId = null;
@@ -168,21 +171,80 @@
 
     rows.forEach(row => {
       const id = row.dataset.id
+    let startTime;
+
       row.addEventListener("mousedown", async function (e) {
-        if (e.button === 0) {
-          try {
-            window.location.href = `/profile/Dashbord/postsAnalytics/update/${id}`;
-
-            console.log("click update");
-
-          } catch (error) {
-            console.error(error)
-          }
-        }
         if (e.button === 2) {
-          if (!confirm("Are you sure you want to delete this article?")) return;
-          try {
-            const res = fetch(`/profile/Dashbord/postsAnalytics/delete/${id}`, {
+               showPopup(id)
+        }
+      })
+
+
+      row.addEventListener("touchstart", ()=>{
+       startTime = setTimeout(()=>{
+            showPopup(id)
+        }, 600)
+      })
+
+
+      row.addEventListener("touchend", ()=>{
+        clearTimeout(startTime)
+      })
+      
+      row.addEventListener("touchmove", ()=>{
+        clearTimeout(startTime)
+      })
+
+
+      row.addEventListener("contextmenu",  e => e.preventDefault())
+    });
+
+    
+
+
+//  correct
+rows.forEach(row => {
+  row.addEventListener("contextmenu", e => e.preventDefault());
+});
+
+
+function showPopup(id) {
+
+  // Create popup background
+  const popup = document.createElement("div");
+  popup.className = "fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center";
+
+  // Create card
+  popup.innerHTML = `
+    <div class="bg-white p-6 rounded-2xl shadow-xl flex flex-col gap-3 w-60">
+      
+       <button onclick="updatePost('${id}')"  
+        class="py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        Update
+      </button>
+
+      <button onclick="deletePost('${id}')" 
+        class="py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+        Delete
+      </button>
+
+      <button onclick="closePopup()" 
+        class="py-2 bg-gray-200 rounded-lg">
+        Close
+      </button>
+
+    </div>
+  `;
+
+  popup.id = "popup";
+  document.body.appendChild(popup);
+}
+
+
+async function deletePost(id) {
+
+  try {
+            const res =await fetch(`/profile/Dashbord/postsAnalytics/delete/${id}`, {
               method: "delete"
             })
             window.location.reload();
@@ -191,16 +253,25 @@
             console.error(error)
 
           }
-        }
-      })
-    });
+  
+}
+async function updatePost(id) {
 
+  try {
+            window.location.href = `/profile/Dashbord/postsAnalytics/update/${id}`;
 
-//  correct
-rows.forEach(row => {
-  row.addEventListener("contextmenu", e => e.preventDefault());
-});
+            console.log("click update");
 
+          } catch (error) {
+            console.error(error)
+          }
+        
+  
+}
+
+function closePopup() {
+  document.getElementById("popup")?.remove()
+}
 
     document.addEventListener("DOMContentLoaded", () => {
   const loadMoreBtn = document.getElementById("loadMoreBtn");
