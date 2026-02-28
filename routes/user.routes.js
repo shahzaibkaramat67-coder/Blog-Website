@@ -55,6 +55,7 @@ import {updateController, updateView} from "../controller/userController/update.
 import { deleteArticle, updateArticle } from '../controller/userController/user.Dashbord/delete&Update.Controller.js'
 import {ArticleList, articleListByApi} from '../controller/userController/ArticleList.controller.js'
 import dashboardLayout from "../middleware/layout.js"
+import { Page } from 'openai/pagination.js'
 // import { profile } from 'console'
 // import { title } from 'process'
 // import { profile } from 'console'
@@ -145,9 +146,9 @@ router.post("/submit-updatePassword", updatePasswordValidation, updatePassword)
 // router.get("/home",(req, res) => {res.render("home", { title: "home" })})
 
 
-router.get("/home", (req, res) => { res.render("home", { title: "home" }) })
+router.get("/home", (req, res) => { res.render("home", { title: "home", page : "home" }) })
 // router.get("/Profile", (req, res) => { res.render("Profile", { title: "Profile"}) })
-router.get("/about", verifijwt, (req, res) => { res.render("about", { title: "about" }) })
+router.get("/about", verifijwt, (req, res) => { res.render("about", { title: "about", page : "about" }) })
 
 // blog roytes
 router.get("/blog", getSearchAndRandomArticals)
@@ -186,7 +187,7 @@ router.post("/blog/share/update",verifijwt, shareArtical);
 //  const blofId = "<%= articalById._id %>";
 
 router.get("/Categorie", categoryHendler)
-router.get("/contact", verifijwt, (req, res) => { res.render("contact", { title: "contact" }) })
+router.get("/contact", verifijwt, (req, res) => { res.render("contact", { title: "contact", page : "contact" }) })
 // router.get("/my-blogs", verifijwt, (req, res) => { res.render("my-blogs", { title: "my-blogs" }) })
 router.post("/contact/contact-form-submit", verifijwt, contactValidator, contactController)
 
@@ -194,32 +195,32 @@ router.post("/contact/contact-form-submit", verifijwt, contactValidator, contact
 
 // footers routes
       // Legel Routes 
-router.get("/cookies", (req, res)=>{res.render("footer/Legal/CookiePolicy", {title : "CookiePolicy"})})
-router.get("/privacy", (req, res)=>{res.render("footer/Legal/PrivacyPolicy", {title : "Privacy"})})
-router.get("/terms", (req, res)=>{res.render("footer/Legal/Terms&Conditions", {title : "Terms & Condition"})})
+router.get("/cookies", (req, res)=>{res.render("footer/Legal/CookiePolicy", {title : "CookiePolicy", page : "CookiePolicy"})})
+router.get("/privacy", (req, res)=>{res.render("footer/Legal/PrivacyPolicy", {title : "Privacy", page : "Privacy"})})
+router.get("/terms", (req, res)=>{res.render("footer/Legal/Terms&Conditions", {title : "Terms & Condition", page : "Terms & Condition"})})
       
 // Support Routes 
 
-router.get("/help", (req, res)=>{res.render("footer/Support/help", {title : "help"})})
-router.get("/help/getting-started", (req, res)=>{res.render("footer/Support/help/gettingStart", {title : "getting-started"})})
-router.get("/help/publishing", (req, res)=>{res.render("footer/Support/help/Publish&Content", {title : "Publish & Content"})})
-router.get("/help/payments", (req, res)=>{res.render("footer/Support/help/payments", {title : "payments"})})
-router.get("/faq", (req, res)=>{res.render("footer/Support/faq", {title : "FAQ"})})
+router.get("/help", (req, res)=>{res.render("footer/Support/help", {title : "help", page : "help"})})
+router.get("/help/getting-started", (req, res)=>{res.render("footer/Support/help/gettingStart", {title : "getting-started", page : "getting-started"})})
+router.get("/help/publishing", (req, res)=>{res.render("footer/Support/help/Publish&Content", {title : "Publish & Content", page : "Publish & Content"})})
+router.get("/help/payments", (req, res)=>{res.render("footer/Support/help/payments", {title : "payments", page : "payments"})})
+router.get("/faq", (req, res)=>{res.render("footer/Support/faq", {title : "FAQ", page : "FAQ"})})
 // router.get("/contact", (req, res)=>{res.render("footer/Support/contact", {title : "contact"})})
 
 // For Creator Routes 
 
-router.get("/Dashbord", (req, res)=>{res.render("footer/ForCreator/Dahbord", {title : "Dahbord"})})
-router.get("/Artical", (req, res)=>{res.render("footer/ForCreator/ArticalPAge", {title : "ArticalPAge"})})
-router.get("/EarningPage", (req, res)=>{res.render("footer/ForCreator/Earnings", {title : "Earnings"})})
-router.get("/Withdraw", (req, res)=>{res.render("footer/ForCreator/WithdrawFunds", {title : "WithdrawFunds"})})
+router.get("/Dashbord", (req, res)=>{res.render("footer/ForCreator/Dahbord", {title : "Dahbord", page : "Dahbord"})})
+router.get("/Artical", (req, res)=>{res.render("footer/ForCreator/ArticalPAge", {title : "ArticalPAge", page : "ArticalPAge"})})
+router.get("/EarningPage", (req, res)=>{res.render("footer/ForCreator/Earnings", {title : "Earnings", page : "Earnings"})})
+router.get("/Withdraw", (req, res)=>{res.render("footer/ForCreator/WithdrawFunds", {title : "WithdrawFunds", page : "WithdrawFunds"})})
 
 // For Platform Routes 
-router.get("/blogs", (req, res)=>{res.render("footer/Platform/blogInfo", {title : "blogs"})})
-router.get("/categories", (req, res)=>{res.render("footer/Platform/category", {title : "category"})})
+router.get("/blogs", (req, res)=>{res.render("footer/Platform/blogInfo", {title : "blogs", page : "blogs"})})
+router.get("/categories", (req, res)=>{res.render("footer/Platform/category", {title : "category", page : "category"})})
 // router.get("/trending", (req, res)=>{res.render("footer/Platform/Earnings", {title : "Earnings"})})
-router.get("/authors", (req, res)=>{res.render("footer/Platform/Author", {title : "Trending"})})
-router.get("/trending", (req, res)=>{res.render("footer/Platform/Trending", {title : "Trending"})})
+router.get("/authors", (req, res)=>{res.render("footer/Platform/Author", {title : "Trending", page : "Trending"})})
+router.get("/trending", (req, res)=>{res.render("footer/Platform/Trending", {title : "Trending", page : "Trending"})})
 router.get("/updates",updateView,  updateController)
 // router.get("/updates/view", )
 

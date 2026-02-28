@@ -45,7 +45,7 @@ const contactController = asyncHandler(async (req, res) => {
     html: `<p><b>Name:</b> ${name}</p><p><b>Email:</b> ${email}</p><p>${message}</p>`
   });
 
-  return res.render("contact", { title: "contact"})
+  return res.render("contact", { title: "contact", page : "contact"})
 
 });
 

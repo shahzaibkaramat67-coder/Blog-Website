@@ -53,7 +53,7 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
          location,
          website,
          socials: { twitter, linkedin, facebook },
-         category,
+         category : category.replace(/-/g, " ") ,
          profile_Image: imageUrl?.secure_url || ""
       });
 
@@ -75,7 +75,7 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
       { new: true }
    );
 
-   return res.render("Profile", { title: "profile", profile });
+   return res.render("Profile", { title: "profile",page : "profile", profile });
 });
 
 
@@ -85,14 +85,15 @@ const getProfileForUpdate = asyncHandler(async (req, res) => {
    const user = await User.findOne({})
    const profile = await Profile.findOne({ User: req.user._id })
    if (req.query.edit === "true") {
-      return res.render("edit-profile", { layout: false, title: "Edit Profile", profile });
+      return res.render("edit-profile", { layout: false, title: "Edit Profile",page : "Edit profile", profile });
    }
    if (profile) {
-      res.render("Profile", { title: "Profile", profile })
+      res.render("Profile", { title: "Profile", page : "Profile", profile })
    } else {
       res.render("edit-profile", {
          layout: false,
          title: "edit-profile",
+          page : "edit Profile",
          profile,
          // category: await Categorie.find()
       })

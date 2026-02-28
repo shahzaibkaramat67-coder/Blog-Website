@@ -137,6 +137,7 @@ const viewControl = asyncHandler(async (req, res) => {
   // 3️ Render blog content
   return res.render("blog-contant", {
     title: "blog-contant",
+    page: "blog-contant",
     articalById,
     liked: !!liked,
     comments

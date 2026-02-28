@@ -19,7 +19,7 @@
         <% SideAllArtical.forEach(Artical=> { %>
           <a href="/blog/blog-contant/<%= Artical._id %>"
             class="flex cursor-pointer items-center shadow mb-3 gap-4 hover:bg-gray-50 p-2 rounded-lg transition">
-            <img src="<%= Artical.featured_image %>" alt="app" class="w-12 h-12 rounded-full object-cover">
+            <img src="<%= Artical.featured_image %>" alt="app" loading="lazy" alt="Description" class="w-12 h-12 rounded-full object-cover">
             <div>
               <h1 class="font-bold text-sm md:text-base">
                 <%= Artical.title %>
@@ -49,7 +49,7 @@
             <div
               class="bg-white p-4 rounded-xl shadow-lg flex flex-col sm:flex-row gap-4 mb-4 hover:shadow-xl transition">
               <div class="flex-shrink-0">
-                <img src="<%= Artical.featured_image %>" alt="app" class="w-full sm:w-72 rounded-lg object-cover">
+                <img  src="<%= Artical.featured_image %>" alt="app" loading="lazy" alt="Description" class="w-full sm:w-72 rounded-lg object-cover">
               </div>
               <div class="flex flex-col justify-between w-full">
                 <div>
@@ -101,19 +101,19 @@
 
                 <div class="grid grid-cols-3 w-40 mt-3 text-gray-600 text-sm">
                   <div class="flex items-center cursor-pointer gap-1">
-                    <img src="/assets/icons/thumbs-up-regular-full.svg" class="w-5 h-5">
+                    <img src="/assets/icons/thumbs-up-regular-full.svg" loading="lazy" alt="Description" class="w-5 h-5">
                     <span>
                       <%= Artical.totalLikes %>
                     </span>
                   </div>
                   <div class="flex items-center gap-1">
-                    <img src="/assets/icons/eye-regular-full.svg" class="w-5 h-5">
+                    <img src="/assets/icons/eye-regular-full.svg" loading="lazy" alt="Description" class="w-5 h-5">
                     <span>
                       <%= Artical.totalViews%>
                     </span>
                   </div>
                   <div class="flex items-center cursor-pointer gap-1">
-                    <img src="/assets/icons/share-nodes-solid-full.svg" class="w-5 h-5">
+                    <img src="/assets/icons/share-nodes-solid-full.svg" loading="lazy" alt="Description" class="w-5 h-5">
                     <span>
                       <%= Artical.totalShares%>
                     </span>

@@ -177,6 +177,7 @@ const getArticales = asyncHandler(async (req, res) => {
 
   res.render("blog", {
     title: "Blog",
+    page : "Blog",
     allArtical,
     currentPage: page,
     searchQuery: Topic || "",
@@ -251,6 +252,7 @@ const getSearchAndRandomArticals = asyncHandler(async (req, res) => {
 
   res.render("blog", {
     title: Search ? `${Search}` : "Blogs",
+    page : "Blogs",
     SideAllArtical,
     searchQuery: Search || "",
     currentPage: page,

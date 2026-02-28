@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title><%= title%></title>
-     <script src="https://cdn.tailwindcss.com"></script>
+    <% if (page === "home") { %>
+      <link rel="preload"
+      as="image"
+      href="/assets/image/homeBgImage.avif"
+      imagesrcset="/assets/image/homeBgImage.avif"
+      imagesizes="100vw"
+      fetchpriority="high">
+  <%  } %>
+
+     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <style>
       /* Only remove list markers inside the main content area to avoid affecting header/nav */
       main ul, main ol, main li, main .list-disc, main .list-decimal, main .list-inside, main .list-outside {
@@ -25,11 +35,11 @@
 
     <%- include('../partial/footer.ejs')%>
 
-    <script src="/user/Category.js"></script>
-    <script src="/user/blog-content.js"></script>
-    <script src="/user/navResponsive.js"></script>
-    <script src="/user/chart.js"></script>
-    <script src="/admin/message.js"></script>
+    <script src="/user/Category.js" defer></script>
+    <script src="/user/blog-content.js" defer></script>
+    <script src="/user/navResponsive.js" defer></script>
+    <script src="/user/chart.js" defer></script>
+    <script src="/admin/message.js" defer></script>
     <!-- <script src="../partial/comments.ejs"></script> -->
     <!-- <script src="/user/Flash_response.js"></script> -->
     <!-- Global page loader (one-time include) -->
@@ -82,6 +92,7 @@
       }, { passive: false });
 
       document.addEventListener('submit', function (ev) {
+      if (form.classList.contains('js-ajax')) return;  
         if (ev.defaultPrevented) return;
         show();
       }, true);

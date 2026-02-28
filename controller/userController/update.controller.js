@@ -13,6 +13,7 @@ const updateController = asyncHandler(async(req, res)=>{
 
     res.render("footer/Platform/updates", {
         title : "updates",
+        page : "updates",
         updates : siteUpdate,
         countUpdate
     })

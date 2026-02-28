@@ -3,7 +3,7 @@
   <h2 class="text-xl font-semibold mb-4">Comments</h2>
 
   <!-- Comment Form -->
-  <form id="comments-form" class="mb-6">
+  <form id="comments-form" class="mb-6 js-ajax">
     <input id="articalId" type="hidden" value="<%= articalById._id %>">
     <textarea id="commentText" placeholder="Write your comment..." class="w-full border p-3 rounded-lg mb-3"></textarea>
     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800">Post Comment</button>
@@ -25,7 +25,7 @@ const renderComment = (comment) => {
   div.innerHTML = `
     <div class="pt-6 px-6 flex items-center justify-between">
       <div class="flex gap-3 items-center">
-        <img class="w-10 rounded-xl" src="${comment.comment_image}" alt="comment_image">
+        <img class="w-10 rounded-xl" loading="lazy" alt="Description" src="${comment.comment_image}" alt="comment_image">
         <p>${comment.username}</p>
       </div>
       <button class="delete-comment" data-id="${comment._id}">

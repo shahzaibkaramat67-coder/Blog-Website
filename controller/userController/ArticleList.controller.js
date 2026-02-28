@@ -4,20 +4,22 @@ import asyncHandler from "../../utils/asyncHandler.js";
 
 const ArticleList = asyncHandler(async(req, res)=>{
 
-     const cat = req.params.cat;
+     const cate = req.params.cat;
      const userId = req.user._id
-  console.log(cat);
+ 
 
-  const article = await Articals.find({User : userId, category : cat})
+  const article = await Articals.find({User : userId, category : cate})
   .sort({createdAt : -1})
   .limit(2)
   .lean()
 
   
+  const cat = cate.replace(/-/g, " ")
     
 
     return res.render("ArticleList", {
         title : "Articles in"+ cat,
+        page : "Articles in"+ cat,
         // layout : false,
         allArtical : article,
         cat
