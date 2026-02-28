@@ -15,7 +15,7 @@ import Categorie from "./models/categorie.model.js";
 import flash from "connect-flash"
 import isAdmin from "./middleware/checkUserForAdmin.js";
 import checkUserRole from "./middleware/checkRole.js"
-// import helmet from "helmet";
+import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import update from "./models/Announcment.Model.js";
@@ -53,7 +53,7 @@ app.use(flash())
 
 app.use(passport.initialize())
 app.use(passport.session())
-// app.use(helmet())
+app.use(helmet())
 app.use(compression())
 // import rateLimit from "express-rate-limit";
 

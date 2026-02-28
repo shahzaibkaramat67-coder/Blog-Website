@@ -19,12 +19,20 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
    if (!Array.isArray(category)) {
       category = category ? [category] : [];
    }
+          if (!category) {
+             req.flash("error", "you did not select the Categories");
+           return res.redirect("/edit-profile");
 
+          }
    let imageUrl = null;
 
    //  Only upload if a file exists
    if (req.file && req.file.path) {
       imageUrl = await uploadOnCloudinary(req.file.path);
+   }else{
+       req.flash("error", "you did not upload the Image");
+           return res.redirect("/edit-profile");
+
    }
 
    // Validate AFTER uploading only if file exists
@@ -40,6 +48,7 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
    }
 
    let profile = await Profile.findOne({ User: req.user._id });
+            
 
    if (!profile) {
       //  Create new profile
@@ -53,11 +62,14 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
          location,
          website,
          socials: { twitter, linkedin, facebook },
-         category : category.replace(/-/g, " ") ,
+         category  ,
          profile_Image: imageUrl?.secure_url || ""
       });
 
-      return res.render("Profile", { title: "profile", profile });
+       
+      
+
+      return res.render("Profile", { title: "profile", page : "profile", profile });
    }
 
    //  Update profile
@@ -69,11 +81,15 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
       profile_Image: imageUrl?.secure_url || profile.profile_Image, // fallback to old image
    };
 
+   
+
    profile = await Profile.findOneAndUpdate(
       { User: req.user._id },
       { $set: updateprofile },
       { new: true }
    );
+       req.flash("success", "you profile is successfully Create");
+         //   return res.redirect("/Profile");
 
    return res.render("Profile", { title: "profile",page : "profile", profile });
 });
