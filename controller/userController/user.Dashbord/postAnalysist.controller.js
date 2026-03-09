@@ -54,7 +54,7 @@ const loadArticle = asyncHandler(async(req, res)=>{
   console.log("this is for see more");
   
 
-  const Page = parseInt(req.params.page) || 2;
+  const Page = parseInt(req.params.page) || 1;
   const userId = req.user._id;
   const limit  = 5
 

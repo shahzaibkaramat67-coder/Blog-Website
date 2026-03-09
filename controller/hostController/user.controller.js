@@ -67,7 +67,6 @@ const userInfo = asyncHandler(async (req, res) => {
 
   return res.render("Admin.Dashbord/user",
     {
-      layout: false,
       title: "user",
       totalProfiles,
       MonthlyProfiles,

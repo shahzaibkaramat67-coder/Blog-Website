@@ -19,19 +19,22 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
    if (!Array.isArray(category)) {
       category = category ? [category] : [];
    }
-          if (!category) {
-             req.flash("error", "you did not select the Categories");
-           return res.redirect("/edit-profile");
 
-          }
+   let profile = await Profile.findOne({ User: req.user._id });
+
+   if (!profile && category.length === 0) {
+      req.flash("error", "you did not select the Categories");
+      return res.redirect("/profile?edit=true");
+
+   }
    let imageUrl = null;
 
    //  Only upload if a file exists
    if (req.file && req.file.path) {
       imageUrl = await uploadOnCloudinary(req.file.path);
-   }else{
-       req.flash("error", "you did not upload the Image");
-           return res.redirect("/edit-profile");
+   } else if (!profile) {
+      req.flash("error", "you did not upload the Image");
+      return res.redirect("/profile?edit=true");
 
    }
 
@@ -43,12 +46,9 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
          msg: errors.msg
       }));
       console.log("errorMessage", errorMessage);
-      
+
       throw new ApiError("validation failed", 400, errorMessage);
    }
-
-   let profile = await Profile.findOne({ User: req.user._id });
-            
 
    if (!profile) {
       //  Create new profile
@@ -62,14 +62,14 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
          location,
          website,
          socials: { twitter, linkedin, facebook },
-         category  ,
+         category,
          profile_Image: imageUrl?.secure_url || ""
       });
 
-       
-      
 
-      return res.render("Profile", { title: "profile", page : "profile", profile });
+
+
+      return res.render("Profile", { title: "profile", page: "profile", profile });
    }
 
    //  Update profile
@@ -81,25 +81,25 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
       profile_Image: imageUrl?.secure_url || profile.profile_Image, // fallback to old image
    };
 
-   
+
 
    profile = await Profile.findOneAndUpdate(
       { User: req.user._id },
       { $set: updateprofile },
       { new: true }
    );
-       req.flash("success", "you profile is successfully Create");
-         //   return res.redirect("/Profile");
+   req.flash("success", "you profile is successfully Create");
+   //   return res.redirect("/Profile");
 
-   return res.render("Profile", { title: "profile",page : "profile", profile });
+   return res.render("Profile", { title: "profile", page: "profile", profile });
 });
 
 
 
 const getProfileForUpdate = asyncHandler(async (req, res) => {
    const useId = req.user._id
-   const user = await User.findOne({})
-   const profile = await Profile.findOne({ User: req.user._id })
+   const profile = await Profile.findOne({ User: useId})
+   // const user = await User.findOne({useId})
    if (req.query.edit === "true") {
       return res.render("edit-profile", { layout: false, title: "Edit Profile",page : "Edit profile", profile });
    }

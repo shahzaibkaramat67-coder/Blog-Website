@@ -1,149 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
+<div class="max-w-4xl  ml-64 bg-white rounded-lg shadow p-6">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">
+        Create Category & Topics
+    </h1>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title%>
-    </title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+    <form action="/api/admin-categoryadd/submit" method="POST" class="space-y-6">
 
-<body class="w-full">
-
-    <%- include("../../partial/AdminHeader.ejs") %>
-
-        <div class="max-w-4xl  ml-64 bg-white rounded-lg shadow p-6">
-            <h1 class="text-2xl font-bold mb-6 text-gray-800">
-                Create Category & Topics
-            </h1>
-
-            <form action="/api/admin-categoryadd/submit" method="POST" class="space-y-6">
-
-                <!-- Category Name -->
-                <div>
-                    <label class="block font-medium text-gray-700 mb-1">
-                        Category Name
-                    </label>
-                    <input type="text" name="name" placeholder="Finance, Technology, Health..." required
-                        class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-blue-500" />
-                </div>
-
-                <!-- Topics Section -->
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-800 mb-3">
-                        Topics
-                    </h2>
-
-                    <div id="topicsWrapper" class="space-y-4">
-
-                        <!-- Topic Row -->
-
-
-                    </div>
-
-                    <!-- Add Topic -->
-                    <button type="button" onclick="addTopic()"
-                        class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                        + Add Topic
-                    </button>
-                </div>
-
-                <!-- Submit -->
-                <button type="submit"
-                    class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
-                    Save Category
-                </button>
-
-            </form>
-
-
+        <!-- Category Name -->
+        <div>
+            <label class="block font-medium text-gray-700 mb-1">
+                Category Name
+            </label>
+            <input type="text" name="name" placeholder="Finance, Technology, Health..." required
+                class="w-full border px-4 py-2 rounded focus:ring-2 focus:ring-blue-500" />
         </div>
 
-        <script>
-    let showGroup = <%- JSON.stringify(showGroup) %>; 
-            let topicIndex = 0;
+        <!-- Topics Section -->
+        <div>
+            <h2 class="text-lg font-semibold text-gray-800 mb-3">
+                Topics
+            </h2>
 
-            let topicsWrapper = document.getElementById("topicsWrapper")
-            function addTopic() {
-                topicsWrapper.insertAdjacentHTML("beforeend", `
-                 <div class="topic-row border p-4 rounded-lg bg-gray-50 space-y-3">
-                            <div>
-                                <label class="block text-sm font-medium">Topic Title</label>
-                                <input  type="text" name="topics[${topicIndex}][title]" placeholder="Personal Finance" required
-                                    class="title w-full border px-3 py-2 rounded" />
-                            </div>
+            <div id="topicsWrapper" class="space-y-4">
 
-                            <div>
-                                <label class="block text-sm font-medium">Slug</label>
-                                <input  type="text" name="topics[${topicIndex}][slug]" placeholder="personal-finance" required
-                                    class="slug w-full border px-3 py-2 rounded" />
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium">RPM Group</label>
-                                <select name="topics[${topicIndex}][rpm_group_id]" required class="w-full border px-3 py-2 rounded">
-                                    <option value="" disabled selected>
-                                        Select the group
-                                    </option>
-                                    <!-- Example -->
-                                    <% if (showGroup && showGroup.length> 0) { %>
-                                        <% showGroup.forEach(group=> { %>
-                                            <option value="<%= group._id %>">
-                                                <%= group.name %>
-                                            </option>
-                                            <% }) %>
-                                                <% } else { %>
-                                                    <option>No data found</option>
-                                                    <% } %>
-
-                                </select>
-                            </div>
-
-                            <button type="button" onclick="removeTopic(this)" class="text-red-600 text-sm font-medium">
-                                Remove Topic
-                            </button>
-                        </div>
-                `)
-                  topicIndex++; // increment after addin
-            }
-
-            function removeTopic(button) {
-                const row = button.closest(".topic-row")
-                if (row) {
-                    row.remove()
-
-                }
-            }
+                <!-- Topic Row -->
 
 
-            // const title = document.getElementsByClassName("title")
-            // const slug = document.getElementsByClassName("slug")
+            </div>
+
+            <!-- Add Topic -->
+            <button type="button" id="addTopic"
+                class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                + Add Topic
+            </button>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
+            Save Category
+        </button>
+
+    </form>
 
 
+</div>
 
-
-            topicsWrapper.addEventListener("input", (e) => {
-                if (e.target.classList.contains("title")) {
-                    const inputTitle = e.target;
-                    const inputSlug = inputTitle.closest(".topic-row").querySelector(".slug")
-                    inputSlug.value = inputTitle.value
-                        .toLowerCase()
-                        .trim()
-                        .replace(/[^\w\s-]/g, "")
-                        .replace(/\s+/g, "-")
-                        .replace(/--+/g, "-")
-                }
-
-
-            })
-
-
-
-
-        </script>
-
-</body>
-
-</html>
+<script>
+  window.showGroup = <%- JSON.stringify(showGroup || []) %>;
+</script>
+<script src="/js/categoryAdd.js"></script>

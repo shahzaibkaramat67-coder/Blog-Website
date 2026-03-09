@@ -1,7 +1,7 @@
 <!-- MAIN WRAPPER -->
 <div class="sidebar-adjust  max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 
             mt-6 sm:mt-12 lg:mt-16 
-            lg:ml-[260px] transition-all duration-300">
+            lg:ml-56 transition-all duration-300">
 
   <!-- Page Title -->
   <h1 class="text-xl  sm:text-2xl lg:text-3xl font-bold mb-6 text-gray-800">
@@ -39,10 +39,10 @@
       </div>
     </div>
     <div class="bg-white p-4 sm:p-5 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-      <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-3">📝 Blogs</h3>
+      <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-3">👁️ Views</h3>
       <div class="space-y-3 text-sm sm:text-base">
         <div class="flex justify-between border-b pb-2">
-          <p class="text-gray-600">👁️ Views</p>
+          <p class="text-gray-600">Total Views</p>
           <span class="font-bold"><%= totalViews %></span>
         </div>
         <div class="flex justify-between border-b pb-2">
@@ -56,10 +56,10 @@
       </div>
     </div>
     <div class="bg-white p-4 sm:p-5 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-      <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-3">📝 Blogs</h3>
+      <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-3">❤️ Likes</h3>
       <div class="space-y-3 text-sm sm:text-base">
         <div class="flex justify-between border-b pb-2">
-          <p class="text-gray-600">❤️ Likes</p>
+          <p class="text-gray-600">Total Likes</p>
           <span class="font-bold"><%= likes %></span>
         </div>
         <div class="flex justify-between border-b pb-2">
@@ -73,10 +73,10 @@
       </div>
     </div>
     <div class="bg-white p-4 sm:p-5 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-      <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-3">📝 Blogs</h3>
+      <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-3">🔗 Share</h3>
       <div class="space-y-3 text-sm sm:text-base">
         <div class="flex justify-between border-b pb-2">
-          <p class="text-gray-600">🔗 Shares</p>
+          <p class="text-gray-600">Total Shares</p>
           <span class="font-bold"><%= totalShareArticals %></span>
         </div>
         <div class="flex justify-between border-b pb-2">
@@ -90,10 +90,10 @@
       </div>
     </div>
     <div class="bg-white p-4 sm:p-5 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-      <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-3">📝 Blogs</h3>
+      <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-3">💬 Comments</h3>
       <div class="space-y-3 text-sm sm:text-base">
         <div class="flex justify-between border-b pb-2">
-          <p class="text-gray-600">💬 Comments</p>
+          <p class="text-gray-600">Total Comments</p>
           <span class="font-bold"><%= comments %></span>
         </div>
         <div class="flex justify-between border-b pb-2">
@@ -138,7 +138,7 @@
       </div>
 
       <!-- Responsive Chart Container -->
-      <div class="relative w-full h-[300px] sm:h-[400px] lg:h-[450px]">
+      <div class="relative w-full h-75 sm:h-100 lg:h-112.5">
         <canvas id="trendChart" class="w-full h-full"></canvas>
       </div>
 
@@ -184,56 +184,4 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-const rangeSelect = document.getElementById("rangeSelect");
-const ctx = document.getElementById("trendChart").getContext("2d");
-
-// Initial empty chart
-let chart = new Chart(ctx, {
-  type: "line",
-  data: {
-    labels: [],          // empty initially
-    datasets: [
-      { label: "Views", data: [], borderColor: "red", fill: false },
-      { label: "Likes", data: [], borderColor: "green", fill: false },
-      { label: "Shares", data: [], borderColor: "blue", fill: false }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: true } },
-    scales: {
-      x: { ticks: { color: "#555" } },
-      y: { beginAtZero: true, ticks: { color: "#555" } }
-    }
-  }
-});
-
-// Fetch initial data for default range (7 days)
-async function loadChart(days = 7) {
-  try {
-    const res = await fetch(`/profile/Dashbord/my-Dashboard/data?days=${days}`);
-    const apiData = await res.json();
-
-    chart.data.labels = apiData.labels;
-    chart.data.datasets[0].data = apiData.views;
-    chart.data.datasets[1].data = apiData.likes;
-    chart.data.datasets[2].data = apiData.shares;
-    chart.update();
-  } catch (err) {
-    console.error("Failed to fetch chart data", err);
-  }
-}
-
-// Load default chart on page load
-loadChart();
-
-// Update chart when range changes
-rangeSelect.addEventListener("change", () => {
-  const days = rangeSelect.value;
-  loadChart(days);
-});
-</script>

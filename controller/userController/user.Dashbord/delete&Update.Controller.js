@@ -5,17 +5,24 @@ import asyncHandler from "../../../utils/asyncHandler.js";
 const updateArticle = asyncHandler(async(req, res)=>{
   const id = req.params.id;
   const data = req.body
+  console.log("id", id);
+  console.log("data", data);
+  
   
   if (req.file) {
       articalUpdate.featured_image = req.file.path;
     }
-    const articalUpdate = await Articals.findByIdAndUpdate(id, data).sort({createdAt : -1})
+    // const articalUpdate = await Articals.findByIdAndUpdate(id, data).sort({createdAt : -1})
+    const findArticle = await Articals.findById(id);
+    console.log("findArticle", findArticle);
+    
+
 
  
   
-  console.log("articalUpdate", articalUpdate);
+  // console.log("articalUpdate", articalUpdate);
   
-res.render("Dashbord/Artical", { title: "Article Update", articalUpdate });
+res.render("Dashbord/Artical", { title: "Article Update", articalUpdate : findArticle});
 
     
 

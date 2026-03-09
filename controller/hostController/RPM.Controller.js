@@ -62,7 +62,6 @@ const showRpm = asyncHandler(async(req, res)=>{
     // console.log("rpmData", rpmData);
 return res.render("Admin.Dashbord/RPM", {
     title: "RPM",
-    layout: false,
     allRpmData
 });
 

@@ -212,11 +212,102 @@ console.log("monthViews", monthViews);
 console.log("todayViews", todayViews);
 // const totalViews = views[0]?.monetized || 0;
 // const monthViews = views[0]?.monthly?.get(monthKey)?.monetized || 0;
+
 // const todayViews = views[0]?.daily?.get(dayKey)?.monetized || 0;
 
 
 
 // console.log({ totalViews, todayViews, monthViews });
+
+
+//  totalShareArticals,
+//     monthlyShares,
+//     dayShares,
+
+
+const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+const monthEnd = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 23, 59, 59, 999)
+
+
+const StartdayDate = new Date();
+StartdayDate.setHours(0,0,0,0)
+const enddayDate = new Date();
+enddayDate.setHours(23,59,59,999)
+
+
+
+const totalShare = await ArticleShare.aggregate([
+  {
+    $match :{user : userId}
+  },
+  {
+    $count : "total"
+  }
+]);
+
+const Shares = await ArticleShare.aggregate([
+  {
+    $match :{
+      user : userId,
+      createdAt :{$gte : monthStart, $lte : monthEnd}
+    }
+  },
+  {
+    $count : "total"
+  }
+  
+]);
+const daySharesArticle = await ArticleShare.aggregate([
+  {
+    $match :{
+      user : userId,
+      createdAt :{$gte : StartdayDate, $lte : enddayDate}
+    }
+    
+  },
+  { 
+    $count : "total"
+  }
+]);
+// console.log("totalShareArticals", totalShareArticals);
+//       console.log("monthlyShares", monthlyShares);
+// console.log("dayShares", dayShares);
+const totalShareArticals = totalShare[0]?.total || 0
+const monthlyShares = Shares[0]?.total || 0
+const dayShares = daySharesArticle[0]?.total || 0
+
+// const monthlyShares = await ArticleShare.;
+// const dayShares = await ArticleShare.countDocuments({createdAt :{$gte : StartdayDate, $lte : enddayDate}});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //   const now = new Date();
@@ -328,50 +419,50 @@ console.log("todayViews", todayViews);
   /*****======== Section share Start ==========*****/
 
 
-  const articals = await Articals.find({ username: profile._id }).select("shares");
+  // const articals = await Articals.find({ username: profile._id }).select("shares");
 
-  let totalShareArticals = 0;
-  articals.forEach(artical => {
-    if (artical.shares) {
-      Object.values(artical.shares).forEach(share => {
-        totalShareArticals += share
-      })
-    }
+  // let totalShareArticals = 0;
+  // articals.forEach(artical => {
+  //   if (artical.shares) {
+  //     Object.values(artical.shares).forEach(share => {
+  //       totalShareArticals += share
+  //     })
+  //   }
 
-  })
+  // })
 
-  console.log("totalShareArticals", totalShareArticals);
+  // console.log("totalShareArticals", totalShareArticals);
 
   // Monthly shares
-  const startMonthlyShare = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  const endMonthlyShare = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999);
+  // const startMonthlyShare = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  // const endMonthlyShare = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999);
 
-  let monthlyShares = await Articals.aggregate([
-    { $match: { username: profile._id } },
-    { $unwind: "$shareHistory" },
-    { $match: { "shareHistory.sharedAt": { $gte: startMonthlyShare, $lte: endMonthlyShare } } },
-    { $count: "monthlyShareCount" }
-  ]);
+  // let monthlyShares = await Articals.aggregate([
+  //   { $match: { username: profile._id } },
+  //   { $unwind: "$shareHistory" },
+  //   { $match: { "shareHistory.sharedAt": { $gte: startMonthlyShare, $lte: endMonthlyShare } } },
+  //   { $count: "monthlyShareCount" }
+  // ]);
 
-  monthlyShares = monthlyShares.length > 0 ? monthlyShares[0].monthlyShareCount : 0;
-  console.log("monthlyShares", monthlyShares);
+  // monthlyShares = monthlyShares.length > 0 ? monthlyShares[0].monthlyShareCount : 0;
+  // console.log("monthlyShares", monthlyShares);
 
   // Daily shares
-  const startDayShare = new Date();
-  startDayShare.setHours(0, 0, 0, 0);
+  // const startDayShare = new Date();
+  // startDayShare.setHours(0, 0, 0, 0);
 
-  const endDayShare = new Date();
-  endDayShare.setHours(23, 59, 59, 999);
+  // const endDayShare = new Date();
+  // endDayShare.setHours(23, 59, 59, 999);
 
-  let dayShares = await Articals.aggregate([
-    { $match: { username: profile._id } },
-    { $unwind: "$shareHistory" },
-    { $match: { "shareHistory.sharedAt": { $gte: startDayShare, $lte: endDayShare } } },
-    { $count: "dailyShareCount" }
-  ]);
+  // let dayShares = await Articals.aggregate([
+  //   { $match: { username: profile._id } },
+  //   { $unwind: "$shareHistory" },
+  //   { $match: { "shareHistory.sharedAt": { $gte: startDayShare, $lte: endDayShare } } },
+  //   { $count: "dailyShareCount" }
+  // ]);
 
-  dayShares = dayShares.length > 0 ? dayShares[0].dailyShareCount : 0;
-  console.log("dayShares", dayShares);
+  // dayShares = dayShares.length > 0 ? dayShares[0].dailyShareCount : 0;
+  // console.log("dayShares", dayShares);
 
 
 

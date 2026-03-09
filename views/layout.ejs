@@ -1,215 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><%= title%></title>
-    <% if (page === "home") { %>
-      <link rel="preload"
-      as="image"
-      href="/assets/image/homeBgImage.avif"
-      imagesrcset="/assets/image/homeBgImage.avif"
-      imagesizes="100vw"
-      fetchpriority="high">
-  <%  } %>
+  <title>
+    <%= title%>
+  </title>
+  <% if (page==="home" ) { %>
+    <link rel="preload" as="image" href="/assets/image/homeBgImage.avif" imagesrcset="/assets/image/homeBgImage.avif"
+      imagesizes="100vw" fetchpriority="high">
+    <% } %>
 
-     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      /* Only remove list markers inside the main content area to avoid affecting header/nav */
-      main ul, main ol, main li, main .list-disc, main .list-decimal, main .list-inside, main .list-outside {
-        list-style: none !important;
-        padding-left: 0 !important;
-        margin-left: 0 !important;
-      }
-      /* Hide marker pseudo-element where supported inside main */
-      main li::marker { content: '' !important; color: transparent !important; font-size: 0 !important; }
-    </style>
+      <link rel="stylesheet" href="/tailwind-build.css">
+      <style>
+        /* Only remove list markers inside the main content area to avoid affecting header/nav */
+        main ul,
+        main ol,
+        main li,
+        main .list-disc,
+        main .list-decimal,
+        main .list-inside,
+        main .list-outside {
+          list-style: none !important;
+          padding-left: 0 !important;
+          margin-left: 0 !important;
+        }
+
+        /* Hide marker pseudo-element where supported inside main */
+        main li::marker {
+          content: '' !important;
+          color: transparent !important;
+          font-size: 0 !important;
+        }
+      </style>
 </head>
-<body>
-    <%- include('../partial/Header.ejs')%>
 
-   <main>
-    <%- body %>
-   </main>
+<body class="bg-slate-50 text-slate-900 antialiased">
+  <%- include('../partial/Header.ejs')%>
+
+    <main>
+      <%- body %>
+    </main>
 
     <%- include('../partial/footer.ejs')%>
 
-    <script src="/user/Category.js" defer></script>
-    <script src="/user/blog-content.js" defer></script>
-    <script src="/user/navResponsive.js" defer></script>
-    <script src="/user/chart.js" defer></script>
-    <script src="/admin/message.js" defer></script>
-    <!-- <script src="../partial/comments.ejs"></script> -->
-    <!-- <script src="/user/Flash_response.js"></script> -->
-    <!-- Global page loader (one-time include) -->
-    <script>
-    (function () {
-      if (!document.getElementById('page-loader-style')) {
-        const style = document.createElement('style');
-        style.id = 'page-loader-style';
-        style.textContent = `
-          #page-loader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);z-index:99999;opacity:0;pointer-events:none;transition:opacity .18s ease}
-          #page-loader.show{opacity:1;pointer-events:auto}
-          #page-loader .spinner{width:52px;height:52px;border-radius:50%;border:5px solid rgba(0,0,0,.08);border-top-color:#10b981;animation:spin .9s linear infinite}
-          @keyframes spin{to{transform:rotate(360deg)}}
-        `;
-        document.head.appendChild(style);
-        const loader = document.createElement('div');
-        loader.id = 'page-loader';
-        loader.innerHTML = '<div class="spinner" aria-hidden="true"></div>';
-        document.body.appendChild(loader);
-      }
+      <script src="/user/loading.js" defer></script>
+      <!-- <script src="/user/Category.js" defer></script> -->
 
-      const loaderEl = document.getElementById('page-loader');
-      const show = () => loaderEl && loaderEl.classList.add('show');
-      const hide = () => loaderEl && loaderEl.classList.remove('show');
+        <% if (title==="home" ) { %>
+          <script src="/user/home.js" defer></script>
+          <% } %>
+        <% if (title==="blog-contant" ) { %>
+       <script src="/user/blog-content.js" defer></script>
+       <script src="/user/comments.js" defer></script>
+         
+          <% } %>
+        <% if (page==="ArticleList" ) { %>
+      
+            <script src="/user/articleList.js" defer></script>
+         
+          <% } %>
+      
+          
+          <!-- <script src="/user/Singup.js" defer></script> -->
+        <!-- <script src="/user/chart.js" defer></script>-->
+      
 
-      function shouldHandleAnchor(a, ev) {
-        if (!a) return false;
-        const href = a.getAttribute('href') || '';
-        if (!href) return false;
-        if (a.hasAttribute('download')) return false;
-        if (a.target && a.target !== '_self') return false;
-        if (/^(mailto:|tel:|javascript:|#)/i.test(href)) return false;
-        if (ev && (ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey)) return false;
-        try {
-          const url = new URL(href, location.href);
-          if (url.origin !== location.origin) return false;
-        } catch (err) {
-          return false;
-        }
-        return true;
-      }
+                      <script src="/user/navResponsive.js" defer></script>
+                      <script src="/user/footer.js" defer></script>
 
-      document.addEventListener('click', function (ev) {
-        const a = ev.target.closest && ev.target.closest('a');
-        if (!shouldHandleAnchor(a, ev)) return;
-        ev.preventDefault();
-        show();
-        const url = a.href;
-        setTimeout(() => (location.href = url), 50);
-      }, { passive: false });
 
-      document.addEventListener('submit', function (ev) {
-      if (form.classList.contains('js-ajax')) return;  
-        if (ev.defaultPrevented) return;
-        show();
-      }, true);
 
-      window.addEventListener('pageshow', function (e) { if (e.persisted) hide(); hide(); });
-
-      window.showPageLoader = show;
-      window.hidePageLoader = hide;
-    })();
-    </script>
 </body>
+
 </html>
-
-
-
-<!-- 
-
-
-
-
-  <script>
-    
-  let share
-
-    const openPopup = () => {
-       share = document.createElement("div")
-      share.className = "fixed absolute inset-0 bg-black bg-opacity-50 z-50 h-screen flex items-center justify-center"
-
-      share.innerHTML = `
-       <div
-      class="relative flex items-center justify-center flex-col bg-white shadow rounded-lg p-6 w-full max-w-md gap-6">
-
-      <button id="xmarkIcon"  onclick="xmarkdown()" class="fixed top-12 right-12 bg-white p-2  z-[9999]">
-        <img src="/assets/icons/xmark-solid-full.svg" alt="Close" class="h-10 w-10">
-      </button>
-
-
-      Input + copy icon
-      <div class=" w-full">
-        <div class="w-full gap-3 flex justify-center items-center">
-          <input id="text" class="border border-gray-900 p-2 w-80" readonly type="text" value="Shahzaib karamat">
-          <img  onclick="copyText()"  src="/assets/icons/paste-regular-full.svg" alt="copy"
-            class="w-9 h-9 p-2 rounded-xl cursor-pointer border border-gray-900">
-        </div>
-        <div class="flex justify-center items-center gap-3">
-          <div class="w-full gap-2 bg-white mt-6 shadow rounded-xl w-[600px] p-2">
-            <div class="w-full flex gap-3 p-1 mb-2">
-               <a href="#"><img src="/assets/icons/facebook-messenger-brands-solid-full.svg" alt="messinger"class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/linkedin-brands-solid-full.svg" alt="linksdin" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/snapchat-brands-solid-full.svg" alt="snapchat" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/telegram-brands-solid-full.svg" alt="telegram" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/share-nodes-solid-full.svg" alt="share" class="w-12 h-12"></a>
-              <a href="#"><img src="/assets/icons/whatsapp-brands-solid-full.svg" class="w-12 h-12 " alt="WhatsApp"></a>
-              </div>
-            <div  id="extraIcons" class=" w-full flex  gap-2 min-w-max hidden">
-              <a href="#"><img src="/assets/icons/x-twitter-brands-solid-full.svg" class="w-12 h-12 "alt="Twitter/X"></a>
-              <a href="#"><img src="/assets/icons/instagram-brands-solid-full.svg" class="w-12 h-12 "alt="Instagram"></a>
-              <a href="#"><img src="/assets/icons/facebook-brands-solid-full.svg" class="w-12 h-12 " alt="Facebook"></a>
-              <a href="#"><img src="/assets/icons/google-brands-solid-full.svg" class="w-12 h-12 " alt="Google"></a>
-            </div>
-          </div>
-          <div>
-            <button onclick="toggleMoreIcons()" class="w-12 h-12 border border-gray-900 rounded-full p-1 flex justify-center items-center ">
-            <img id="arrowIcon" src="/assets/icons/arrow-up-solid-full.svg" class="w-12 h-12 transition-transform duration-300 ease-in-out "alt="Arrow">
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-     </div>
-      `
-
-      document.body.appendChild(share)
-      
-    }
-
-
-    const toggleMoreIcons = () => {
-      const extra = document.querySelector("#extraIcons")
-      const arrowIcon = document.querySelector("#arrowIcon")
-      
-      if (extra.classList.contains("hidden")) {
-        extra.classList.remove("hidden")
-        arrowIcon.style.transform = "rotate(0deg)"
-        
-      } else {
-        extra.classList.add("hidden")
-        arrowIcon.style.transform = "rotate(180deg)"
-      }
-    }
-    
-    const xmarkIcon = document.querySelector("#xmarkIcon")
-    
-    const xmarkdown = () =>{
-      if (share) {
-        document.body.removeChild(share)
-        
-      }
-    }
-
-    
-    const copyText = () =>{
-      const text = document.querySelector("#text")
-      try {
-        navigator.clipboard.writeText(text.value)  
-      } catch (error) {
-        console.log(error);
-        
-      }
-    } 
-
-
-    const heart = document.querySelector("#Heart")
-    if (heart) {
-      
-    }
-
-
-  </scr> -->

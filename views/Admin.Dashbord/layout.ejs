@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    <%= title%>
+  </title>
+
+      <link rel="stylesheet" href="/tailwind-build.css">
+      <style>
+        /* Only remove list markers inside the main content area to avoid affecting header/nav */
+        main ul,
+        main ol,
+        main li,
+        main .list-disc,
+        main .list-decimal,
+        main .list-inside,
+        main .list-outside {
+          list-style: none !important;
+          padding-left: 0 !important;
+          margin-left: 0 !important;
+        }
+
+        /* Hide marker pseudo-element where supported inside main */
+        main li::marker {
+          content: '' !important;
+          color: transparent !important;
+          font-size: 0 !important;
+        }
+      </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 antialiased">
+  
+  <%- include("../../partial/AdminHeader.ejs") %>
+  
+  <main>
+    <%- body %>
+  </main>
+  
+  
+  <script src="/user/loading.js" defer></script>
+  <script src="/admin/navbar.js" defer></script>
+
+
+     <%  if(title === "Admin-Dashbord"){%>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="/admin/Dashbord.js" defer></script> 
+      <%} %>
+
+
+      <%  if(title === "user"){%>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="/admin/user.js" defer></script>
+     <%} %>
+
+
+ 
+
+     
+     <%  if(title === "message"){%>
+    <script src="/admin/message.js" defer></script>
+     <%} %>
+     
+     
+          <%  if(title === "earning"){%>
+       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="/admin/earning.js" defer></script>
+          <%} %>
+
+
+          <%  if(title === "Withdraw"){%>
+   <script src="/admin/withdraw.js" defer></script>
+          <%} %>
+
+
+          <%  if(title === "admin-categoryadd"){%>
+   <script src="/admin/categoryAdd.js" defer></script>
+          <%} %>
+
+
+          <%  if(title === "Announcements"){%>
+   <script src="/admin/Announcment.js" defer></script>
+          <%} %>
+
+
+
+
+
+
+<!-- <script src="/admin/Announcment.js" defer></script> -->
+<!-- 
+<script src="/admin/message.js" defer></script>
+<script src="/admin/withdraw.js" defer></script>  -->
+
+
+</body>
+
+</html>
+

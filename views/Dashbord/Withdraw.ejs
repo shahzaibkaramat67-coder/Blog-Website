@@ -1,12 +1,15 @@
- <div class="bg-white  shadow-md ml-[30%] rounded-lg w-full max-w-2xl p-6">
+<div class="flex justify-center">
+
+  <div class="bg-white shadow-md  rounded-lg w-full max-w-2xl p-6">
     <h2 class="text-2xl font-bold mb-4">Withdraw Funds</h2>
 
     <form id="EarningRequest" class="space-y-6" action="/profile/Dashbord/Withdraw/submit" method="POST">
       <!-- Withdrawal Amount -->
       <div>
-        <label class="block text-sm font-semibold mb-1">Amount (PKR)</label>
+        <label class="block text-sm font-semibold mb-1">Amount ($)</label>
         <input type="number" name="amount" min="10" required
-          class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter amount" />
+          class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter amount" />
       </div>
 
       <!-- Withdrawal Method -->
@@ -51,37 +54,9 @@
     </div>
   </div>
 
- 
+</div>
 
-<script>
-
-const methodToWithdraw = document.getElementById("method"); 
-const accountDetails = document.getElementById("accountDetails");
- 
-methodToWithdraw.addEventListener("change", function (){
-  const method = this.value;
-
-  // ["bank", "easypaisa", "jazzcash", "payoneer", "sadapay"],
-
-  if (method === "easypaisa" || method === "jazzcash") {
-    accountDetails.placeholder = "Enter Mobile Number (03XXXXXXXXX)";
-    accountDetails.type = "tel"
-
-  }
-  else if (method === "payoneer" || method === "sadapay") {
-    accountDetails.placeholder = "Enter registered email address";
-    accountDetails.type = "text"
-
-  }
-  else  {
-    accountDetails.placeholder = "Enter Account Details";
-    accountDetails.type = "text"
-
-  }
-})
+        <script src="/Dashbord/Withdraw.js" defer></script>
 
 
 
-
-
-</script>

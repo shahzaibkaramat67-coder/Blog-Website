@@ -2,19 +2,25 @@
 <section class="min-h-screen md:ml-[20%] bg-slate-50/70 py-8 sm:py-12">
   <div class="max-w-4xl mx-auto px-4 sm:px-6">
     <div class="bg-white/90 backdrop-blur border border-slate-200 shadow-xl rounded-2xl p-6 sm:p-8">
+      
+      <!-- Header -->
       <div class="mb-6 text-center">
         <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">
           <%= title %>
         </h1>
-        <p class="mt-2 text-sm sm:text-base text-slate-500">Add details, upload media, and publish your article.</p>
+        <p class="mt-2 text-sm sm:text-base text-slate-500">
+          Add details, upload media, and publish your article.
+        </p>
       </div>
 
+      <!-- Form -->
       <form id="uploadForm" enctype="multipart/form-data" class="space-y-6">
 
         <!-- Title -->
         <div>
           <label for="title" class="block text-sm font-medium text-slate-700">Blog Title</label>
-          <input id="title" name="title" required type="text" value="<%= articalUpdate? articalUpdate.title : ""%>"
+          <input id="title" name="title" required type="text"
+            value="<%= articalUpdate ? articalUpdate.title : '' %>"
             class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
         </div>
 
@@ -23,83 +29,91 @@
           <label for="featured_image" class="block text-sm font-medium text-slate-700">Featured Image</label>
           <input type="file" id="featured_image" name="featured_image"
             class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-700 file:mr-4 file:rounded-md file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200" />
-          <img src="<%= articalUpdate? articalUpdate.featured_image : "" %>" alt="Featured"
-            class="mt-3 w-full max-h-56 rounded-lg border border-slate-200 object-cover" />
+          <% if (articalUpdate && articalUpdate.featured_image) { %>
+            <img src="<%= articalUpdate.featured_image %>" alt="Featured"
+              class="mt-3 w-full max-h-56 rounded-lg border border-slate-200 object-cover" />
+          <% } %>
         </div>
 
         <!-- Tags -->
         <div>
           <label for="tags" class="block text-sm font-medium text-slate-700">Tags</label>
           <input id="tags" name="tags" type="text"
-            value="<%= articalUpdate &&  articalUpdate.tags? articalUpdate.tags.join(" ,") : "" %>"
-          placeholder="security, nodejs, tips"
-          class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900
-          placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
+            value="<%= articalUpdate && articalUpdate.tags ? articalUpdate.tags.join(', ') : '' %>"
+            placeholder="security, nodejs, tips"
+            class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
         </div>
 
         <!-- Short Description -->
         <div>
           <label for="short_description" class="block text-sm font-medium text-slate-700">Short Description</label>
           <textarea id="short_description" name="short_description" rows="3"
-            class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"><%= articalUpdate? articalUpdate.short_description : ""%></textarea>
+            class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"><%= articalUpdate ? articalUpdate.short_description : '' %></textarea>
         </div>
 
-        <!-- Content -->
+        <!-- Full Content -->
         <div>
           <label for="content" class="block text-sm font-medium text-slate-700">Full Content</label>
           <textarea id="content" name="content" rows="8" required
-            class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"><%= articalUpdate? articalUpdate.content : ""%></textarea>
+            class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"><%= articalUpdate ? articalUpdate.content : '' %></textarea>
         </div>
 
-
-
-
-
+        <!-- Publish Date & Category -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
           <!-- Publish Date -->
           <div>
             <label for="publish_date" class="block text-sm font-medium text-slate-700">Publish Date</label>
             <input type="date" id="publish_date" name="publish_date"
-              value="<%= articalUpdate? articalUpdate.publish_date : ""%>"
+              value="<%= articalUpdate ? articalUpdate.publish_date : '' %>"
               class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
           </div>
 
           <!-- Category -->
           <div>
             <label class="block text-sm font-medium text-slate-700">Category</label>
-            <select name="category" id="category" value="<%= articalUpdate.category%>"
-              class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
-              <option value="" disabled selected>Choose Category</option>
-              <% if (category && category.length) { %>
-                <% category.forEach(cat=> { %>
-                  <option value="<%= cat %>" <%=articalUpdate.category===cat? "selected" : "" %> >
-                    <%= cat %>
-                  </option>
-                  <% }) %>
-                    <% } else { %>
-                      <option disabled>No categories available</option>
-                      <% } %>
-            </select>
+         <select name="category" id="category"
+        class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+
+  <% if (articalUpdate && articalUpdate.category) { %>
+    <!-- Update Article: show only the article's category -->
+    <option value="<%= articalUpdate.category %>" selected>
+      <%= articalUpdate.category %>
+    </option>
+
+  <% } else { %>
+    <!-- Create Article: show all profile categories -->
+    <option disabled selected>Choose Category</option>
+
+    <% if (category && category.length) { %>
+      <% category.forEach(cat => { %>
+        <option value="<%= cat %>"><%= cat %></option>
+      <% }) %>
+    <% } else { %>
+      <option disabled>No categories available</option>
+    <% } %>
+  <% } %>
+</select>
           </div>
+
         </div>
 
         <!-- SEO Meta Title -->
         <div>
           <label for="meta_title" class="block text-sm font-medium text-slate-700">SEO Meta Title</label>
           <input type="text" id="meta_title" name="meta_title"
-            value="<%= articalUpdate? articalUpdate.meta_title : ""%>"
-            class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            placeholder="Enter meta title for search engines">
+            value="<%= articalUpdate ? articalUpdate.meta_title : '' %>"
+            placeholder="Enter meta title for search engines"
+            class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
         </div>
 
         <!-- SEO Meta Description -->
         <div>
           <label for="meta_description" class="block text-sm font-medium text-slate-700">SEO Meta Description</label>
-          <textarea type="text" id="meta_description" name="meta_description" rows="2"
-            class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            placeholder="Enter meta description for search engines"><%= articalUpdate? articalUpdate.meta_description : ""%></textarea>
+          <textarea id="meta_description" name="meta_description" rows="2"
+            placeholder="Enter meta description for search engines"
+            class="w-full mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"><%= articalUpdate ? articalUpdate.meta_description : '' %></textarea>
         </div>
-
 
         <!-- Progress Bar -->
         <div id="progressBox" class="hidden w-full bg-slate-200 rounded-full h-2.5 relative overflow-hidden">
@@ -107,7 +121,7 @@
           <span id="progressText" class="absolute right-2 top-0 text-white text-[10px] font-semibold">0%</span>
         </div>
 
-        <!-- Button -->
+        <!-- Submit Button -->
         <button id="uploadBtn" type="submit"
           class="w-full inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-white font-semibold shadow hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition">
           Upload Blog Post
@@ -118,62 +132,4 @@
   </div>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script>
-  const form = document.getElementById('uploadForm');
-  const bar = document.getElementById('progressBar');
-  const text = document.getElementById('progressText');
-  const progressBox = document.getElementById('progressBox');
-  const btn = document.getElementById('uploadBtn');
-
-  let uploading = false;
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    if (uploading) return;
-    uploading = true;
-
-    btn.disabled = true;
-    btn.innerText = 'Uploading...';
-    progressBox.classList.remove('hidden');
-
-    const formData = new FormData(form);
-
-    try {
-      const res = await axios.post('/profile/Dashbord/craete-Artical/upload-blog', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        onUploadProgress: (p) => {
-          if (!p.total) return;
-          const percent = Math.round((p.loaded * 100) / p.total);
-          bar.style.width = percent + '%';
-          text.innerText = percent + '%';
-        }
-      });
-
-      if (res.data.success) {
-        alert('Blog uploaded successfully');
-        form.reset();
-      } else {
-        alert(res.data.message || 'Upload failed');
-      }
-
-    } catch (err) {
-      console.log(err.response?.data || err.message);
-      alert(err.response?.data?.message || 'Server error');
-    }
-
-    uploading = false;
-    btn.disabled = false;
-    btn.innerText = 'Upload Blog Post';
-    bar.style.width = '0%';
-    text.innerText = '0%';
-    progressBox.classList.add('hidden');
- 
-tn.innerText = 'Upload Blog Post';
-bar.style.width = '0%';
-text.innerText = '0%';
-progressBox.classList.add('hidden');
-});
-</script>
+ <script src="/vendor/axios/dist/axios.min.js"></script>

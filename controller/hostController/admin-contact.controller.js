@@ -1,3 +1,4 @@
+import { Title } from "chart.js";
 import ContactMessage from "../../models/mail.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 
@@ -24,7 +25,14 @@ console.log("unreadMails", unreadMails);
 
     
 
-return res.render("Admin.Dashbord/message", { layout: false,  adminMessages, totalMail, readsMails, unreadMails, showId});
+return res.render("Admin.Dashbord/message", {
+    title : "message",
+    adminMessages, 
+    totalMail, 
+    readsMails, 
+    unreadMails, 
+    showId
+});
 
 
 })

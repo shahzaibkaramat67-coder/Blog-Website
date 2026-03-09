@@ -14,15 +14,15 @@ const ArticleList = asyncHandler(async(req, res)=>{
   .lean()
 
   
-  const cat = cate.replace(/-/g, " ")
+//   const cat = cate.replace(/-/g, " ")
     
 
     return res.render("ArticleList", {
-        title : "Articles in"+ cat,
-        page : "Articles in"+ cat,
+        title : "Articles in"+ cate,
+        page : "ArticleList",
         // layout : false,
         allArtical : article,
-        cat
+        cate
     })
 
 
@@ -30,8 +30,12 @@ const ArticleList = asyncHandler(async(req, res)=>{
 
 
 const articleListByApi = asyncHandler(async(req, res)=>{
-
+   console.log("this is page listing the");
+   
     const category = req.params.category;
+    console.log("category patam", category);
+
+    
    const page = parseInt(req.query.page) || 1; 
     console.log("page", page);
     
@@ -40,12 +44,14 @@ const articleListByApi = asyncHandler(async(req, res)=>{
 
 
   const article = await Articals.find({User : userId, category})
+  
   .sort({createdAt : -1})
   .skip((page - 1) * limit)
   .limit(limit)
   .lean()
-
+  
   console.log("article", article);
+
   
   res.json(article)
 })

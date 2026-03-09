@@ -16,6 +16,8 @@ import { format } from "path";
 import vettlyApi from "../../helper/openaiClient.js";
 
 const articalUpload = asyncHandler(async (req, res) => {
+  console.log("trcyubiomp,cyvguhbijnokml");
+  
 
     console.log("ARTICLE UPLOAD HIT", new Date().toISOString());
 
@@ -146,7 +148,7 @@ const articalUpload = asyncHandler(async (req, res) => {
 
 
 
-// })
+
 
 const getArticales = asyncHandler(async (req, res) => {
   const topicSlug = req.params.slug || null;
@@ -424,9 +426,9 @@ const getSearchAndRandomArticals = asyncHandler(async (req, res) => {
 
 
 export {
-  articalUpload,
   getArticales,
   // getArticalesById,
+  articalUpload,
   categoryShareToArtical,
   getSearchAndRandomArticals,
 

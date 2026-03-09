@@ -2,7 +2,7 @@
 <div class="flex flex-col md:flex-row justify-center max-w-7xl mx-auto py-12 gap-6 px-4">
 
   <!-- Sidebar -->
-  <div class="w-full md:w-80 md:flex-shrink-0">
+  <div class="w-full md:w-80 md:shrink-0">
     <!-- Search Bar -->
     <form class="w-full mb-4 sticky md:static top-0 bg-white z-10" action="/blog" method="get">
       <div class="bg-white">
@@ -14,12 +14,13 @@
     </form>
 
     <!--  Sidebar Search Results (Desktop Only) -->
-    <div class="hidden md:block rounded-lg p-5 text-gray-500 shadow-lg overflow-y-auto max-h-[600px]">
+    <div class="hidden md:block rounded-lg p-5 text-gray-500 shadow-lg overflow-y-auto max-h-150">
       <% if (SideAllArtical && SideAllArtical.length> 0) { %>
         <% SideAllArtical.forEach(Artical=> { %>
           <a href="/blog/blog-contant/<%= Artical._id %>"
             class="flex cursor-pointer items-center shadow mb-3 gap-4 hover:bg-gray-50 p-2 rounded-lg transition">
-            <img src="<%= Artical.featured_image %>" alt="app" loading="lazy" alt="Description" class="w-12 h-12 rounded-full object-cover">
+            <img src="<%= Artical.featured_image %>" alt="app" loading="lazy" alt="Description"
+              class="w-12 h-12 rounded-full object-cover">
             <div>
               <h1 class="font-bold text-sm md:text-base">
                 <%= Artical.title %>
@@ -48,8 +49,9 @@
           <% SideAllArtical.forEach(Artical=> { %>
             <div
               class="bg-white p-4 rounded-xl shadow-lg flex flex-col sm:flex-row gap-4 mb-4 hover:shadow-xl transition">
-              <div class="flex-shrink-0">
-                <img  src="<%= Artical.featured_image %>" alt="app" loading="lazy" alt="Description" class="w-full sm:w-72 rounded-lg object-cover">
+              <div class="shrink-0">
+                <img src="<%= Artical.featured_image %>" alt="app" loading="lazy" alt="Description"
+                  class="w-full sm:w-72 rounded-lg object-cover">
               </div>
               <div class="flex flex-col justify-between w-full">
                 <div>
@@ -83,7 +85,7 @@
           <% allArtical.forEach(Artical=> { %>
             <div
               class="bg-white p-4 rounded-xl shadow-lg flex flex-col sm:flex-row gap-4 mb-4 hover:shadow-xl transition">
-              <div class="flex-shrink-0">
+              <div class="shrink-0">
                 <img src="<%= Artical.featured_image %>" alt="app" class="w-full sm:w-72 rounded-lg object-cover">
               </div>
               <div class="flex flex-col justify-between w-full">
@@ -101,7 +103,8 @@
 
                 <div class="grid grid-cols-3 w-40 mt-3 text-gray-600 text-sm">
                   <div class="flex items-center cursor-pointer gap-1">
-                    <img src="/assets/icons/thumbs-up-regular-full.svg" loading="lazy" alt="Description" class="w-5 h-5">
+                    <img src="/assets/icons/thumbs-up-regular-full.svg" loading="lazy" alt="Description"
+                      class="w-5 h-5">
                     <span>
                       <%= Artical.totalLikes %>
                     </span>
@@ -113,7 +116,8 @@
                     </span>
                   </div>
                   <div class="flex items-center cursor-pointer gap-1">
-                    <img src="/assets/icons/share-nodes-solid-full.svg" loading="lazy" alt="Description" class="w-5 h-5">
+                    <img src="/assets/icons/share-nodes-solid-full.svg" loading="lazy" alt="Description"
+                      class="w-5 h-5">
                     <span>
                       <%= Artical.totalShares%>
                     </span>
@@ -123,7 +127,7 @@
                 <div class="flex justify-end mt-3">
                   <a href="/blog/blog-contant/<%= Artical._id %>"
                     class="read-more-btn  bg-teal-500 px-4 py-2 sm:px-6 sm:py-3 text-white font-bold uppercase rounded-lg hover:bg-teal-600 transition"
-                      data-id="<%= Artical._id %>">
+                    data-id="<%= Artical._id %>">
                     Read More
                   </a>
                 </div>
@@ -142,58 +146,46 @@
           <a href="<%= topicSlug 
     ? '/topics/' + topicSlug + '?page=' + (currentPage - 1)
     : '/blog/?page=' + (currentPage - 1) + (searchQuery ? '&Search=' + encodeURIComponent(searchQuery) : '') %>"
-            class="cursor-pointer px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+            class="cursor-pointer px-3 py-2 bg-teal-500 text-gray-700 rounded-lg hover:bg-teal-700 transition">
             Previous
           </a>
 
           <% } %>
 
-            <!-- Page Numbers -->
-            <% for (let i=1; i <=totalPages; i++) { %>
-              <a href="<%= (typeof topicSlug !== 'undefined' && topicSlug) 
-      ? '/topics/' + topicSlug + '?page=' + i 
-      : '/blog/?page=' + i + (searchQuery ? '&Search=' + encodeURIComponent(searchQuery) : '') %>
-" class="w-8 h-8 flex items-center justify-center rounded-lg
-              <%= i === currentPage ? 'bg-teal-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' %>
-              transition font-semibold shadow-md">
-                <%= i %>
-              </a>
-              <% } %>
+            <% const page=Number(currentPage); %>
 
-                <!-- Next Page -->
-                <% if (currentPage < totalPages) { %>
-                  <a href="<%= topicSlug 
-    ? '/topics/' + topicSlug + '?page=' + (currentPage + 1)
-    : '/blog/?page=' + (currentPage + 1) + (searchQuery ? '&Search=' + encodeURIComponent(searchQuery) : '') %>"
-                    class="cursor-pointer px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                    Next
+              <% for(let i=1; i <=totalPages; i++){ %>
+
+                <% if(i <=3 || i> totalPages - 3){ %>
+
+                  <a href="?page=<%= i %>" class="px-3 py-1 border rounded-md
+       <%= i === page ? 'bg-teal-500 text-white border-teal-600' : 'hover:bg-gray-100' %>">
+                    <%= i %>
                   </a>
 
+                  <% } else if(i===4){ %>
 
-                  <% } %>
+                    <span class="px-2 text-gray-500">...</span>
+
+                    <% } %>
+
+                      <% } %>
+
+
+
+                        <!-- Next Page -->
+                        <% if (currentPage < totalPages) { %>
+                          <a href="<%= topicSlug 
+    ? '/topics/' + topicSlug + '?page=' + (currentPage + 1)
+    : '/blog/?page=' + (currentPage + 1) + (searchQuery ? '&Search=' + encodeURIComponent(searchQuery) : '') %>"
+                            class="cursor-pointer px-3 py-2 bg-teal-500 text-gray-700 rounded-lg hover:bg-teal-700 transition">
+                            Next
+                          </a>
+
+
+                          <% } %>
 
       </div>
     </div>
   </div>
 </div>
-
-<!-- <script>
-
-document.querySelectorAll(".read-more-btn").forEach(btn => {
-      btn.addEventListener("click",async (e)=>{
-e.preventDefault();
- const id = btn.dataset.id;
-
-try {
-   const res = await fetch(`/blog/blog-conent/${id}/view`, {
-    method : "post"
-   })
-} catch (error) {
-  console.error(error);
-}
-      })
-});
-
-
-
-</script> -->

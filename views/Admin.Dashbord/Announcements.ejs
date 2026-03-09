@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-    
-  <section class="max-w-3xl mx-auto px-6 py-16">
-        <%- include("../../partial/AdminHeader.ejs") %>
+<section class="max-w-3xl mx-auto px-6 py-16">
+
 
   <h1 class="text-4xl font-bold text-gray-900 mb-8 text-center">Post a New Update</h1>
 
   <!-- Update Form -->
-  <form id="updateForm" action="/api/admin-Announcements/update" method="post" class="bg-white p-6 rounded-xl shadow space-y-4">
+  <form id="updateForm" class="bg-white p-6 rounded-xl shadow space-y-4">
 
     <!-- Title -->
     <div>
@@ -73,45 +63,3 @@
 </section>
 
 
-<script>
-    const name = document.getElementById("title")
-   
-    const textarea = document.getElementById("textarea")
-
-    const category = document.getElementById("category")
-   
-    const btn = document.getElementById("update")
-    const updateForm = document.getElementById("updateForm")
-
-    btn.addEventListener("click",async (e)=>{
-        e.preventDefault();
-         const Categories = category.value.trim()
-
-          const textName = name.value.trim()
-              const discrib = textarea.value.trim()
-        if (!textName || !discrib || !Categories) alert("All Fields are required")
-
-        const res = await fetch("/api/admin-Announcements/update", {
-            method : "post",
-            headers :{'content-type': 'application/json'},
-            body : JSON.stringify({textName, discrib, Categories})
-        })
-         
-        if (res.success) {
-            alert("post update successfully")
-            updateForm.reset()
-        }
-        
-
-        // const update =  res.json()
-
-
-    })
-
-   
-
-
-</script>
-
-</body>
-</html>

@@ -34,7 +34,7 @@ const articalCategories = asyncHandler(async (req, res) => {
   }));
 
   return res.render("Admin.Dashbord/artical", {
-    layout: false,
+ 
     title: "Blog Categories",
     finalstage
   });

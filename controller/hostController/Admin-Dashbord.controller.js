@@ -442,7 +442,7 @@ const dashboardController = asyncHandler(async (req, res) => {
 
 
   return res.render("Admin.Dashbord/Admin-Dashbord", {
-    layout: false, title: "Admin-Dashbord",
+    title: "Admin-Dashbord",
     artical,
     MonthlyArticals,
     dayArticals,

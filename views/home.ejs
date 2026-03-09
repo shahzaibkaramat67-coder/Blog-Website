@@ -31,105 +31,47 @@
   /* Focus-visible for accessibility */
   .card:focus { outline: 2px solid rgba(34,197,94,0.12); outline-offset: 4px; }
 </style>
-<section class="relative bg-cover bg-center h-[90vh]" style="background-image: url('/assets/image/homeBgImage.avif'), url('/assets/image/homeBgImage.webp');">
-  <div class="bg-black h-[90vh] bg-opacity-40">
-    <div class="max-w-6xl mx-auto py-28 text-center px-6 text-white">
-      <h1 class="text-5xl font-extrabold mb-4 drop-shadow-lg">Share Your Knowledge. Inspire the World.</h1>
-      <p class="text-lg mb-8 drop-shadow">Write articles, connect with readers, and grow your influence everything a creator needs to thrive.</p>
-      <div class="flex items-center justify-center gap-4">
-        <a href="/signup" class="bg-teal-600 hover:bg-teal-500 text-white px-6 py-3 rounded-lg font-semibold">Get Started</a>
-        <a href="/blog" class="bg-white bg-opacity-90 hover:bg-opacity-100 text-teal-700 px-6 py-3 rounded-lg font-semibold">Explore Articles</a>
-      </div>
+<section class="relative isolate h-[90vh] overflow-hidden bg-cover bg-center" style="background-image: url('/assets/image/homeBgImage.avif'), url('/assets/image/homeBgImage.webp');">
+  <div class="absolute inset-0 bg-linear-to-b from-black/70 via-black/40 to-black/80"></div>
+  <div class="relative max-w-6xl mx-auto px-6 py-28 text-center text-white">
+    <p class="mx-auto inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs uppercase tracking-widest text-white/80">
+      Creator-first publishing platform
+    </p>
+    <h1 class="mt-6 text-4xl font-semibold leading-tight md:text-6xl md:leading-tight drop-shadow-lg">
+      Share your knowledge. <br class="hidden sm:block">Inspire the world.
+    </h1>
+    <p class="mx-auto mt-5 max-w-2xl text-base text-white/85 md:text-lg">
+      Write articles, connect with readers, and grow your influence — everything a creator needs to thrive.
+    </p>
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <a href="/signup" class="rounded-full bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-500">Get Started</a>
+      <a href="/blog" class="rounded-full border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">Explore Articles</a>
+    </div>
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-white/70">
+      <div class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-teal-400"></span>Curated topics</div>
+      <div class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-teal-400"></span>Monetize your posts</div>
+      <div class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-teal-400"></span>Built for creators</div>
     </div>
   </div>
 </section>
 
-<script>
-// Pro entrance + pointer tilt
-document.addEventListener('DOMContentLoaded', () => {
-  const cards = Array.from(document.querySelectorAll('.card'));
-  if (!cards.length) return;
 
-  // Staggering function
-  const setDelay = (el, i) => el.style.setProperty('--delay', `${i * 120}ms`);
 
-  // IntersectionObserver: reveal on scroll
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        const idx = cards.indexOf(el);
-        setDelay(el, idx);
-        // double RAF so styles take effect before class toggle
-        requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in-view')));
-        observer.unobserve(el);
-      });
-    }, { threshold: 0.12 });
-    cards.forEach(c => io.observe(c));
-  } else {
-    cards.forEach((el, i) => { setDelay(el, i); el.classList.add('in-view'); });
-  }
-
-  // Pointer tilt (subtle) with RAF
-  cards.forEach(card => {
-    let rafId = null;
-    const rectCache = { w: 0, h: 0, left: 0, top: 0 };
-
-    const updateRect = () => {
-      const r = card.getBoundingClientRect();
-      rectCache.w = r.width; rectCache.h = r.height; rectCache.left = r.left; rectCache.top = r.top;
-    };
-
-    const onMove = (e) => {
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        updateRect();
-        const px = (e.clientX - rectCache.left) / rectCache.w;
-        const py = (e.clientY - rectCache.top) / rectCache.h;
-        const ry = (px - 0.5) * 16;   // rotateY
-        const rx = (0.5 - py) * 10;   // rotateX
-        const ty = Math.max(0, 12 - py * 12); // slight parallax
-        card.style.setProperty('--ry', ry + 'deg');
-        card.style.setProperty('--rx', rx + 'deg');
-        card.style.setProperty('--ty', ty + 'px');
-        card.style.setProperty('--s', '1.02');
-      });
-    };
-
-    const onLeave = () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      // smooth reset
-      card.style.transition = 'transform 420ms cubic-bezier(.2,.9,.3,1)';
-      card.style.setProperty('--ry', '0deg');
-      card.style.setProperty('--rx', '0deg');
-      card.style.setProperty('--ty', '0px');
-      card.style.setProperty('--s', '1');
-      setTimeout(() => card.style.transition = '', 420);
-    };
-
-    card.addEventListener('mousemove', onMove);
-    card.addEventListener('mouseleave', onLeave);
-    card.addEventListener('focus', () => card.classList.add('in-view'));
-  });
-});
-</script>
-
-<section class="bg-gray-50 py-16">
+<section class="bg-slate-50 py-16">
   <!-- Heading -->
   <div class="max-w-6xl mx-auto text-center mb-12 px-6">
-    <h2 class="text-4xl font-extrabold text-gray-800 mb-4">Discover. Learn. Earn.</h2>
+    <h2 class="text-4xl font-semibold text-gray-900 mb-4">Discover. Learn. Earn.</h2>
     <p class="text-gray-600 text-lg">
       Welcome to a platform where ideas become impact. Whether you're a writer, learner, or tech enthusiast, this is your space to create, grow, and shine.
     </p>
   </div>
 
   <!-- Features -->
-  <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-10 max-w-6xl mx-auto px-6">
+  <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-8 max-w-6xl mx-auto px-6">
     
     <!-- Feature 1: Create Freely -->
      <!-- Feature 1: Create Freely -->
-  <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition card" style="--delay: 0s;">
+  <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-8 hover:shadow-xl transition card" style="--delay: 0s;">
   <div class="flex justify-center mb-6">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 20h9M12 4v16m0-16L3 12l9 8" />
@@ -144,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     <!-- Feature 2: Learn & Grow -->
-    <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition card" style="--delay: 0.08s;">
+    <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-8 hover:shadow-xl transition card" style="--delay: 0.08s;">
       <div class="flex justify-center mb-6">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6l4 2m6 8H6a2 2 0 01-2-2V6a2 2 0 012-2h8l6 6v12a2 2 0 01-2 2z" />
@@ -157,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
 
     <!-- Feature 3: Earn Recognition -->
-    <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition card" style="--delay: 0.16s;">
+    <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-8 hover:shadow-xl transition card" style="--delay: 0.16s;">
       <div class="flex justify-center mb-6">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 0v8m-6 0a6 6 0 1112 0H6z" />
@@ -180,9 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </section>
 
-<section class="bg-gray-50 py-16">
+<section class="bg-slate-50 py-16">
   <div class="max-w-6xl mx-auto px-6">
-    <div class="bg-white rounded-2xl shadow-lg p-10 hover:shadow-2xl transition">
+    <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-10 hover:shadow-xl transition">
       <div class="flex items-center justify-center mb-6">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 20h9M12 4v16m0-16L3 12l9 8" />

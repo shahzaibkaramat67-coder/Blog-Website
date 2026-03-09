@@ -38,9 +38,8 @@ const withdrawRequestList = asyncHandler(async(req, res)=>{
 
 
     res.render('Admin.Dashbord/Withdraw', {
-        layout: false,
+
         title: 'Withdraw',
-        page: "Withdraw",
         withdrawList : result,
         pending,
         Approve,

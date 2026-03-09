@@ -1,10 +1,12 @@
-import asyncHandler from "../../utils/asyncHandler";
+import asyncHandler from "../../utils/asyncHandler.js";
+import { Profile } from "../../models/profile.model.js";
 
-const edit_Profile = asyncHandler(async(req, res)=>{
-
-    
+const editProfile = asyncHandler(async(req, res)=>{
+   const userId = req.user._id;
+   const profile = await Profile.findOne({ User: userId });
+   return res.render('edit-profile', {layout : false, title: 'edit-profile', profile})
 })
 
-export default {
-    edit_Profile
+export {
+    editProfile
 }

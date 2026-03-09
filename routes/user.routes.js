@@ -102,17 +102,7 @@ router.get('/profile/Dashbord/history',verifijwt, getHistoryPage)
 // router.get('/profile/Dashbord/history/page/:id',verifijwt, articeLimitList)
 
 
-//  there are Singup , Login , forgetPassport , Logout logicss
-// router.get('/signup', (req, res) => {
-//   if (req.isAuthenticated()) {
-//     return res.redirect("/login");
-//   }
 
-//   res.render("signup", { layout: false, title: "Signup" });
-// });
- // if (req.user) {
-  //   return res.redirect("/home");
-  // }
 
 router.get('/signup', (req, res) => {res.render("signup", { layout: false, title: "Signup" })});
 

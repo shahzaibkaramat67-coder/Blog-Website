@@ -7,7 +7,13 @@ import {ArticleShare} from "../../models/share.Model.js"
 
 
 const shareArtical = asyncHandler(async (req, res) => {
+
+  console.log(" here i will share any article");
+  
+
   const { articalId, platform } = req.body;
+  const userId = req.user._id
+  
   
   console.log("articalId", articalId);
   console.log("platform", platform);
@@ -45,10 +51,18 @@ const shareArtical = asyncHandler(async (req, res) => {
 
   await ArticleShare.create({
     platform,
-    article : artical
+    user : userId,
+    article : articalId
   })
 
-  await artical.save();
+  await Articals.findByIdAndUpdate(articalId, {
+    $inc :{
+      totalShares : 1
+    }
+  })
+
+
+  // await artical.save();
 
   return res.json({ success: true, message: "Share updated!" });
 });

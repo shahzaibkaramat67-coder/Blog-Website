@@ -19,6 +19,8 @@ import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import update from "./models/Announcment.Model.js";
+// import AdminDashboardLayout from "../middleware/Admin.layout.js"
+import path from "path"
 // import connectRedis from "connect-redis";
 // import Redis from "ioredis";
 
@@ -53,8 +55,52 @@ app.use(flash())
 
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(helmet())
+
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+
+        scriptSrc: [
+          "'self'",
+          "https://cdn.jsdelivr.net"
+        ],
+
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'"
+        ],
+
+        imgSrc: [
+          "'self'",
+          "data:",
+          "blob:",
+          "https://res.cloudinary.com",
+          "https://cdn.jsdelivr.net"
+        ],
+
+        connectSrc: ["'self'"],
+
+        fontSrc: [
+          "'self'",
+          "data:"
+        ]
+      }
+    }
+  })
+);
 app.use(compression())
+app.use(
+  "/vendor/chartjs",
+  express.static("node_modules/chart.js/dist")
+);
+app.use(
+  "/vendor/axios/dist",
+  express.static("node_modules/axios/dist")
+);
+// app.use("/vendor", express.static(path.join(__dirname, "node_modules")));
 // import rateLimit from "express-rate-limit";
 
 const userRateLimit = rateLimit({

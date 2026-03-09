@@ -4,11 +4,13 @@ import Category from "../../models/categorie.model.js";
 import ApiError from "../../utils/ApiError.js";
 
 const getAddCaategoryPage = asyncHandler(async (req, res) => {
+
+      const showGroup = await RPMGroup.find().lean()
+    console.log("showGroup", showGroup);
+
     res.render('Admin.Dashbord/categoryadd', {
-        layout: false,
         title: 'admin-categoryadd',
-        page: "admin-categoryadd",
-        showGroup: req.showGroup
+        showGroup : req.showGroup
     })
 })
 
@@ -22,6 +24,8 @@ const groutRpm = asyncHandler(async (req, res, next) => {
     console.log("showGroup", showGroup);
 
     req.showGroup = showGroup
+
+    // res.json(showGroup)
 
 
     //    console.log("  req.showGroup",   req.showGroup);
@@ -81,7 +85,7 @@ const addCategory = asyncHandler(async (req, res) => {
     await category.save();
 
     res.render('Admin.Dashbord/categoryadd', {
-        layout: false,
+    
         title: 'admin-categoryadd',
         page: "admin-categoryadd",
         showGroup: req.showGroup

@@ -5,98 +5,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OTP Verification</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/tailwind-build.css">
   <!-- <link rel="stylesheet" href="/all.css"> -->
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-slate-50 flex items-center justify-center min-h-screen px-6 py-12">
 
-  <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
-    <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Verify Your OTP</h2>
-    <p class="text-gray-600 text-center mb-6">Enter the 6-digit code sent to your email</p>
+  <div class="bg-white shadow-xl ring-1 ring-black/5 rounded-3xl p-8 sm:p-10 w-full max-w-md">
+    <p class="text-xs uppercase tracking-widest text-slate-400 text-center">Security</p>
+    <h2 class="mt-2 text-2xl font-semibold text-center text-slate-900">Verify Your OTP</h2>
+    <p class="mt-2 text-slate-500 text-center mb-8">Enter the 6-digit code sent to your email</p>
 
     <form class="otpForm" action="/otp-submit" method="post" class="space-y-6">
       <div class="flex justify-between gap-3">
         <input type="text" maxlength="1" autofocus
-          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
+          class="otp-digit w-14 h-14 text-center rounded-xl border border-slate-200 bg-white text-2xl shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-200" />
         <input type="text" maxlength="1"
-          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
+          class="otp-digit w-14 h-14 text-center rounded-xl border border-slate-200 bg-white text-2xl shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-200" />
         <input type="text" maxlength="1"
-          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
+          class="otp-digit w-14 h-14 text-center rounded-xl border border-slate-200 bg-white text-2xl shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-200" />
         <input type="text" maxlength="1"
-          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
+          class="otp-digit w-14 h-14 text-center rounded-xl border border-slate-200 bg-white text-2xl shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-200" />
         <input type="text" maxlength="1"
-          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
+          class="otp-digit w-14 h-14 text-center rounded-xl border border-slate-200 bg-white text-2xl shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-200" />
         <input type="text" maxlength="1"
-          class="otp-digit w-14 h-14 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-2xl" />
+          class="otp-digit w-14 h-14 text-center rounded-xl border border-slate-200 bg-white text-2xl shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-200" />
       </div>
 
       <input type="hidden" name="otp" id="otpInput">
 
       <button type="submit"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md text-lg font-medium transition duration-200">
+        class="w-full rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700">
         Verify OTP
       </button>
     </form>
 
-    <div class="text-center mt-4 text-sm text-gray-600">
+    <div class="text-center mt-5 text-sm text-slate-500">
       Didn't receive the code?
-      <a href="#" class="text-blue-600 hover:underline">Resend</a>
+      <a href="#" class="font-medium text-teal-700 hover:text-teal-800">Resend</a>
     </div>
   </div>
 
 
-  <script>
 
-    const otpForm = document.querySelector('.otpForm');
-    const otpdigit = document.querySelectorAll('.otp-digit');
-    const otpInput = document.querySelector('#otpInput')
-
-    otpdigit.forEach((input, index) => {
-      input.addEventListener('input', (e) => {
-        const otp = e.target.value
-        // just Number Allow
-        if (!/^[0-9]$/.test(otp)) {
-          e.target.value = ""
-          return;
-        }
-
-        if (index < otpdigit.length - 1) {
-          otpdigit[index + 1].focus()
-        }
-
-      })
-
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace" && !e.target.value && index > 0) {
-          otpdigit[index - 1].focus();
-        }
-      })
-
-      input.addEventListener("paste", (e) => {
-        // Allow pasting full code: distribute pasted digits across inputs
-        e.preventDefault();
-        const paste = (e.clipboardData || window.clipboardData).getData('text') || '';
-        const digits = paste.replace(/\D/g, '').slice(0, otpdigit.length).split('');
-        digits.forEach((ch, i) => {
-          otpdigit[i].value = ch;
-        });
-        const nextIndex = Math.min(digits.length, otpdigit.length) - 1;
-        if (nextIndex >= 0 && nextIndex < otpdigit.length) otpdigit[nextIndex].focus();
-      });
-    });
-
-    otpForm.addEventListener("submit", (e)=>{
-        const inputArray = Array.from(otpdigit).map(i => i.value).join("")
-    otpInput.value = inputArray
-
-    })
-    
-
-
-  </script>
-
-
+  <script src="/user/opt.js" defer></script>
 
 
 </body>

@@ -158,9 +158,8 @@ console.log("balance", balance);
 
 
     res.render('Admin.Dashbord/earning', {
-         layout: false,
+        
           title: 'earning',
-           page: "earning",
            total,
            month,
            day,
