@@ -8,7 +8,7 @@
   <title>
     <%= title%>
   </title>
-  <% if (page==="home" ) { %>
+  <% if (title==="home" ) { %>
     <link rel="preload" as="image" href="/assets/image/homeBgImage.avif" imagesrcset="/assets/image/homeBgImage.avif"
       imagesizes="100vw" fetchpriority="high">
     <% } %>
@@ -38,38 +38,64 @@
 </head>
 
 <body class="bg-slate-50 text-slate-900 antialiased">
-  <%- include('../partial/Header.ejs')%>
+  <% if (showLayout !== false) { %>
+    <%- include('../partial/Header.ejs')%>
 
+ <% } %>
     <main>
       <%- body %>
     </main>
 
-    <%- include('../partial/footer.ejs')%>
+    <% if (showLayout !== false) { %>
+      <%- include('../partial/footer.ejs')%>
+ <% } %>
 
       <script src="/user/loading.js" defer></script>
+
       <!-- <script src="/user/Category.js" defer></script> -->
+
+
+      <% if (title ==="Create Your BlogHub Account | BlogHub" ) { %>
+          <script src="/user/Singup.js" defer></script>
+        <% } %>
+        
+        <% if (title ==="OTP Verification | BlogHub" ) { %>
+             <script src="/user/opt.js" defer></script>
+          <% } %>
+          
+          <% if (title ==="Login to BlogHub | BlogHub" ) { %>
+               <script src="/user/Login.js" defer></script>
+            <% } %>
+            
+            <% if (title ==="Update Password | BlogHub" ) { %>
+               <script src="/user/updatePassword.js" defer></script>
+              <% } %>
+            
 
         <% if (title==="home" ) { %>
           <script src="/user/home.js" defer></script>
           <% } %>
+
         <% if (title==="blog-contant" ) { %>
        <script src="/user/blog-content.js" defer></script>
        <script src="/user/comments.js" defer></script>
-         
           <% } %>
-        <% if (page==="ArticleList" ) { %>
-      
+
+
+        <% if (title==="ArticleList" ) { %>
             <script src="/user/articleList.js" defer></script>
-         
           <% } %>
-      
+
           
-          <!-- <script src="/user/Singup.js" defer></script> -->
+          <% if (title==="Signup" ) { %>
+            <script src="/user/Login.js" defer></script>
+            <% } %>
+          
         <!-- <script src="/user/chart.js" defer></script>-->
       
 
                       <script src="/user/navResponsive.js" defer></script>
-                      <script src="/user/footer.js" defer></script>
+                      <!-- <script src="/user/footer.js" defer></script> -->
 
 
 

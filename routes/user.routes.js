@@ -11,7 +11,6 @@ import verifijwt from '../middleware/auth.middleware.js'
 import {
   submitSingupData,
   submitLoginData,
-  forgetPassword,
   submitForgetPassword,
   updatePassword,
   logOut,
@@ -31,7 +30,7 @@ import { shareArtical, profile_Image } from '../controller/userController/share.
 import userEarning from '../controller/userController/user.Dashbord/Earning.Controller.js'
 import contactValidator from '../middleware/contact.validation.js'
 import { contactController } from '../controller/userController/contact.controller.js'
-import { OTP, otpVerify } from '../controller/userController/otp.controller.js'
+import {otpVerify } from '../controller/userController/otp.controller.js'
 import { userDashboard, getDashbordChartData } from "../controller/userController/user.Dashbord/Dashbord.Controller.js"
 // import {categoryShareToArtical} from '../controller/userController/artical.controller.js'
 import { categoryHendler } from '../controller/userController/category.controller.js'
@@ -79,9 +78,9 @@ router.get('/auth/google/callback',passport.authenticate('google'), googlecontro
 router.get('/profile', verifijwt, getProfileForUpdate)
 router.post('/edit-profile',verifijwt, (req, res)=>{res.render('edit-profile', {layout : false, title: 'edit-profile'})})
 router.post('/profile', verifijwt, upload.single("profile_Image"), profileValivation, createORUpdateProfile)
-router.get('/profile/:cat', ArticleList)
-router.get('/profile/list/:category', articleListByApi)
-router.use("/profile/Dashbord", dashboardLayout);
+router.get('/profile/:cat',verifijwt, ArticleList)
+router.get('/profile/list/:category',verifijwt, articleListByApi)
+router.use("/profile/Dashbord",verifijwt, dashboardLayout);
 router.get('/profile/Dashbord/postsAnalytics',verifijwt, postInTable)
 router.get('/profile/Dashbord/postsAnalytics/page/:page',verifijwt, loadArticle)
 router.get('/profile/Dashbord/postsAnalytics/update/:id',verifijwt, updateArticle)
@@ -104,31 +103,64 @@ router.get('/profile/Dashbord/history',verifijwt, getHistoryPage)
 
 
 
-router.get('/signup', (req, res) => {res.render("signup", { layout: false, title: "Signup" })});
+router.get('/signup', (req, res) => {res.render("signup", { 
+        showLayout: false,
+        title: 'Create Your BlogHub Account | BlogHub',
+        metaDescription: 'Sign up to start publishing articles, tracking performance, and growing your audience on BlogHub.',
+        metaKeywords: 'signup, create account, creator registration, BlogHub join',
+        robots: 'noindex, nofollow'
+})});
 
 
 router.post('/submit-singup', validatorForRegistration, submitSingupData)
-router.get('/otp', OTP)
-// router.get('/otp', verifijwt, (req, res) => {
-// router.get('/otp', verifijwt, (req, res) => {
-//   const Email = req.query.Email
-//   //     const Email =  req.body.Email
-//   if (!Email) {
-//     return res.status(400).send('Email is required')
-// } else {
-//     res.render('otp', {layout : false, title: "otpPage", Email })
-//   }s
-// })
-router.post('/otp-submit', otpVerify)
-router.get("/login", (req, res) => { res.render('login', { layout: false, title: "login", isAdmin: false }) })
-router.get("/logOut", logOut)
-router.post('/submit-login', loginValidationRules, submitLoginData)
-router.get("/forgetPassword", forgetPassword)
-router.post("/submit-forgetPassword", forgetPasswordValidation, submitForgetPassword)
-router.get('otp', (req, res) => {
 
-})
-router.get("/updatePassword/:token", (req, res) => { res.render("updatePassword", { layout: false, title: "updatePassword", token: req.params.token }) })
+router.get('/otp', (req, res)=>{res.render("otp", {
+   title: 'OTP Verification | BlogHub',
+        showLayout: false,
+        metaDescription: 'Verify your BlogHub account by entering the OTP sent to your email.',
+        metaKeywords: 'OTP verification, email verification, account security, BlogHub signup',
+        robots: 'noindex, nofollow'
+})});
+      
+      
+router.post('/otp-submit', otpVerify)
+
+router.get("/login", (req, res) => { res.render('login', { 
+  isAdmin : false,
+  title: 'Login to BlogHub | BlogHub',
+  showLayout: false,
+  metaDescription: 'Securely sign in to access your profile, dashboard, and creator tools.',
+  metaKeywords: 'login, sign in, account access, BlogHub login',
+  robots: 'noindex, nofollow'
+})})
+
+
+router.post('/submit-login', loginValidationRules, submitLoginData)
+router.get("/logOut", logOut)
+
+router.get("/forgetPassword", (req, res) => {res.render("forgetPassword", {
+  title: 'Reset Password | BlogHub',
+        showLayout: false,
+        metaDescription: 'Request a secure password reset link for your BlogHub account.',
+        metaKeywords: 'forgot password, reset password, account recovery, BlogHub',
+        robots: 'noindex, nofollow'
+
+})})
+
+router.post("/submit-forgetPassword", forgetPasswordValidation, submitForgetPassword)
+
+
+router.get("/updatePassword/:token", (req, res) => { res.render("updatePassword", { 
+   token: req.params.token,
+   title: 'Update Password | BlogHub',
+        showLayout: false,
+        metaDescription: 'Create a new secure password to regain access to your BlogHub account.',
+        metaKeywords: 'update password, reset password, account security, BlogHub',
+        robots: 'noindex, nofollow'
+
+})})
+
+
 router.post("/submit-updatePassword", updatePasswordValidation, updatePassword)
 
 
@@ -136,15 +168,15 @@ router.post("/submit-updatePassword", updatePasswordValidation, updatePassword)
 // router.get("/home",(req, res) => {res.render("home", { title: "home" })})
 
 
-router.get("/home", (req, res) => { res.render("home", { title: "home", page : "home" }) })
+router.get("/home", (req, res) => { res.render("home", {layout : true, title: "home", page : "home" }) })
 // router.get("/Profile", (req, res) => { res.render("Profile", { title: "Profile"}) })
-router.get("/about", verifijwt, (req, res) => { res.render("about", { title: "about", page : "about" }) })
+router.get("/about", (req, res) => { res.render("about", { title: "about", page : "about" }) })
 
 // blog roytes
 router.get("/blog", getSearchAndRandomArticals)
 // router.post("/blog/blog-contant/:id", getArticalesById)
 
-router.get("/topics/:slug", verifijwt, getArticales)
+router.get("/topics/:slug", getArticales)
 router.get("/blog/blog-contant/:id",viewControl)
 // router.get(
 //   "/blog/blog-contant/:id",
@@ -177,7 +209,7 @@ router.post("/blog/share/update",verifijwt, shareArtical);
 //  const blofId = "<%= articalById._id %>";
 
 router.get("/Categorie", categoryHendler)
-router.get("/contact", verifijwt, (req, res) => { res.render("contact", { title: "contact", page : "contact" }) })
+router.get("/contact", (req, res) => { res.render("contact", { title: "contact", page : "contact" }) })
 // router.get("/my-blogs", verifijwt, (req, res) => { res.render("my-blogs", { title: "my-blogs" }) })
 router.post("/contact/contact-form-submit", verifijwt, contactValidator, contactController)
 

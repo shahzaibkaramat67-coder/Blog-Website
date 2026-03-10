@@ -41,7 +41,11 @@ const generateAccessAndRefreshToken = async (userId) => {
 /*****======== Section singup Form Hendler Start ==========*****/
 
 const submitSingupData = asyncHandler(async (req, res) => {
-    const { Username, Email, password, confirmPassword, role } = req.body;
+
+ console.log("this is submit Singup route");
+ 
+
+    const { Username, Email, password, confirmPassword } = req.body;
 
     if ([Username, Email, password].some((field => !field))) {
         req.flash("error", "All fields are required!");
@@ -61,22 +65,40 @@ const submitSingupData = asyncHandler(async (req, res) => {
         return res.redirect("/signup");
     }
 
-    const userExisted = await User.findOne({ Email });
-    if (userExisted) {
-        req.flash("error", "User already exists with that Email");
-        return res.redirect("/signup");
-    }
+
+         const userExisted = await User.findOne({ 
+            $or :[{Email}, {Username}]
+          });
+
+          if (userExisted) {
+              if (userExisted.Email === Email) {
+                 req.flash("error", "User already exists with that Email");
+                }else{
+                  req.flash("error", "User already exists with that Username");
+              }
+             return res.redirect("/signup")
+          }
+
+    
 
 
     // continue with creating the user
 
-
-    const userSingup = await User.create({
-        Username,
-        Email,
-        password,
-        role: "user"
-    })
+   let userSingup
+    try {
+         userSingup = await User.create({
+            Username,
+            Email,
+            password,
+            role: "user"
+        })
+    } catch (error) {
+        if (error.code === 11000) {
+            if (error.keyValue.Email) req.flash("error", "User already exists with that Email");
+            else if (error.keyValue.Username) req.flash("error", "User already exists with that Username");
+         return res.redirect("/signup")
+        }
+    }
 
     const otpCode = await userSingup.generateOtpCode()
     await userSingup.save({ validateBeforeSave: false });
@@ -96,8 +118,12 @@ const submitSingupData = asyncHandler(async (req, res) => {
 
     }
     req.session.Email = userSingup.Email;
+    console.log("this is after email");
+    
     req.flash("success", "Signup successful! OTP sent to your email.");
+    console.log("this is befor redirect");
     return res.redirect('/otp');
+    console.log("this is after redirect");
 
 
 
@@ -173,15 +199,12 @@ const submitLoginData = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", refreshToken, refreshTokenOption)
 
     req.flash("success", "login successfully");
-    return res.redirect("/profile")
+    return res.redirect("/home")
 
 
 })
 
 
-const forgetPassword = asyncHandler(async (req, res) => {
-    res.render("forgetPassword", { layout: false, title: "forgetPassword" })
-})
 
 const submitForgetPassword = asyncHandler(async (req, res) => {
 
@@ -297,7 +320,7 @@ const updatePassword = asyncHandler(async (req, res) => {
     res.cookie("accessToken", accessToken, accessTokenOption)
     res.cookie("refreshToken", refreshToken, refreshTokenOption)
 
-    return res.render("home", { title: "home" })
+  return res.redirect('/');
 })
 
 const googlecontroller = asyncHandler(async (req, res) => {
@@ -322,12 +345,18 @@ const googlecontroller = asyncHandler(async (req, res) => {
 
 
     const profile = await Profile.findOne({ User: req.user._id })
+
     if (profile) {
-        return res.render("home", { title: "home" });
-        // return res.render("profile", { title: "profile", profile });
-    } else {
-        return res.render("edit-profile", { layout: false, title: "edit-profile", profile });
-    }
+    return res.redirect('/home');
+} else {
+    return res.redirect('/profile/edit'); // or whatever your edit-profile route is
+}
+    // if (profile) {
+    //     return res.render("home", { title: "home" });
+    //     // return res.render("profile", { title: "profile", profile });
+    // } else {
+    //     return res.render("edit-profile", { layout: false, title: "edit-profile", profile });
+    // }
     //  return res.render("/edit-profile", { layout : false, title: "Edit Profile", profile });
 
 })
@@ -350,7 +379,6 @@ const logOut = asyncHandler(async (req, res) => {
 export {
     submitSingupData,
     submitLoginData,
-    forgetPassword,
     submitForgetPassword,
     updatePassword,
     logOut,

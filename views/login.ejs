@@ -1,12 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %></title>
-  <link rel="stylesheet" href="/tailwind-build.css">
-</head>
-<body class="bg-slate-50">
   <%- include("../partial/Flash_response.ejs") %>
   <section class="min-h-screen flex items-center justify-center px-6 py-12">
     <div class="w-full max-w-5xl grid gap-8 lg:grid-cols-2">
@@ -55,13 +46,13 @@
             </span>
           </div>
           <div>
-            <button type="submit" class="w-full rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700">Sign in</button>
+            <button type="submit" class="cursor-pointer w-full rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700">Sign in</button>
           </div>
 
           <% if (!isAdmin) { %>
           <div class="text-sm text-center text-slate-500">
-            <p>Don't have an account? <a href="/signup" class="font-medium text-teal-700 hover:text-teal-800">Sign Up</a></p>
-            <p class="mt-1">Forgot password? <a href="/forgetPassword" class="font-medium text-teal-700 hover:text-teal-800">Reset</a></p>
+            <p>Don't have an account? <a href="/signup" class="cursor-pointer font-medium text-teal-700 hover:text-teal-800">Sign Up</a></p>
+            <p class="mt-1">Forgot password? <a href="/forgetPassword" class="cursor-pointer font-medium text-teal-700 hover:text-teal-800">Reset</a></p>
           </div>
           <% } %>
         </form>
@@ -70,11 +61,6 @@
   </section>
 
 
-
-<script src="/user/Login.js" defer></script>
-
-</body>
-</html>
 
 
 
