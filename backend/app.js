@@ -10,7 +10,7 @@ const port = process.env.PORT || 3001;
 
 dbConnnection()
     .then(() => {
-        app.listen(port, () => {
+        app.listen(port, "0.0.0.0", () => {
             console.log(`the server is runing on :${port}`);
 
         })
