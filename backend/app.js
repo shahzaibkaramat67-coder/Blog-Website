@@ -4,7 +4,7 @@ import app from './index.js'
 import { dbConnnection } from "./db/userSingup.js";
 
 // import  BLOG_DATA  from './controller/host.controller';
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 
 // import "./utils/Cron.js";
 
