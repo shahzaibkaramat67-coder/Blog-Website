@@ -1,10 +1,20 @@
 import multer from "multer"
+import path from "node:path";
+
+const tempdir = path.resolve(
+  process.cwd(), "../frontend/public/temp"
+)
+
+console.log("tempdir :", tempdir);
+
+
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/temp')
+    cb(null, tempdir)
   },
   filename: function (req, file, cb) {
-   
+
     cb(null, file.originalname)
   }
 })

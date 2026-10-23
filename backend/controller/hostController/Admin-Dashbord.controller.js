@@ -513,25 +513,50 @@ console.log("dayStr", dayStr);
     // let sharesCount = 0;
     let viewCount = 0;
 
+
+
+
+
+const startdayforgrapg = {
+  createdAt :{$gte : startDate, $lte : endDate}
+}
+
+
+    const [articalGraph, likeGraph, shareGraph ] =await Promise.all([
+            Articals.countDocuments(startdayforgrapg),
+            ArticleLike.countDocuments(startdayforgrapg),
+            ArticleShare.countDocuments(startdayforgrapg),
+            // ArticleView.countDocuments(startday)
+                
+          ])
+
+    articalArr.push(articalGraph)  
+    likeArr.push(likeGraph)
+    shareArr.push(shareGraph)
     
 
-    const articalGraph = await Articals.countDocuments({createdAt :{$gte : startDate, $lte : endDate}})
-    console.log("articalGraph", articalGraph);
-    
-    articalArr.push(articalGraph)
-
+//     const articalGraph = await Articals.countDocuments({createdAt :{$gte : startDate, $lte : endDate}})
+//     console.log("articalGraph", articalGraph);
+//   const likeGraph = await ArticleLike.countDocuments({createdAt :{$gte : startDate, $lte : endDate}})
+//   console.log("likeGraph", likeGraph);
   
-  const likeGraph = await ArticleLike.countDocuments({createdAt :{$gte : startDate, $lte : endDate}})
-  console.log("likeGraph", likeGraph);
-  
-  likeArr.push(likeGraph)
-  const shareGraph = await ArticleShare.countDocuments({createdAt :{$gte : startDate, $lte : endDate}})
-  console.log("shareGraph", shareGraph);
-  shareArr.push(shareGraph)
+//   const shareGraph = await ArticleShare.countDocuments({createdAt :{$gte : startDate, $lte : endDate}})
+//   console.log("shareGraph", shareGraph);
+const viewForGraph = await ArticleView.find({}).lean();
 
 
 
-    const viewForGraph = await ArticleView.find({}).lean();
+
+
+
+
+
+
+
+
+
+
+
       
       console.log(`Total ArticleView documents:`, viewForGraph.length);
 

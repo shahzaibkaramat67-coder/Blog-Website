@@ -1,29 +1,29 @@
- let page = 1; // first article already rendered on page
+let page = 1; // first article already rendered on page
 
 
 
-    const loadMoreBtn = document.getElementById("loadMoreBtn");
-    const articleContainer = document.getElementById("articleContainer");
-    const category = loadMoreBtn.getAttribute("data-category")
+const loadMoreBtn = document.getElementById("loadMoreBtn");
+const articleContainer = document.getElementById("articleContainer");
+const category = loadMoreBtn.getAttribute("data-category")
 
-    async function LoadArticles() {
+async function LoadArticles() {
 
-        console.log("8wndowndowndiownokqw dl sjd d ");
-        
-        const res = await fetch(`/profile/list/${category}?page=${page}`);
-        console.log("8wndowndowndiownokqw dl sjd d ");
-        const dataArtical = await res.json();
+    console.log("8wndowndowndiownokqw dl sjd d ");
 
-        if (!dataArtical || dataArtical.length === 0) {
-            loadMoreBtn.style.display = "none";
-            return;
-        }
+    const res = await fetch(`/profile/list/${category}?page=${page}`);
+    console.log("8wndowndowndiownokqw dl sjd d ");
+    const dataArtical = await res.json();
 
-        dataArtical.forEach(Artical => {
-            const div = document.createElement("div");
-            div.className = "bg-white p-4 rounded-xl shadow-lg flex flex-col sm:flex-row gap-4 mb-4 hover:shadow-xl transition";
-            div.innerHTML = `
-            <div class="flex-shrink-0">
+    if (!dataArtical || dataArtical.length === 0) {
+        loadMoreBtn.style.display = "none";
+        return;
+    }
+
+    dataArtical.forEach(Artical => {
+        const div = document.createElement("div");
+        div.className = "bg-white p-4 rounded-xl shadow-lg flex flex-col sm:flex-row gap-4 mb-4 hover:shadow-xl transition";
+        div.innerHTML = `
+            <div class="shrink-0">
                 <img src="${Artical.featured_image}" alt="app" class="w-full sm:w-72 rounded-lg object-cover">
             </div>
             <div class="flex flex-col justify-between w-full">
@@ -50,16 +50,16 @@
                     <div class="flex justify-end mt-3">
                         <a href="/blog/blog-contant/${Artical._id}"
                             class="read-more-btn  bg-teal-500 px-4 py-2 sm:px-6 sm:py-3 text-white font-bold uppercase rounded-lg hover:bg-teal-600 transition"
-                            data-id="${Artical._id }">
+                            data-id="${Artical._id}">
                             Read More
                         </a>
                     </div>
             </div>
         `;
-            articleContainer.appendChild(div);
-        });
+        articleContainer.appendChild(div);
+    });
 
-        page++;
-    }
+    page++;
+}
 
-    loadMoreBtn.addEventListener("click", LoadArticles);
+loadMoreBtn.addEventListener("click", LoadArticles);

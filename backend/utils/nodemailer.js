@@ -10,8 +10,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log("process.env.EMAIL_USER", process.env.EMAIL_USER);
-console.log("process.env.EMAIL_PASS", process.env.EMAIL_PASS);
+// console.log("process.env.EMAIL_USER", process.env.EMAIL_USER);
+// console.log("process.env.EMAIL_PASS", process.env.EMAIL_PASS);
 
 
 

@@ -15,6 +15,11 @@ import { log } from 'console';
 const createORUpdateProfile = asyncHandler(async (req, res) => {
    const { full_name, username, about, email, phone, location, website, twitter, linkedin, facebook } = req.body;
 
+   const user_name = await Profile.findOne({ username: username, email: email, phone: phone })
+   if (user_name) {
+      req.flash("error", `this ${user_name} is already exist`);
+      return res.redirect("/Profile");
+   }
    let { category } = req.body;
    if (!Array.isArray(category)) {
       category = category ? [category] : [];
@@ -31,33 +36,33 @@ const createORUpdateProfile = asyncHandler(async (req, res) => {
 
    //  Only upload if a file exists
 
-    if (req.file && req.file.path) {
-     try {
-       imageUrl = await uploadOnCloudinary(req.file.path);
-     } catch (error) {
-          req.flash("error", "Image upload failed");
-             return res.redirect("/profile?edit=true");
-     }
-     
-   } 
+   if (req.file && req.file.path) {
+      try {
+         imageUrl = await uploadOnCloudinary(req.file.path);
+      } catch (error) {
+         req.flash("error", "Image upload failed");
+         return res.redirect("/profile?edit=true");
+      }
 
-//   else if (!profile) {
-//       req.flash("error", "you did not upload the Image");
-//       return res.redirect("/profile?edit=true");
+   }
 
-//    }
+   //   else if (!profile) {
+   //       req.flash("error", "you did not upload the Image");
+   //       return res.redirect("/profile?edit=true");
+
+   //    }
 
    // Validate AFTER uploading only if file exists
    const result = validationResult(req);
    if (!result.isEmpty()) {
-   result.array().forEach(err => req.flash("error", err.msg))
-        return res.redirect("/profile?edit=true");
+      result.array().forEach(err => req.flash("error", err.msg))
+      return res.redirect("/profile?edit=true");
    }
 
-console.log("profile is going to create");
+   console.log("profile is going to create");
 
 
-if (!profile) {
+   if (!profile) {
       //  Create new profile
       profile = await Profile.create({
          User: req.user._id,
@@ -72,20 +77,20 @@ if (!profile) {
          category,
          profile_Image: imageUrl?.secure_url || ""
       });
-      
-      
-         req.flash("success", "Your Profile create Successfully");
-             return res.redirect("/profile");
-            //  return res.redirect("/profile?edit=true");
-    
+
+
+      req.flash("success", "Your Profile create Successfully");
+      return res.redirect("/profile");
+      //  return res.redirect("/profile?edit=true");
+
       // return res.render("Profile", {showLayout : true, title: "profile", page: "profile", profile });
    }
-      console.log("profile is now created");
-      
-      //  Update profile
-      const updateprofile = {
-         full_name,
-         about,
+   console.log("profile is now created");
+
+   //  Update profile
+   const updateprofile = {
+      full_name,
+      about,
       phone,
       location,
       profile_Image: imageUrl?.secure_url || profile.profile_Image, // fallback to old image
@@ -93,17 +98,17 @@ if (!profile) {
 
 
    console.log("profile is going to update");
-try {
-   profile = await Profile.findOneAndUpdate(
-      { User: req.user._id },
-      { $set: updateprofile },
+   try {
+      profile = await Profile.findOneAndUpdate(
+         { User: req.user._id },
+         { $set: updateprofile },
          { new: true }
       );
    } catch (error) {
-     req.flash("success", "you profile is successfully Update");
-     return res.redirect("/profile");
+      req.flash("success", "you profile is successfully Update");
+      return res.redirect("/profile");
    }
-   
+
    console.log("profile is now updated");
    return res.redirect("/profile");
 
@@ -113,18 +118,18 @@ try {
 
 const getProfileForUpdate = asyncHandler(async (req, res) => {
    const useId = req.user._id
-   const profile = await Profile.findOne({ User: useId})
+   const profile = await Profile.findOne({ User: useId })
    // const user = await User.findOne({useId})
    if (req.query.edit === "true") {
-      return res.render("edit-profile", {layout: false, title: "Edit Profile",page : "Edit profile", profile });
+      return res.render("edit-profile", { layout: false, title: "Edit Profile", page: "Edit profile", profile });
    }
    if (profile) {
-      res.render("Profile", {showLayout : true, title: "Profile", page : "Profile", profile })
+      res.render("Profile", { showLayout: true, title: "Profile", page: "Profile", profile })
    } else {
       res.render("edit-profile", {
          layout: false,
          title: "edit-profile",
-          page : "edit Profile",
+         page: "edit Profile",
          profile,
          // category: await Categorie.find()
       })

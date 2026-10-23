@@ -15,14 +15,14 @@ const articleViewSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Artical", // matches your Articals collection
       required: true,
-     
+
     },
-    User :{
-       type : mongoose.Schema.Types.ObjectId,
-       ref : "User",
-       default: null,
+    User: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
-     total: { type: Number, default: 0 },        // total views
+    total: { type: Number, default: 0 },        // total views
     monetized: { type: Number, default: 0 },   // total monetized views
     earningsMills: { type: Number, default: 0 },
 

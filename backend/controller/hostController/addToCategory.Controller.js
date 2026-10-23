@@ -7,7 +7,7 @@ import ApiError from "../../utils/ApiError.js";
 const getAddCaategoryPage = asyncHandler(async (req, res) => {
 
     const showGroup = await RPMGroup.find().lean()
-    // console.log("showGroup req.showGroup", req.showGroup);
+    console.log("showGroup req.showGroup", req.showGroup);
     res.render('Admin.Dashbord/categoryadd', {
         title: 'admin-categoryadd',
         showGroup
