@@ -1,5 +1,7 @@
 import express from "express"
 const app = express();
+import mongoose from "mongoose";
+import { dbConnnection } from "./db/userSingup.js";
 // import  CategoryRouter  from "./routes/host.routes.js";
 import hostRouter from "./routes/host.routes.js";
 import userRouter from "./routes/user.routes.js";
@@ -31,6 +33,31 @@ import dns from "dns"
 dns.setServers(["1.1.1.1", "8.8.8.8"])
 
 // import .env from './'
+
+
+
+let dbConnectionPromise;
+
+app.use(async (req, res, next) => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      if (!dbConnectionPromise) {
+        dbConnectionPromise = dbConnnection().catch((error) => {
+          dbConnectionPromise = null;
+          throw error;
+        });
+      }
+
+      await dbConnectionPromise;
+    }
+
+    next();
+  } catch (error) {
+    console.error("Database connection unavailable:", error.message);
+    next(error);
+  }
+});
+
 
 
 
@@ -252,6 +279,9 @@ app.use(express.static(path.join(__dirname, "./public")));
 
 // app.use("/", userRateLimit)
 app.use("/api", adminRateLimit, hostRouter)
+
+
+
 
 
 app.use("/", userRateLimit, userRouter)
